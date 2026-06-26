@@ -1,0 +1,50 @@
+[project]
+name = "precis"
+version = "0.1.0"
+description = "Epistemically-typed SVOA for CPU-viable edge RAG"
+requires-python = ">=3.11"
+
+dependencies = [
+    # nlp
+    "spacy>=3.7,<4.0",
+
+    # embeddings
+    "sentence-transformers",
+
+    # fact store
+    "chromadb",
+
+    # utils
+    "psutil",
+]
+
+[project.optional-dependencies]
+api = ["fastapi", "uvicorn[standard]", "websockets", "pyjwt"]
+eval = ["rouge-score", "bert-score", "datasets"]
+dev = ["pytest", "pytest-cov", "black", "flake8", "pre-commit"]
+coref-fast = ["fastcoref"]
+coref-spacy = ["spacy-experimental"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short --strict-markers"
+markers = [
+    "slow: marks tests as slow (deselect with '-m\"not slow\"')",
+    "integration: marks tests requiring ollama running",
+]
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project.scripts]
+precis-evaluation = "precis.evaluation.harness:main"
+precis-demo = "precis.demo.rub_demo:main"
+precis-graph = "precis.graph:main"
+precis-pipeline = "precis.pipeline:main"

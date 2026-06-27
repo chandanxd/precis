@@ -1,0 +1,73 @@
+/* for dark mode */
+:root[data-theme="dark"] {
+  --bg: #0e0c09;
+  --bg-2: #131109;
+  --bg-3: #18160c;
+  --bg-4: #1e1b10;
+  --surface: #232017;
+  --raised: #2a2618;
+  --bd: #2c2820;
+  --bd-2: #3a3428;
+  --bd-3: #4a4232;
+  --tx: #e8e0d0;
+  --tx-2: #8a7e6a;
+  --tx-3: #4a4232;
+  --tx-4: #2e2a1e;
+  --au: #d4a853;
+  --au-2: #b8903e;
+  --au-3: #8a6828;
+  --au-dim: rgba(212,168,83,.1);
+  --au-glow: rgba(212,168,83,.06);
+  --au-trace: rgba(212,168,83,.03);
+  --neg: #c0614a;
+  --neg-dim: rgba(192,97,74,.1);
+  --cond: #8a7a3a;
+  --cond-dim: rgba(138,122,58,.1);
+  --attr: #6a8a6a;
+  --attr-dim: rgba(106,138,106,.1);
+  --good: #5a9a6a;
+  --good-dim: rgba(90,154,106,.1);
+  --sh: 0 1px 3px rgba(0,0,0,.4), 0 4px 16px rgba(0,0,0,.3);
+  --sh-lg: 0 4px 8px rgba(0,0,0,.5), 0 16px 48px rgba(0,0,0,.4);
+  --edge-normal: rgba(212,168,83,.2);
+  --edge-neg: rgba(192,97,74,.3);
+  --node-active: rgba(212,168,83,.9);
+  --node-dim: rgba(212,168,83,.3);
+}
+
+/* for light mode */
+:root[data-theme="light"] {
+  --bg: #f7f3ec;
+  --bg-2: #f2ede4;
+  --bg-3: #ece6db;
+  --bg-4: #e5ddd0;
+  --surface: #ddd4c4;
+  --raised: #d4c8b4;
+  --bd: #c8bea8;
+  --bd-2: #b8ac94;
+  --bd-3: #a49880;
+  --tx: #2a2418;
+  --tx-2: #6a5e48;
+  --tx-3: #a0927a;
+  --tx-4: #c0b09a;
+  --au: #b87e28;
+  --au-2: #9a6818;
+  --au-3: #7a5010;
+  --au-dim: rgba(184,126,40,.1);
+  --au-glow: rgba(184,126,40,.06);
+  --au-trace: rgba(184,126,40,.03);
+  --neg: #a04030;
+  --neg-dim: rgba(160,64,48,.1);
+  --cond: #7a6a28;
+  --cond-dim: rgba(122,106,40,.1);
+  --attr: #4a7a4a;
+  --attr-dim: rgba(74,122,74,.1);
+  --good: #3a7a4a;
+  --good-dim: rgba(58,122,74,.1);
+  --sh: 0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.06);
+  --sh-lg: 0 4px 8px rgba(0,0,0,.1), 0 16px 48px rgba(0,0,0,.08);
+  --edge-normal: rgba(184,126,40,.25);
+  --edge-neg: rgba(160,64,48,.35);
+  --node-active: rgba(184,126,40,.9);
+  --node-dim: rgba(184,126,40,.35);
+}

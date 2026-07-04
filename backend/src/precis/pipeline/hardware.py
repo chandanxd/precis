@@ -3,6 +3,8 @@ import subprocess
 
 import psutil
 
+COMMON_RAM_SIZES = [2, 4, 8, 16, 24, 32, 48, 64, 96, 128, 192, 256]
+
 
 def detect_cpu() -> tuple[int, str]:
     cores = psutil.cpu_count(logical=False) or psutil.cpu_count(logical=True) or 1
@@ -41,5 +43,19 @@ def detect_cpu() -> tuple[int, str]:
     return cores, model
 
 
-def detect_ram() -> float:
-    return round(psutil.virtual_memory().total / (1024**3), 1)
+def detect_ram() -> dict[str, int | float]:
+    memory = psutil.virtual_memory()
+
+    usable = round(memory.total / (1024**3), 1)
+    total = min(COMMON_RAM_SIZES, key=lambda size: abs(size - usable))
+    available = round(memory.available / (1024**3), 1)
+    used = round(memory.used / (1024**3), 1)
+    usage = memory.percent
+
+    return {
+        "total": total,
+        "usable": usable,
+        "available": available,
+        "used": used,
+        "usage": usage,
+    }

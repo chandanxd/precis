@@ -1,3 +1,4 @@
+import csv
 import platform
 import subprocess
 
@@ -61,59 +62,74 @@ def detect_ram() -> dict[str, int | float]:
     }
 
 
+def _select_gpu(gpus: list[str]) -> str:
+    for gpu in gpus:
+        if "NVIDIA" in gpu:
+            return gpu
+    for gpu in gpus:
+        if "AMD" in gpu or "ATI" in gpu:
+            return gpu
+    return gpus[0]
+
+
 def _detect_linux_gpu() -> tuple[bool, str | None, float | None]:
     try:
         result = subprocess.run(
             ["lspci"], capture_output=True, text=True, timeout=5, check=True
         )
+        gpus: list[str] = []
+
         for line in result.stdout.splitlines():
-            if "VGA compatible controller" not in line and "3D controller" not in line:
-                continue
+            if "VGA compatible controller" in line or "3D controller" in line:
+                gpus.append(line.split(":", 2)[-1].strip())
 
-            name = line.split(":", 2)[-1].strip()
+        if not gpus:
+            return False, None, None
 
-            if "NVIDIA" in name:
-                try:
-                    result = subprocess.run(
-                        [
-                            "nvidia-smi",
-                            "--query-gpu=memory.total",
-                            "--format=csv,noheader,nounits",
-                        ],
-                        capture_output=True,
-                        text=True,
-                        timeout=5,
-                        check=True,
-                    )
-                    vram = round(float(result.stdout.strip()) / 1024, 1)
-                    return True, name, vram
-                except (
-                    FileNotFoundError,
-                    subprocess.TimeoutExpired,
-                    subprocess.CalledProcessError,
-                ):
-                    return True, name, None
+        name = _select_gpu(gpus)
 
-            if "AMD" in name or "ATI" in name:
-                try:
-                    result = subprocess.run(
-                        ["rocm-smi", "--showmeminfo", "vram"],
-                        capture_output=True,
-                        text=True,
-                        timeout=5,
-                        check=True,
-                    )
-                    # TODO: parse vram from rocm-smi output
-                    return True, name, None
-                except (
-                    FileNotFoundError,
-                    subprocess.TimeoutExpired,
-                    subprocess.CalledProcessError,
-                ):
-                    return True, name, None
-                # leaving AMD VRAM parsing for later since rocm-smi is less standardized
-                # and many consumer AMD systems don't have it installed
-            return True, name, None
+        if "NVIDIA" in name:
+            try:
+                result = subprocess.run(
+                    [
+                        "nvidia-smi",
+                        "--query-gpu=memory.total",
+                        "--format=csv,noheader,nounits",
+                    ],
+                    capture_output=True,
+                    text=True,
+                    timeout=5,
+                    check=True,
+                )
+                vram = round(float(result.stdout.strip()) / 1024, 1)
+                return True, name, vram
+            except (
+                FileNotFoundError,
+                subprocess.TimeoutExpired,
+                subprocess.CalledProcessError,
+            ):
+                return True, name, None
+
+        if "AMD" in name or "ATI" in name:
+            try:
+                result = subprocess.run(
+                    ["rocm-smi", "--showmeminfo", "vram"],
+                    capture_output=True,
+                    text=True,
+                    timeout=5,
+                    check=True,
+                )
+                # TODO: parse vram from rocm-smi output
+                return True, name, None
+            except (
+                FileNotFoundError,
+                subprocess.TimeoutExpired,
+                subprocess.CalledProcessError,
+            ):
+                return True, name, None
+            # leaving AMD VRAM parsing for later since rocm-smi is less standardized
+            # and many consumer AMD systems don't have it installed
+        return True, name, None
 
     except (
         FileNotFoundError,
@@ -121,8 +137,6 @@ def _detect_linux_gpu() -> tuple[bool, str | None, float | None]:
         subprocess.CalledProcessError,
     ):
         return False, None, None
-
-    return False, None, None
 
 
 def _detect_windows_gpu() -> tuple[bool, str | None, float | None]:
@@ -132,7 +146,7 @@ def _detect_windows_gpu() -> tuple[bool, str | None, float | None]:
                 "powershell",
                 "-command",
                 (
-                    "Get-CimInstance Win32_VideoController | Select-Object Name, AdapterRAM"
+                    "Get-CimInstance Win32_VideoController | Select-Object Name, AdapterRAM | ConvertTo-Csv -NoTypeInformation"
                 ),
             ],
             capture_output=True,
@@ -140,28 +154,31 @@ def _detect_windows_gpu() -> tuple[bool, str | None, float | None]:
             timeout=5,
             check=True,
         )
-        lines = [line.strip() for line in result.stdout.strip()]
+        reader = csv.DictReader(result.stdout.splitlines())
+        gpus: list[tuple[str, float | None]] = []
 
-        # TODO: handle multiple gpus later
-        if len(lines) < 3:
+        for row in reader:
+            name = row["Name"].strip()
+            try:
+                vram = round(int(row["AdapterRAM"]) / (1024**3), 1)
+            except (ValueError, TypeError):
+                vram = None
+
+            gpus.append((name, vram))
+
+        if not gpus:
             return False, None, None
-
-        gpu = lines[2]
-
-        parts = gpu.rsplit(maxsplit=1)
-        if len(parts) != 2:
-            return False, None, None
-
-        name = parts[0]
-
-        try:
-            vram = round(int(parts[1]) / (1024**3), 1)
-        except ValueError:
-            vram = None
-
-        return True, name, vram
-    except (FileExistsError, subprocess.TimeoutExpired, subprocess.CalledProcessError):
+        name = _select_gpu([gpu[0] for gpu in gpus])
+        for gpu_name, vram in gpus:
+            if gpu_name == name:
+                return True, gpu_name, vram
+    except (
+        FileNotFoundError,
+        subprocess.CalledProcessError,
+        subprocess.TimeoutExpired,
+    ):
         return False, None, None
+    return False, None, None
 
 
 def _detect_macos_gpu() -> tuple[bool, str | None, float | None]:
@@ -213,8 +230,3 @@ def detect_gpu() -> tuple[bool, str | None, float | None]:
         return False, None, None
 
     return detector()
-
-
-print("cpu:", detect_cpu())
-print("ram:", detect_ram())
-print("gpu:", detect_gpu())

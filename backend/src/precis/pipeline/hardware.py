@@ -245,3 +245,19 @@ def detect_gpu() -> tuple[bool, str | None, float | None]:
         return False, None, None
 
     return detector()
+
+
+def detect_ml_accelerator() -> tuple[bool, str | None]:
+    try:
+        import torch
+
+    except ImportError:
+        return False, None
+    if torch.cuda.is_available():
+        if getattr(torch.version, "hip", None) is not None:
+            return True, "ROCm"
+        return True, "CUDA"
+
+    if hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
+        return True, "MPS"
+    return False, None

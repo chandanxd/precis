@@ -1,5 +1,6 @@
 import csv
 import platform
+import re
 import subprocess
 
 import psutil
@@ -119,8 +120,22 @@ def _detect_linux_gpu() -> tuple[bool, str | None, float | None]:
                     timeout=5,
                     check=True,
                 )
-                # TODO: parse vram from rocm-smi output
-                return True, name, None
+
+                vram = None
+
+                for line in result.stdout.splitlines():
+                    if "VRAM Total Memory" not in line:
+                        continue
+                    match = re.search(r"/d+", line)
+                    if not match:
+                        continue
+                    value = int(match.group(1))
+                    if "B" in line:
+                        vram = round(value / (1024**3), 1)
+                    elif "MiB" in line:
+                        vram = round(value / 1024, 1)
+                    break
+                return True, name, vram
             except (
                 FileNotFoundError,
                 subprocess.TimeoutExpired,

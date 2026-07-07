@@ -277,7 +277,7 @@ class HardwareProfile:
     token_ceiling: int
 
 
-def select_model(ram_gb: float, has_gpu: bool, vram_gb: float | None) -> str:
+def select_mode(ram_gb: float, has_gpu: bool, vram_gb: float | None) -> str:
     if ram_gb >= 16 and has_gpu and vram_gb is not None and vram_gb >= 6:
         return "gpu"
     if ram_gb >= 16 and has_gpu and vram_gb is not None:
@@ -306,7 +306,7 @@ def profile_hardware() -> HardwareProfile:
     cores, cpu_model = detect_cpu()
     ram = detect_ram()
     has_gpu, gpu_name, vram = detect_gpu()
-    mode = select_model(ram["usable"], has_gpu, vram)
+    mode = select_mode(ram["usable"], has_gpu, vram)
 
     return HardwareProfile(
         cpu_cores=cores,

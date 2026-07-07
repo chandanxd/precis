@@ -319,3 +319,32 @@ def profile_hardware() -> HardwareProfile:
         recommended_mode=mode,
         token_ceiling=MODE_TO_CEILING[mode],
     )
+
+
+def to_dict(self) -> dict:
+    return {
+        "cpu_cores": self.cpu_cores,
+        "cpu_model": self.cpu_model,
+        "ram_gb": self.ram_gb,
+        "has_gpu": self.has_gpu,
+        "gpu_name": self.gpu_name,
+        "vram_gb": self.vram_gb,
+        "recommended_model": self.recommended_model,
+        "recommended_mode": self.recommended_mode,
+        "token_ceiling": self.token_ceiling,
+    }
+
+
+def __str__(self) -> str:
+    gpu_str = f"{self.gpu_name} ({self.vram_gb} GB)" if self.has_gpu else "None"
+    return (
+        f"HardwareProfile(\n"
+        f"CPU: {self.cpu_model} ({self.cpu_cores} cores)\n"
+        f"RAM: {self.ram_gb} GB\n"
+        f"GPU: {gpu_str}\n"
+        f"Mode: {self.recommended_mode}\n"
+        f"Model: {self.recommended_model}\n"
+        f"Token ceiling: {self.token_ceiling}\n"
+        ")"
+    )
+

@@ -348,3 +348,14 @@ def __str__(self) -> str:
         ")"
     )
 
+
+def validate_ollama(model: str) -> bool:
+    try:
+        result = subprocess.run(
+            ["ollama", "list"], capture_output=True, text=True, timeout=10
+        )
+        if result.returncode == 0:
+            return model.split(":")[0] in result.stdout
+    except (FileNotFoundError, subprocess.TimeoutExpired):
+        pass
+    return False

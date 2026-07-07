@@ -2,6 +2,7 @@ import csv
 import platform
 import re
 import subprocess
+from dataclasses import dataclass
 
 import psutil
 
@@ -261,3 +262,60 @@ def detect_ml_accelerator() -> tuple[bool, str | None]:
     if hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
         return True, "MPS"
     return False, None
+
+
+@dataclass
+class HardwareProfile:
+    cpu_cores: int
+    cpu_model: str
+    ram_gb: float
+    has_gpu: bool
+    gpu_name: str | None
+    vram_gb: float | None
+    recommended_model: str
+    recommended_mode: str
+    token_ceiling: int
+
+
+def select_model(ram_gb: float, has_gpu: bool, vram_gb: float | None) -> str:
+    if ram_gb >= 16 and has_gpu and vram_gb is not None and vram_gb >= 6:
+        return "gpu"
+    if ram_gb >= 16 and has_gpu and vram_gb is not None:
+        return "gpu-partial"
+    if ram_gb >= 16:
+        return "cpu"
+    return "cpu-light"
+
+
+MODE_TO_MODEL: dict[str, str] = {
+    "gpu": "llama3:8b",
+    "gpu-partial": "llama3:8b",
+    "cpu": "llama3:8b",
+    "cpu-light": "qwen2.5v1:7b",
+}
+
+MODE_TO_CEILING: dict[str, int] = {
+    "gpu": 4096,
+    "gpu-partial": 3072,
+    "cpu": 2048,
+    "cpu-light": 1024,
+}
+
+
+def profile_hardware() -> HardwareProfile:
+    cores, cpu_model = detect_cpu()
+    ram = detect_ram()
+    has_gpu, gpu_name, vram = detect_gpu()
+    mode = select_model(ram["usable"], has_gpu, vram)
+
+    return HardwareProfile(
+        cpu_cores=cores,
+        cpu_model=cpu_model,
+        ram_gb=ram["usable"],
+        has_gpu=has_gpu,
+        gpu_name=gpu_name,
+        vram_gb=vram,
+        recommended_model=MODE_TO_MODEL[mode],
+        recommended_mode=mode,
+        token_ceiling=MODE_TO_CEILING[mode],
+    )

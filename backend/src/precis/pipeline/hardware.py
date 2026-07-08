@@ -276,6 +276,33 @@ class HardwareProfile:
     recommended_mode: str
     token_ceiling: int
 
+    def to_dict(self) -> dict:
+        return {
+            "cpu_cores": self.cpu_cores,
+            "cpu_model": self.cpu_model,
+            "ram_gb": self.ram_gb,
+            "has_gpu": self.has_gpu,
+            "gpu_name": self.gpu_name,
+            "vram_gb": self.vram_gb,
+            "recommended_model": self.recommended_model,
+            "recommended_mode": self.recommended_mode,
+            "token_ceiling": self.token_ceiling,
+        }
+
+
+    def __str__(self) -> str:
+        gpu_str = f"{self.gpu_name} ({self.vram_gb} GB)" if self.has_gpu else "None"
+        return (
+            f"HardwareProfile(\n"
+            f"CPU: {self.cpu_model} ({self.cpu_cores} cores)\n"
+            f"RAM: {self.ram_gb} GB\n"
+            f"GPU: {gpu_str}\n"
+            f"Mode: {self.recommended_mode}\n"
+            f"Model: {self.recommended_model}\n"
+            f"Token ceiling: {self.token_ceiling}\n"
+            ")"
+        )
+
 
 def select_mode(ram_gb: float, has_gpu: bool, vram_gb: float | None) -> str:
     if ram_gb >= 16 and has_gpu and vram_gb is not None and vram_gb >= 6:
@@ -321,32 +348,7 @@ def profile_hardware() -> HardwareProfile:
     )
 
 
-def to_dict(self) -> dict:
-    return {
-        "cpu_cores": self.cpu_cores,
-        "cpu_model": self.cpu_model,
-        "ram_gb": self.ram_gb,
-        "has_gpu": self.has_gpu,
-        "gpu_name": self.gpu_name,
-        "vram_gb": self.vram_gb,
-        "recommended_model": self.recommended_model,
-        "recommended_mode": self.recommended_mode,
-        "token_ceiling": self.token_ceiling,
-    }
 
-
-def __str__(self) -> str:
-    gpu_str = f"{self.gpu_name} ({self.vram_gb} GB)" if self.has_gpu else "None"
-    return (
-        f"HardwareProfile(\n"
-        f"CPU: {self.cpu_model} ({self.cpu_cores} cores)\n"
-        f"RAM: {self.ram_gb} GB\n"
-        f"GPU: {gpu_str}\n"
-        f"Mode: {self.recommended_mode}\n"
-        f"Model: {self.recommended_model}\n"
-        f"Token ceiling: {self.token_ceiling}\n"
-        ")"
-    )
 
 
 def validate_ollama(model: str) -> bool:

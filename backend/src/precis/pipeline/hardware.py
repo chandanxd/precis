@@ -251,17 +251,16 @@ def detect_gpu() -> tuple[bool, str | None, float | None]:
 def detect_ml_accelerator() -> tuple[bool, str | None]:
     try:
         import torch
-
     except ImportError:
-        return False, None
+        return False, "cpu"
     if torch.cuda.is_available():
         if getattr(torch.version, "hip", None) is not None:
-            return True, "ROCm"
-        return True, "CUDA"
+            return True, "rocm"
+        return True, "cuda"
 
     if hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
-        return True, "MPS"
-    return False, None
+        return True, "mps"
+    return False, "cpu"
 
 
 @dataclass
@@ -288,7 +287,6 @@ class HardwareProfile:
             "recommended_mode": self.recommended_mode,
             "token_ceiling": self.token_ceiling,
         }
-
 
     def __str__(self) -> str:
         gpu_str = f"{self.gpu_name} ({self.vram_gb} GB)" if self.has_gpu else "None"
@@ -348,9 +346,6 @@ def profile_hardware() -> HardwareProfile:
     )
 
 
-
-
-
 def validate_ollama(model: str) -> bool:
     try:
         result = subprocess.run(
@@ -361,3 +356,6 @@ def validate_ollama(model: str) -> bool:
     except (FileNotFoundError, subprocess.TimeoutExpired):
         pass
     return False
+
+
+print(profile_hardware())

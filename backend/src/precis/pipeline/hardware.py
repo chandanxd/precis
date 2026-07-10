@@ -271,6 +271,7 @@ class HardwareProfile:
     has_gpu: bool
     gpu_name: str | None
     vram_gb: float | None
+    ml_accelerator: str | None
     recommended_model: str
     recommended_mode: str
     token_ceiling: int
@@ -286,6 +287,7 @@ class HardwareProfile:
             "recommended_model": self.recommended_model,
             "recommended_mode": self.recommended_mode,
             "token_ceiling": self.token_ceiling,
+            "ml_accelerator": self.ml_accelerator,
         }
 
     def __str__(self) -> str:
@@ -295,6 +297,7 @@ class HardwareProfile:
             f"CPU: {self.cpu_model} ({self.cpu_cores} cores)\n"
             f"RAM: {self.ram_gb} GB\n"
             f"GPU: {gpu_str}\n"
+            f"ML accelerator: {self.ml_accelerator}\n"
             f"Mode: {self.recommended_mode}\n"
             f"Model: {self.recommended_model}\n"
             f"Token ceiling: {self.token_ceiling}\n"
@@ -331,6 +334,7 @@ def profile_hardware() -> HardwareProfile:
     cores, cpu_model = detect_cpu()
     ram = detect_ram()
     has_gpu, gpu_name, vram = detect_gpu()
+    _, ml_accelerator = detect_ml_accelerator()
     mode = select_mode(ram["usable"], has_gpu, vram)
 
     return HardwareProfile(
@@ -340,6 +344,7 @@ def profile_hardware() -> HardwareProfile:
         has_gpu=has_gpu,
         gpu_name=gpu_name,
         vram_gb=vram,
+        ml_accelerator=ml_accelerator,
         recommended_model=MODE_TO_MODEL[mode],
         recommended_mode=mode,
         token_ceiling=MODE_TO_CEILING[mode],
@@ -356,6 +361,3 @@ def validate_ollama(model: str) -> bool:
     except (FileNotFoundError, subprocess.TimeoutExpired):
         pass
     return False
-
-
-print(profile_hardware())

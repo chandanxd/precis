@@ -63,3 +63,21 @@ class TestCoreference:
         text = "John met John Smith yesterday. He was excited about the meeting."
         resolved = resolve_coreferences(text)
         assert isinstance(resolved, str)
+
+    def test_legal_documents(self):
+        text = (
+            "The Plaintiff filed a motion on March 5. "
+            "The Court reviewed it on March 12. "
+            "It was denied due to procedural errors. "
+        )
+        resolved = resolve_coreferences(text)
+        assert isinstance(resolved, str)
+        assert len(resolved) >= len(text)
+
+    def test_no_crash_on_empty(self):
+        assert resolve_coreferences("") == ""
+
+    def test_no_crash_on_single_sentence(self):
+        text = "The bill passed. "
+        resolved = resolve_coreferences(text)
+        assert isinstance(resolved, str)

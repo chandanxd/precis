@@ -1,3 +1,6 @@
+import time
+from dataclasses import dataclass
+
 import spacy
 from fastcoref import spacy_component  # noqa: F401
 from spacy.language import Language
@@ -5,6 +8,12 @@ from spacy.language import Language
 from precis.pipeline.hardware import profile_hardware
 
 _nlp = None
+
+
+@dataclass(slots=True)
+class CoreferenceResult:
+    text: str
+    elapsed: float
 
 
 def _get_nlp() -> Language:
@@ -143,3 +152,11 @@ def _match_case(replacement: str, original: str) -> str:
     if original[0].isupper():
         return replacement[0].upper() + replacement[1:]
     return replacement.lower()
+
+
+def resolve_document(text: str) -> CoreferenceResult:
+    start = time.perf_counter()
+
+    resolved = resolve_coreferences(text)
+    elapsed = time.perf_counter() - start
+    return CoreferenceResult(text=resolved, elapsed=elapsed)

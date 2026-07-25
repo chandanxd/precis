@@ -20,13 +20,13 @@ def _get_nlp() -> Language:
     global _nlp
     hardware = profile_hardware()
     if _nlp is None:
-        _nlp = spacy.load(
-            "en_core_web_lg", exclude=["parser", "lemmatizer", "ner", "textcat"]
-        )
+        device = "cpu" if hardware.ml_accelerator == "mps" else hardware.ml_accelerator
+        _nlp = spacy.load("en_core_web_lg", exclude=["lemmatizer", "ner", "textcat"])
         _nlp.add_pipe(
             "fastcoref",
-            config={"model_architecture": "FCoref", "device": hardware.ml_accelerator},
+            config={"model_architecture": "FCoref", "device": device},
         )
+
     return _nlp
 
 
@@ -40,12 +40,6 @@ def resolve_coreferences(text: str) -> str:
     nlp = _get_nlp()
     doc = nlp(text)
 
-    print(doc._.coref_clusters)
-    for cluster in doc._.coref_clusters:
-        print("Cluster:")
-        for start, end in cluster:
-            print(repr(text[start:end]))
-
     clusters = doc._.coref_clusters
     if not clusters:
         return text
@@ -57,31 +51,42 @@ def resolve_coreferences(text: str) -> str:
         if representative is None:
             continue
 
-        # skip the representative mention itself
-        for start, end in cluster[1:]:
+        rep_clean = representative.strip()
+
+        # look at ALL items in the clusters, not just cluster
+        for start, end in cluster:
             mention = text[start:end]
 
-            if mention.lower() not in _PRONOUN_SET:
-                continue
-            replacement = _match_case(representative, mention)
+            # separate whitespace from the actual word
+            l_space = mention[: len(mention) - len(mention.lstrip())]
+            r_space = mention[len(mention.rstrip()) :]
+            mention_clean = mention.strip()
 
-            if mention.lower() in _POSSESSIVE_PRONOUNS:
-                if representative.endswith("s"):
+            # if the mention is not a pronoun, skip it
+            if mention_clean.lower() not in _PRONOUN_SET:
+                continue
+
+            replacement = _match_case(rep_clean, mention_clean)
+
+            if mention_clean.lower() in _POSSESSIVE_PRONOUNS:
+                if rep_clean.endswith("s"):
                     replacement += "'"
                 else:
                     replacement += "'s"
 
-            replacements.append((start, end, replacement))
+            full_replacement = l_space + replacement + r_space
 
-        if not replacements:
-            return text
+            replacements.append((start, end, full_replacement))
 
-        # replace from end of string backwards so offsets stay valid
-        replacements.sort(key=lambda x: x[0], reverse=True)
+    if not replacements:
+        return text
 
-        result = text
-        for start, end, replacement in replacements:
-            result = result[:start] + replacement + result[end:]
+    # replace from end of string backwards so offsets stay valid
+    replacements.sort(key=lambda x: x[0], reverse=True)
+
+    result = text
+    for start, end, replacement in replacements:
+        result = result[:start] + replacement + result[end:]
 
     return result
 
@@ -131,12 +136,12 @@ _PRONOUN_SET = _PERSONAL_PRONOUNS | _POSSESSIVE_PRONOUNS | _REFLEXIVE_PRONOUNS
 
 
 def _find_representative(text: str, cluster: list[tuple[int, int]]) -> str | None:
-    """return the first pronoun mention in the cluster"""
+    """Return the first non-pronoun mention in the cluster"""
 
     for start, end in cluster:
         mention = text[start:end]
 
-        if mention.lower() not in _PRONOUN_SET:
+        if mention.strip().lower() not in _PRONOUN_SET:
             return mention
 
     if cluster:
@@ -151,7 +156,7 @@ def _match_case(replacement: str, original: str) -> str:
         return replacement.upper()
     if original[0].isupper():
         return replacement[0].upper() + replacement[1:]
-    return replacement.lower()
+    return replacement
 
 
 def resolve_document(text: str) -> CoreferenceResult:

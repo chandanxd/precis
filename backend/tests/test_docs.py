@@ -3,9 +3,15 @@ from precis.pipeline.coref import resolve_coreferences
 
 class TestCoreference:
     def test_simple_pronoun(self):
-        text = "Dr. Smith discovered a compound. He published the results."
+        text = "Dr. Smith discovered a new chemical compound yesterday. He quickly published the results."
+
+        expected = (
+            "Dr. Smith discovered a new chemical compound yesterday. "
+            "Dr. Smith quickly published the results."
+        )
         resolved = resolve_coreferences(text)
-        assert "He" not in resolved or "Dr. Smith" in resolved
+
+        assert resolved == expected
 
     def test_multiple_actors(self):
         text = (

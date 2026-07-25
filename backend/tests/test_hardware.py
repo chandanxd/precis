@@ -44,5 +44,6 @@ class TestProfileHardware:
             "recommended_model",
             "recommended_mode",
             "token_ceiling",
+            "ml_accelerator",
         }
         assert set(d.keys()) == expected_keys

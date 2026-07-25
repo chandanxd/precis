@@ -18,7 +18,11 @@ def detect_cpu() -> tuple[int, str]:
                 ["powershell", "-command", "(Get-CimInstance Win32_Processor).Name"],
                 text=True,
             ).strip()
-        except Exception:
+        except (
+            FileNotFoundError,
+            subprocess.TimeoutExpired,
+            subprocess.CalledProcessError,
+        ):
             model = "Unknown CPU"
 
     elif system == "Linux":
@@ -29,7 +33,11 @@ def detect_cpu() -> tuple[int, str]:
                     if line.startswith("model name"):
                         model = line.split(":", 1)[1].strip()
                         break
-        except Exception:
+        except (
+            FileNotFoundError,
+            subprocess.TimeoutExpired,
+            subprocess.CalledProcessError,
+        ):
             model = "Unknown CPU"
 
     elif system == "Darwin":
@@ -37,7 +45,11 @@ def detect_cpu() -> tuple[int, str]:
             model = subprocess.check_output(
                 ["sysctl", "-n", "machdep.cpu.brand_string"], text=True
             ).strip()
-        except Exception:
+        except (
+            FileNotFoundError,
+            subprocess.TimeoutExpired,
+            subprocess.CalledProcessError,
+        ):
             model = "Unknown CPU"
 
     else:
@@ -103,7 +115,8 @@ def _detect_linux_gpu() -> tuple[bool, str | None, float | None]:
                     timeout=5,
                     check=True,
                 )
-                vram = round(float(result.stdout.strip()) / 1024, 1)
+                first_gpu_vram = result.stdout.strip().splitlines()[0]
+                vram = round(float(first_gpu_vram) / 1024, 1)
                 return True, name, vram
             except (
                 FileNotFoundError,
@@ -127,7 +140,7 @@ def _detect_linux_gpu() -> tuple[bool, str | None, float | None]:
                 for line in result.stdout.splitlines():
                     if "VRAM Total Memory" not in line:
                         continue
-                    match = re.search(r"/d+", line)
+                    match = re.search(r"\d+", line)
                     if not match:
                         continue
                     value = int(match.group(1))
@@ -156,6 +169,30 @@ def _detect_linux_gpu() -> tuple[bool, str | None, float | None]:
 
 
 def _detect_windows_gpu() -> tuple[bool, str | None, float | None]:
+    # 1. try nvidia-smi first to bypass Windows WMI 4GB VRAM capping
+    try:
+        result = subprocess.run(
+            [
+                "nvidia-smi",
+                "--query-gpu=name,memory.total",
+                "--format=csv,noheader,nounits",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=True,
+        )
+        first_gpu = result.stdout.strip().splitlines()[0]
+        name, vram_mb = first_gpu.split(",")
+        return True, name.strip(), round(float(vram_mb.strip()) / 1024, 1)
+    except (
+        FileNotFoundError,
+        subprocess.TimeoutExpired,
+        subprocess.CalledProcessError,
+    ):
+        pass
+
+    # 2. fallback to Powershell for AMD/Intel or systems without nvidia-smi
     try:
         result = subprocess.run(
             [
@@ -184,6 +221,7 @@ def _detect_windows_gpu() -> tuple[bool, str | None, float | None]:
 
         if not gpus:
             return False, None, None
+
         name = _select_gpu([gpu[0] for gpu in gpus])
         for gpu_name, vram in gpus:
             if gpu_name == name:
@@ -194,6 +232,7 @@ def _detect_windows_gpu() -> tuple[bool, str | None, float | None]:
         subprocess.TimeoutExpired,
     ):
         return False, None, None
+
     return False, None, None
 
 
@@ -222,6 +261,9 @@ def _detect_macos_gpu() -> tuple[bool, str | None, float | None]:
                     pass
 
         if name:
+            if "Apple" in name:
+                memory = psutil.virtual_memory()
+                vram = round((memory.total * 0.75) / (1024**3), 1)
             return True, name, vram
 
     except (
@@ -354,10 +396,14 @@ def profile_hardware() -> HardwareProfile:
 def validate_ollama(model: str) -> bool:
     try:
         result = subprocess.run(
-            ["ollama", "list"], capture_output=True, text=True, timeout=10
+            ["ollama", "list"], capture_output=True, text=True, timeout=10, check=True
         )
         if result.returncode == 0:
             return model.split(":")[0] in result.stdout
-    except (FileNotFoundError, subprocess.TimeoutExpired):
+    except (
+        FileNotFoundError,
+        subprocess.TimeoutExpired,
+        subprocess.CalledProcessError,
+    ):
         pass
     return False

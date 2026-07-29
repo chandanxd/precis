@@ -144,12 +144,7 @@ def _find_representative(text: str, cluster: list[tuple[int, int]]) -> str | Non
         if mention.strip().lower() not in _PRONOUN_SET:
             return mention
 
-    if cluster:
-        start, end = cluster[0]
-        return text[start:end]
-
     return None
-
 
 def _match_case(replacement: str, original: str) -> str:
     if original.isupper():

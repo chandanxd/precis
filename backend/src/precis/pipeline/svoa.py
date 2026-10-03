@@ -12,8 +12,9 @@ __all__ = ["extract_facts"]
 
 MODEL_NAME = "en_core_web_lg"
 
-
+# ---------------------------------------------------------------------------
 # Lexical resources
+# ---------------------------------------------------------------------------
 
 _COPULAR_VERBS = {
     "be",
@@ -27,6 +28,7 @@ _COPULAR_VERBS = {
     "smell",
     "taste",
 }
+
 _NEGATION_CUES = {
     "not",
     "never",
@@ -51,6 +53,7 @@ _NEGATION_CUES = {
     "havent",
     "hadnt",
 }
+
 _TEMPORAL_MARKERS = {
     "on",
     "in",
@@ -87,6 +90,7 @@ _TEMPORAL_MARKERS = {
     "initially",
     "originally",
 }
+
 _SPATIAL_MARKERS = {
     "in",
     "at",
@@ -122,6 +126,7 @@ _SPATIAL_MARKERS = {
     "somewhere",
     "nowhere",
 }
+
 _CAUSAL_MARKERS = {
     "because",
     "due",
@@ -143,6 +148,7 @@ _CAUSAL_MARKERS = {
     "effect",
     "outcome",
 }
+
 _CONDITIONAL_MARKERS = {
     "if",
     "unless",
@@ -158,70 +164,33 @@ _CONDITIONAL_MARKERS = {
     "as long as",
     "so long as",
 }
+
+# Keep this list focused on predicates that introduce a source/claim.
+# Evidential predicates such as "confirm" remain asserted rather than attributed.
 _REPORTING_VERBS = {
     "say",
-    "said",
     "claim",
-    "claimed",
     "report",
-    "reported",
     "argue",
-    "argued",
     "state",
-    "stated",
     "assert",
-    "asserted",
     "suggest",
-    "suggested",
     "announce",
-    "announced",
     "declare",
-    "declared",
     "note",
-    "noted",
     "believe",
-    "believed",
     "contend",
-    "contended",
     "maintain",
-    "maintained",
-    "acknowledge",
-    "acknowledged",
-    "admit",
-    "admitted",
-    "confirm",
-    "confirmed",
-    "deny",
-    "denied",
     "explain",
-    "explained",
     "mention",
-    "mentioned",
     "remark",
-    "remarked",
-    "indicate",
-    "indicated",
-    "reveal",
-    "revealed",
-    "disclose",
-    "disclosed",
-    "affirm",
-    "affirmed",
     "allege",
-    "alleged",
     "insist",
-    "insisted",
-    "observe",
-    "observed",
-    "point out",
-    "pointed out",
     "stress",
-    "stressed",
     "emphasise",
-    "emphasised",
     "emphasize",
-    "emphasized",
 }
+
 _MODAL_VERBS = {
     "might",
     "could",
@@ -239,7 +208,36 @@ _MODAL_VERBS = {
 }
 
 
+# Common English phrasal-verb particles. spaCy may parse these as either
+# ``prt`` or ``prep`` depending on the construction and model.
+_PHRASAL_PARTICLES = {
+    "about",
+    "across",
+    "ahead",
+    "along",
+    "around",
+    "aside",
+    "away",
+    "back",
+    "by",
+    "down",
+    "forth",
+    "forward",
+    "in",
+    "off",
+    "on",
+    "out",
+    "over",
+    "past",
+    "through",
+    "together",
+    "under",
+    "up",
+}
+
+# ---------------------------------------------------------------------------
 # spaCy model loading
+# ---------------------------------------------------------------------------
 
 
 @lru_cache(maxsize=1)
@@ -254,16 +252,13 @@ def get_nlp() -> Language:
         ) from exc
 
 
+# ---------------------------------------------------------------------------
 # Public API
+# ---------------------------------------------------------------------------
 
 
 def extract_facts(text: str, source_doc: str = "") -> list[Fact]:
-    """
-    Extract Fact objects from coreference-resolved English text.
-
-    The input is expected to be the output of Stage 1 (coreference resolution).
-    A sentence may produce zero or more facts.
-    """
+    """Extract SVOA facts from coreference-resolved English text."""
     if not text or not text.strip():
         return []
 
@@ -271,41 +266,37 @@ def extract_facts(text: str, source_doc: str = "") -> list[Fact]:
     facts: list[Fact] = []
 
     for sentence_id, sentence in enumerate(doc.sents):
-        sentence_facts = _extract_from_sentence(sentence, source_doc, sentence_id)
-        facts.extend(sentence_facts)
+        facts.extend(_extract_from_sentence(sentence, source_doc, sentence_id))
 
-    return facts
+    return _deduplicate_facts(facts)
 
 
+# ---------------------------------------------------------------------------
 # Per-sentence extraction
+# ---------------------------------------------------------------------------
 
 
 def _extract_from_sentence(
     sentence: Span, source_doc: str, sentence_id: int
 ) -> list[Fact]:
-    """Extract all facts from a single sentence."""
+    """Extract the primary proposition and secondary embedded propositions."""
     root = _find_root(sentence)
     if root is None:
         return []
 
     facts: list[Fact] = []
 
-    # Primary SVOA proposition
     primary = _extract_primary_fact(root, sentence, source_doc, sentence_id)
     if primary is not None:
         facts.append(primary)
 
-    # Additional propositions from coordination
     facts.extend(_extract_coordination(root, sentence, source_doc, sentence_id))
-
-    # Relative clauses
     facts.extend(_extract_relative_clauses(sentence, source_doc, sentence_id))
-
-    # Clausal complements (reported speech, mental states)
     facts.extend(_extract_clausal_complements(root, sentence, source_doc, sentence_id))
 
-    # Ditransitive / indirect objects
-    facts.extend(_extract_ditransitive(root, sentence, source_doc, sentence_id))
+    # Ditransitives are argument structures, not separate propositions. The
+    # primary extractor already enriches their fact with recipient metadata.
+    # Keep the helper for compatibility, but do not emit a duplicate fact.
 
     return facts
 
@@ -318,7 +309,9 @@ def _find_root(sentence: Span) -> Token | None:
     return sentence.root if sentence else None
 
 
+# ---------------------------------------------------------------------------
 # Primary fact extraction
+# ---------------------------------------------------------------------------
 
 
 def _extract_primary_fact(
@@ -327,70 +320,88 @@ def _extract_primary_fact(
     """Extract the primary SVOA fact from a sentence."""
     if _is_copular(root):
         return _extract_copular(root, sentence, source_doc, sentence_id)
+
+    # Some spaCy parses make the lexical complement the sentence root and
+    # attach the copula as ``cop``. Others expose the copular token elsewhere
+    # in the sentence. Recover that structure before falling back to SVOA.
+    copular_token = next(
+        (
+            token
+            for token in sentence
+            if token is not root
+            and token.lemma_.lower() in _COPULAR_VERBS
+            and token.dep_ in {"cop", "aux", "ROOT"}
+        ),
+        None,
+    )
+    if copular_token is not None:
+        return _extract_copular(root, sentence, source_doc, sentence_id)
+
     return _extract_svoa(root, sentence, source_doc, sentence_id)
-
-
-# Copular / attributive extraction
 
 
 def _extract_copular(
     root: Token, sentence: Span, source_doc: str, sentence_id: int
 ) -> Fact | None:
-    """
-    Extract facts from copular constructions:
-        "X is Y"       → subject=X, verb=is, object=Y
-        "X became Y"   → subject=X, verb=became, object=Y
-        "X seems happy"→ subject=X, verb=seems, object=happy
-    """
-    subject = _get_subject(root)
+    """Extract copular/attributive propositions such as ``X is Y``."""
+    predicate = _get_copular_predicate(root)
+
+    # Some spaCy parses expose the copular verb as the root; others make the
+    # complement the root and attach the copula with ``cop``. A few model
+    # configurations are less consistent about the exact dependency labels,
+    # so first locate the actual lexical copular token in the sentence.
+    if predicate is root and root.lemma_.lower() not in _COPULAR_VERBS:
+        predicate = next(
+            (token for token in sentence if token.lemma_.lower() in _COPULAR_VERBS),
+            root,
+        )
+
+    subject = _get_subject(predicate)
+    if not subject:
+        subject = _get_subject_from_sentence(root, sentence)
+
+    # Complement-root parses can attach the subject to the complement rather
+    # than the copular predicate.
+    if not subject and predicate is not root:
+        subject = _get_subject(root)
+
     if not subject:
         return None
 
-    verb = _get_verb_phrase(root)
-    negated = _is_negated(root)
-    modality = _get_modality(root, sentence)
-    attributed_to = _get_attribution(root)
-    adjuncts = _extract_adjuncts(root)
+    verb = _get_verb_phrase(predicate, include_negation=False)
+    negated = _is_negated(predicate) or (predicate is not root and _is_negated(root))
 
-    # Try to find the predicative complement
-    # Order of preference: attr > acomp > xcomp > dobj > pobj of prep
+    modality = _get_modality(predicate, sentence)
+    attributed_to = _get_attribution(predicate)
+    adjuncts = _extract_adjuncts(predicate)
+
     comp_text = None
 
-    # 1. Direct attribute (nsubj + attr)
-    for child in root.children:
-        if child.dep_ == "attr":
+    # Standard parse: X is [attribute/adjective/xcomp].
+    for child in predicate.children:
+        if child.dep_ in {"attr", "acomp", "xcomp", "oprd"}:
             comp_text = _get_span_text(child)
             break
 
-    # 2. Adjectival complement
-    if not comp_text:
-        for child in root.children:
-            if child.dep_ == "acomp":
-                comp_text = _get_span_text(child)
-                break
+    # Complement-root parse: [feasible] is ROOT with the copula attached to it.
+    if not comp_text and predicate is not root:
+        comp_text = root.text
 
-    # 3. Open clausal complement ("He seems to know")
+    # Prepositional copular complement: X is [on the table].
     if not comp_text:
-        for child in root.children:
-            if child.dep_ == "xcomp":
-                comp_text = _get_span_text(child)
-                break
-
-    # 4. Prepositional complement ("The book is on the table")
-    if not comp_text:
-        for child in root.children:
+        for child in predicate.children:
             if child.dep_ == "prep":
                 comp_text = _get_prepositional_phrase(child)
                 break
 
-    # 5. Adverbial modifier as fallback ("He is here")
+    # If the parser attaches the complement directly to the root, recover it
+    # from a non-subject, non-copular child.
     if not comp_text:
         for child in root.children:
-            if child.dep_ in {"advmod", "npadvmod"} and child.ent_type_ not in {
-                "DATE",
-                "TIME",
-            }:
-                comp_text = child.text
+            if child is predicate:
+                continue
+            if child.dep_ in {"attr", "acomp", "xcomp", "oprd"}:
+                comp_text = _get_span_text(child)
                 break
 
     if not comp_text:
@@ -410,17 +421,11 @@ def _extract_copular(
     )
 
 
-# Standard SVOA extraction
-
-
 def _extract_svoa(
     root: Token, sentence: Span, source_doc: str, sentence_id: int
 ) -> Fact | None:
-    """
-    Extract standard Subject-Verb-Object-Adjunct facts.
-    Handles active voice, passive voice, and various argument structures.
-    """
-    subject = _get_subject(root)
+    """Extract a standard Subject-Verb-Object-Adjunct proposition."""
+    subject = _get_subject_from_sentence(root, sentence)
     if not subject:
         return None
 
@@ -430,35 +435,37 @@ def _extract_svoa(
     attributed_to = _get_attribution(root)
     adjuncts = _extract_adjuncts(root)
 
-    # Try to find object
     obj_text = _get_object(root)
 
-    # If no direct object, try clausal complement
+    # Passive: the test/schema treats the by-agent as the object when no
+    # direct object exists, e.g. "The bill was approved by parliament."
+    if not obj_text and _is_passive(root):
+        obj_text = _get_agent(root) or ""
+
+    # Existential constructions can expose the semantic noun through attr.
     if not obj_text:
         for child in root.children:
             if child.dep_ in {"ccomp", "xcomp"}:
                 obj_text = _get_span_text(child)
                 break
 
-    # If still no object, try prepositional object as fallback
     if not obj_text:
         for child in root.children:
             if child.dep_ == "prep":
-                for grandchild in child.children:
-                    if grandchild.dep_ == "pobj":
-                        obj_text = _get_span_text(grandchild)
-                        break
-                if obj_text:
+                pobj = _get_prepositional_object(child)
+                if pobj:
+                    obj_text = _get_span_text(pobj)
                     break
 
-    # For intransitive verbs, we allow no object
-    if not obj_text:
-        obj_text = ""
+    # Enrich ditransitive facts instead of creating a duplicate proposition.
+    recipient = _get_recipient(root)
+    if recipient:
+        adjuncts.setdefault("recipient", []).append(recipient)
 
     return _build_fact(
         subject=subject,
         verb=verb,
-        object=obj_text,
+        object=obj_text or "",
         adjuncts=adjuncts,
         negated=negated,
         modality=modality,
@@ -469,353 +476,332 @@ def _extract_svoa(
     )
 
 
+# ---------------------------------------------------------------------------
 # Coordination extraction
+# ---------------------------------------------------------------------------
 
 
 def _extract_coordination(
     root: Token, sentence: Span, source_doc: str, sentence_id: int
 ) -> list[Fact]:
-    """
-    Extract facts from coordinated subjects, verbs, or objects.
-
-    Examples:
-        "John and Mary ate pizza" → two facts with same verb/object
-        "John ate pizza and drank water" → two facts with same subject
-        "John ate pizza and pasta" → two facts with same subject/verb
-    """
+    """Extract additional facts from coordinated subjects, verbs, or objects."""
     facts: list[Fact] = []
 
-    # Find conjunctions attached to the root or its children
-    conj_tokens = [t for t in sentence if t.dep_ == "conj"]
-
-    for conj in conj_tokens:
-        # Determine what is being conjoined by looking at the head
+    for conj in (token for token in sentence if token.dep_ == "conj"):
         head = conj.head
 
-        # Coordinated subjects: "John and Mary ran"
+        # Coordinated subjects: "John and Mary ate pizza"
         if head.dep_ in {"nsubj", "nsubjpass"}:
-            # The head is a subject; conj is another subject with same predicate
-            # Find the verb (root of the sentence)
             verb = head.head if head.head.pos_ in {"VERB", "AUX"} else root
             if verb.pos_ not in {"VERB", "AUX"}:
                 continue
 
-            subj_text = _get_span_text(conj)
-            verb_phrase = _get_verb_phrase(verb)
-            obj_text = _get_object(verb) or ""
-            negated = _is_negated(verb)
-            modality = _get_modality(verb, sentence)
-            adjuncts = _extract_adjuncts(verb)
+            subject = _get_span_text(conj)
+            object_text = _get_object(verb) or ""
+            if not object_text and _is_passive(verb):
+                object_text = _get_agent(verb) or ""
 
-            fact = _build_fact(
-                subject=subj_text,
-                verb=verb_phrase,
-                object=obj_text,
-                adjuncts=adjuncts,
-                negated=negated,
-                modality=modality,
-                source_doc=source_doc,
-                sentence_id=sentence_id,
-                raw_sentence=sentence.text,
+            adjuncts = _extract_adjuncts(verb)
+            recipient = _get_recipient(verb)
+            if recipient:
+                adjuncts.setdefault("recipient", []).append(recipient)
+
+            facts.append(
+                _build_fact(
+                    subject=subject,
+                    verb=_get_verb_phrase(verb),
+                    object=object_text,
+                    adjuncts=adjuncts,
+                    negated=_is_negated(verb),
+                    modality=_get_modality(verb, sentence),
+                    attributed_to=_get_attribution(verb),
+                    source_doc=source_doc,
+                    sentence_id=sentence_id,
+                    raw_sentence=sentence.text,
+                )
             )
-            facts.append(fact)
 
         # Coordinated verbs: "John ran and swam"
         elif head.pos_ in {"VERB", "AUX"} and head == root:
-            subj_text = _get_subject(head) or _get_subject(root) or ""
-            if not subj_text:
+            subject = _get_subject(head) or _get_subject(root)
+            if not subject:
                 continue
 
-            verb_phrase = _get_verb_phrase(conj)
-            obj_text = _get_object(conj) or _get_object(head) or ""
-            negated = _is_negated(conj) or _is_negated(head)
-            modality = _get_modality(conj, sentence)
+            object_text = _get_object(conj) or ""
             adjuncts = _extract_adjuncts(conj)
+            recipient = _get_recipient(conj)
+            if recipient:
+                adjuncts.setdefault("recipient", []).append(recipient)
 
-            fact = _build_fact(
-                subject=subj_text,
-                verb=verb_phrase,
-                object=obj_text,
-                adjuncts=adjuncts,
-                negated=negated,
-                modality=modality,
-                source_doc=source_doc,
-                sentence_id=sentence_id,
-                raw_sentence=sentence.text,
+            facts.append(
+                _build_fact(
+                    subject=subject,
+                    verb=_get_verb_phrase(conj),
+                    object=object_text,
+                    adjuncts=adjuncts,
+                    negated=_is_negated(conj) or _is_negated(head),
+                    modality=_get_modality(conj, sentence),
+                    attributed_to=_get_attribution(conj),
+                    source_doc=source_doc,
+                    sentence_id=sentence_id,
+                    raw_sentence=sentence.text,
+                )
             )
-            facts.append(fact)
 
         # Coordinated objects: "John ate pizza and pasta"
-        elif head.dep_ == "obj":
+        elif head.dep_ in {"obj", "dobj"}:
             verb = head.head
             if verb.pos_ not in {"VERB", "AUX"}:
                 continue
 
-            subj_text = _get_subject(verb) or ""
-            if not subj_text:
+            subject = _get_subject(verb)
+            if not subject:
                 continue
 
-            verb_phrase = _get_verb_phrase(verb)
-            obj_text = _get_span_text(conj)
-            negated = _is_negated(verb)
-            modality = _get_modality(verb, sentence)
             adjuncts = _extract_adjuncts(verb)
+            recipient = _get_recipient(verb)
+            if recipient:
+                adjuncts.setdefault("recipient", []).append(recipient)
 
-            fact = _build_fact(
-                subject=subj_text,
-                verb=verb_phrase,
-                object=obj_text,
-                adjuncts=adjuncts,
-                negated=negated,
-                modality=modality,
-                source_doc=source_doc,
-                sentence_id=sentence_id,
-                raw_sentence=sentence.text,
+            facts.append(
+                _build_fact(
+                    subject=subject,
+                    verb=_get_verb_phrase(verb),
+                    object=_get_span_text(conj),
+                    adjuncts=adjuncts,
+                    negated=_is_negated(verb),
+                    modality=_get_modality(verb, sentence),
+                    attributed_to=_get_attribution(verb),
+                    source_doc=source_doc,
+                    sentence_id=sentence_id,
+                    raw_sentence=sentence.text,
+                )
             )
-            facts.append(fact)
 
     return facts
 
 
+# ---------------------------------------------------------------------------
 # Relative clause extraction
+# ---------------------------------------------------------------------------
 
 
 def _extract_relative_clauses(
     sentence: Span, source_doc: str, sentence_id: int
 ) -> list[Fact]:
-    """
-    Extract facts from relative clauses.
-
-    Example: "The man who discovered penicillin was a scientist"
-    → Fact(subject="The man", verb="discovered", object="penicillin")
-    """
+    """Extract explicit and reduced relative-clause propositions."""
     facts: list[Fact] = []
 
     for token in sentence:
-        if token.dep_ != "relcl":
+        if token.dep_ not in {"relcl", "acl"}:
             continue
 
-        # token is the relative clause verb (e.g., "discovered")
-        # token.head is the noun being modified (e.g., "man")
-        antecedent = token.head
-        antecedent_text = _get_span_text(antecedent)
+        # acl is broad. Restrict this path to participial reduced relatives.
+        if token.dep_ == "acl" and token.tag_ not in {"VBN", "VBG"}:
+            continue
 
-        # The relative clause verb becomes the predicate
+        antecedent = token.head
+        antecedent_text = _get_antecedent_text(antecedent, reduced=token.dep_ == "acl")
         verb = _get_verb_phrase(token)
         negated = _is_negated(token)
         modality = _get_modality(token, sentence)
         adjuncts = _extract_adjuncts(token)
 
-        # Try to find object of the relative clause verb
-        obj_text = _get_object(token) or ""
+        object_text = _get_object(token) or ""
 
-        # If no direct object, look for other complements
-        if not obj_text:
+        if not object_text:
             for child in token.children:
                 if child.dep_ in {"attr", "acomp", "xcomp", "ccomp"}:
-                    obj_text = _get_span_text(child)
+                    object_text = _get_span_text(child)
                     break
 
-        # Handle "The man who was killed by police"
-        if not obj_text and any(child.dep_ == "agent" for child in token.children):
-            # Passive relative - the antecedent is the object
-            # The agent becomes the subject
+        # Passive relative: "the man who was killed by police"
+        if _is_passive(token):
             agent = _get_agent(token)
             if agent:
-                fact = _build_fact(
-                    subject=agent,
-                    verb=verb,
-                    object=antecedent_text,
-                    adjuncts=adjuncts,
-                    negated=negated,
-                    modality=modality,
-                    source_doc=source_doc,
-                    sentence_id=sentence_id,
-                    raw_sentence=sentence.text,
+                facts.append(
+                    _build_fact(
+                        subject=agent,
+                        verb=verb,
+                        object=antecedent_text,
+                        adjuncts=adjuncts,
+                        negated=negated,
+                        modality=modality,
+                        source_doc=source_doc,
+                        sentence_id=sentence_id,
+                        raw_sentence=sentence.text,
+                    )
                 )
-                facts.append(fact)
                 continue
 
-        # Standard relative clause: antecedent is the subject
-        fact = _build_fact(
-            subject=antecedent_text,
-            verb=verb,
-            object=obj_text,
-            adjuncts=adjuncts,
-            negated=negated,
-            modality=modality,
-            source_doc=source_doc,
-            sentence_id=sentence_id,
-            raw_sentence=sentence.text,
+        facts.append(
+            _build_fact(
+                subject=antecedent_text,
+                verb=verb,
+                object=object_text,
+                adjuncts=adjuncts,
+                negated=negated,
+                modality=modality,
+                source_doc=source_doc,
+                sentence_id=sentence_id,
+                raw_sentence=sentence.text,
+            )
         )
-        facts.append(fact)
 
     return facts
 
 
+# ---------------------------------------------------------------------------
 # Clausal complement extraction
+# ---------------------------------------------------------------------------
 
 
 def _extract_clausal_complements(
     root: Token, sentence: Span, source_doc: str, sentence_id: int
 ) -> list[Fact]:
-    """
-    Extract facts from clausal complements (reported speech, mental states).
-
-    Example: "She said that he left" → Fact(subject="he", verb="left", object="")
-    Example: "He believes the market will crash" → Fact(subject="market", verb="will crash", object="")
-    """
+    """Extract propositions embedded as ccomp/xcomp clauses."""
     facts: list[Fact] = []
 
     for child in root.children:
         if child.dep_ not in {"ccomp", "xcomp"}:
             continue
 
-        # ccomp: clausal complement with internal subject
-        # xcomp: open clausal complement (no internal subject, shares with parent)
-
         if child.dep_ == "ccomp":
-            # Find the subject within the complement clause
-            comp_subj = _get_subject(child)
-            if not comp_subj:
-                # Sometimes the subject is the same as the matrix clause (e.g., "He wants to go")
-                comp_subj = _get_subject(root) or ""
+            subject = _get_subject(child) or _get_subject(root) or ""
+        else:
+            subject = _get_subject(root) or ""
 
-            comp_verb = _get_verb_phrase(child)
-            comp_obj = _get_object(child) or ""
-            negated = _is_negated(child)
-            modality = _get_modality(child, sentence)
-            adjuncts = _extract_adjuncts(child)
+        if not subject:
+            continue
 
-            fact = _build_fact(
-                subject=comp_subj,
-                verb=comp_verb,
-                object=comp_obj,
-                adjuncts=adjuncts,
-                negated=negated,
-                modality=modality,
+        facts.append(
+            _build_fact(
+                subject=subject,
+                verb=_get_verb_phrase(child),
+                object=_get_object(child) or "",
+                adjuncts=_extract_adjuncts(child),
+                negated=_is_negated(child)
+                or (_is_negated(root) if child.dep_ == "xcomp" else False),
+                modality=_get_modality(child, sentence),
+                attributed_to=_get_attribution(child),
                 source_doc=source_doc,
                 sentence_id=sentence_id,
                 raw_sentence=sentence.text,
             )
-            facts.append(fact)
-
-        elif child.dep_ == "xcomp":
-            # Open clausal complement - subject is shared with matrix clause
-            comp_subj = _get_subject(root) or ""
-            comp_verb = _get_verb_phrase(child)
-            comp_obj = _get_object(child) or ""
-            negated = _is_negated(child) or _is_negated(root)
-            modality = _get_modality(child, sentence)
-            adjuncts = _extract_adjuncts(child)
-
-            fact = _build_fact(
-                subject=comp_subj,
-                verb=comp_verb,
-                object=comp_obj,
-                adjuncts=adjuncts,
-                negated=negated,
-                modality=modality,
-                source_doc=source_doc,
-                sentence_id=sentence_id,
-                raw_sentence=sentence.text,
-            )
-            facts.append(fact)
+        )
 
     return facts
 
 
-# Ditransitive extraction
+# ---------------------------------------------------------------------------
+# Ditransitive helpers
+# ---------------------------------------------------------------------------
 
 
 def _extract_ditransitive(
     root: Token, sentence: Span, source_doc: str, sentence_id: int
 ) -> list[Fact]:
+    """Compatibility helper for ditransitive detection.
+
+    Ditransitive information is now attached to the primary fact through the
+    ``recipient`` adjunct, so emitting another Fact here would duplicate the
+    same proposition.
     """
-    Extract facts from ditransitive verbs (verbs with both direct and indirect objects).
+    return []
 
-    Example: "John gave Mary a book"
-    → Fact(subject="John", verb="gave", object="a book", adjuncts={"recipient": "Mary"})
-    """
-    facts: list[Fact] = []
 
-    # Check if this verb has a dative child
-    dative = None
-    for child in root.children:
-        if child.dep_ == "dative":
-            dative = child
-            break
-
-    if not dative:
-        return facts
-
-    subject = _get_subject(root)
-    if not subject:
-        return facts
-
-    verb = _get_verb_phrase(root)
-    dobj = _get_object(root)
-    negated = _is_negated(root)
-    modality = _get_modality(root, sentence)
-    adjuncts = _extract_adjuncts(root)
-
-    # Add the dative as a recipient adjunct
-    recipient_text = _get_span_text(dative)
-    if "recipient" not in adjuncts:
-        adjuncts["recipient"] = [recipient_text]
-    else:
-        adjuncts["recipient"].append(recipient_text)
-
-    fact = _build_fact(
-        subject=subject,
-        verb=verb,
-        object=dobj or "",
-        adjuncts=adjuncts,
-        negated=negated,
-        modality=modality,
-        source_doc=source_doc,
-        sentence_id=sentence_id,
-        raw_sentence=sentence.text,
+def _get_recipient(root: Token) -> str | None:
+    """Return the indirect recipient of a ditransitive verb."""
+    direct_object = next(
+        (child for child in root.children if child.dep_ in {"obj", "dobj"}),
+        None,
     )
-    facts.append(fact)
 
-    return facts
+    # Preferred spaCy representation for "gave Mary a book".
+    for child in root.children:
+        if child.dep_ in {"dative", "iobj"}:
+            return _get_span_text(child)
+
+    # Some parses attach both nominal arguments as obj. In that case, choose
+    # the nominal argument that occurs before the direct object.
+    if direct_object is not None:
+        candidates = [
+            child
+            for child in root.children
+            if child.dep_ in {"obj", "dobj"}
+            and child != direct_object
+            and child.i < direct_object.i
+        ]
+        if candidates:
+            return _get_span_text(candidates[-1])
+
+    # Handle the prepositional variant: "gave a book to Mary".
+    for child in root.children:
+        if child.dep_ == "prep" and child.text.lower() == "to":
+            pobj = _get_prepositional_object(child)
+            if pobj:
+                return _get_span_text(pobj)
+
+    return None
 
 
-# Lexical helpers
+# ---------------------------------------------------------------------------
+# Lexical / predicate helpers
+# ---------------------------------------------------------------------------
 
 
 def _is_copular(root: Token) -> bool:
-    """Return whether the root is a copular verb."""
-    return root.lemma_.lower() in _COPULAR_VERBS
+    """Return whether the root is a copular/attributive predicate."""
+    if root.lemma_.lower() in _COPULAR_VERBS:
+        return True
+
+    # Only dependency structure identifies a child as the copula here.
+    # Looking at every child lemma is unsafe: in
+    # ``She claimed that the data was incorrect``, the ``was`` token is a
+    # ccomp child, not part of the main copular predicate.
+    return any(child.dep_ in {"attr", "acomp", "cop"} for child in root.children)
+
+
+def _get_copular_predicate(root: Token) -> Token:
+    """Return the lexical copular predicate when the complement is sentence root."""
+    if root.lemma_.lower() in _COPULAR_VERBS:
+        return root
+
+    for child in root.children:
+        if child.dep_ == "cop" or child.lemma_.lower() in _COPULAR_VERBS:
+            return child
+
+    return root
+
+
+def _is_passive(root: Token) -> bool:
+    """Return whether a predicate is syntactically passive."""
+    return any(
+        child.dep_ in {"nsubjpass", "auxpass", "agent"} for child in root.children
+    ) or any(
+        child.dep_ == "prep" and child.text.lower() == "by" for child in root.children
+    )
 
 
 def _is_negated(root: Token) -> bool:
-    """Return whether the predicate is negated."""
-    # Check direct negation children
+    """Return whether the predicate or its core argument is negated."""
     for child in root.children:
         if child.dep_ == "neg":
             return True
         if child.text.lower() in _NEGATION_CUES:
             return True
-        if child.dep_ == "aux" and child.text.lower().endswith("n't"):
-            return True
-        if child.dep_ == "aux" and child.lemma_.lower() in {
-            "not",
-            "no",
-            "never",
-            "neither",
-            "nor",
-        }:
+        if child.dep_ in {"aux", "auxpass"} and child.text.lower().endswith("n't"):
             return True
 
-    # Check negation in the verb text itself
-    if "n't" in root.text.lower() or "not" in root.text.lower():
+    if any(
+        token.text.lower() in {"not", "never", "neither", "nor"}
+        for token in root.subtree
+    ):
         return True
 
-    # Check for "no" as determiner of object
+    # "There is no evidence" and ordinary "no + noun" constructions.
     for child in root.children:
-        if child.dep_ == "obj":
+        if child.dep_ in {"obj", "attr", "nsubj", "nsubjpass"}:
             for grandchild in child.children:
                 if grandchild.dep_ == "det" and grandchild.text.lower() == "no":
                     return True
@@ -823,179 +809,262 @@ def _is_negated(root: Token) -> bool:
     return False
 
 
+# ---------------------------------------------------------------------------
 # Span helpers
+# ---------------------------------------------------------------------------
 
 
 def _get_span_text(token: Token) -> str:
-    """Return the text spanned by a token's subtree."""
+    """Return the text spanned by a token's dependency subtree."""
     if token is None:
         return ""
+
     start = token.left_edge.i
     end = token.right_edge.i + 1
     return token.doc[start:end].text.strip()
 
 
 def _get_prepositional_phrase(preposition: Token) -> str:
-    """Return the full text of a prepositional phrase."""
+    """Return the complete prepositional phrase."""
     return _get_span_text(preposition)
 
 
+def _get_prepositional_object(preposition: Token) -> Token | None:
+    """Return the object of a preposition across spaCy dependency variants."""
+    for child in preposition.children:
+        if child.dep_ in {"pobj", "obj"}:
+            return child
+    return None
+
+
+def _get_antecedent_text(token: Token, reduced: bool = False) -> str:
+    """Return the noun phrase modified by a relative clause."""
+    if not reduced:
+        return _get_span_text(token)
+
+    # For reduced relatives, exclude the acl itself from the antecedent span.
+    start = token.left_edge.i
+    end = token.i + 1
+    return token.doc[start:end].text.strip()
+
+
+# ---------------------------------------------------------------------------
 # Argument helpers
+# ---------------------------------------------------------------------------
+
+
+def _get_subject_from_sentence(root: Token, sentence: Span) -> str | None:
+    """Find a subject even when the parser attaches it to the complement."""
+    subject = _get_subject(root)
+    if subject:
+        return subject
+
+    # Complement-root copular parses can put the nsubj on the complement
+    # while the copular verb is a ``cop`` child.
+    for token in sentence:
+        if token.dep_ in {"nsubj", "nsubjpass", "csubj", "csubjpass"}:
+            return _get_span_text(token)
+
+    return None
 
 
 def _get_subject(root: Token) -> str | None:
-    """Return the sentence subject, if present."""
+    """Return the grammatical/semantic subject of a predicate."""
     for child in root.children:
         if child.dep_ in {"nsubj", "nsubjpass", "csubj", "csubjpass"}:
             return _get_span_text(child)
+
+    # Existential construction: "There is no evidence..."
+    for child in root.children:
+        if child.dep_ == "attr" and child.pos_ in {"NOUN", "PROPN", "PRON"}:
+            return _get_span_text(child)
+
     return None
 
 
 def _get_object(root: Token) -> str | None:
-    """Return the direct object, if present."""
+    """Return the direct object of a predicate."""
     for child in root.children:
-        if child.dep_ == "obj":
-            return _get_span_text(child)
-        # Also check for dobj (older spaCy versions)
-        if child.dep_ == "dobj":
+        if child.dep_ in {"obj", "dobj"}:
             return _get_span_text(child)
     return None
 
 
 def _get_agent(root: Token) -> str | None:
-    """Return the agent of a passive construction, if present."""
+    """Return the agent of a passive construction."""
     for child in root.children:
         if child.dep_ == "agent":
-            for grandchild in child.children:
-                if grandchild.dep_ == "pobj":
-                    return _get_span_text(grandchild)
+            pobj = _get_prepositional_object(child)
+            if pobj:
+                return _get_span_text(pobj)
 
         if child.dep_ == "prep" and child.text.lower() == "by":
-            for grandchild in child.children:
-                if grandchild.dep_ in {"pobj", "obj"}:
-                    return _get_span_text(grandchild)
+            pobj = _get_prepositional_object(child)
+            if pobj:
+                return _get_span_text(pobj)
 
     return None
 
 
+# ---------------------------------------------------------------------------
 # Predicate helpers
+# ---------------------------------------------------------------------------
 
 
-def _get_verb_phrase(root: Token) -> str:
-    """Return the verb phrase headed by the root, including auxiliaries and particles."""
-    parts: list[str] = []
+def _get_verb_phrase(root: Token, *, include_negation: bool = True) -> str:
+    """Return the predicate verb phrase in surface order."""
+    tokens = {root}
 
-    # Collect auxiliaries before the main verb
-    auxiliaries = []
+    # Auxiliaries and negation.
     for child in root.children:
-        if child.dep_ in {"aux", "auxpass"} and child.i < root.i:
-            auxiliaries.append(child)
+        if (
+            child.dep_ in {"aux", "auxpass"}
+            or include_negation
+            and (child.dep_ == "neg" or child.text.lower() in _NEGATION_CUES)
+        ):
+            tokens.add(child)
 
-    # Sort by token position
-    auxiliaries.sort(key=lambda t: t.i)
+    # Particles. ``off`` is unambiguous enough to include even when spaCy
+    # attaches the following object beneath the particle.
+    for child in root.children:
+        if child.dep_ == "prt" or child.dep_ == "prep" and child.text.lower() == "off":
+            tokens.add(child)
 
-    for aux in auxiliaries:
-        parts.append(aux.text)
+    # Passive parses can make the finite auxiliary the ROOT and the lexical
+    # participle an ``obj`` or another non-aux child. Recover that participle.
+    if root.lemma_.lower() in {"be", "have", "do"}:
+        for child in root.children:
+            if (
+                child.pos_ in {"VERB", "AUX"}
+                and child.tag_ in {"VBN", "VBG"}
+                and child.lemma_.lower() not in _NEGATION_CUES
+            ):
+                tokens.add(child)
 
-    parts.append(root.text)
-
-    # Particle (phrasal verb)
-    for child in sorted(root.children, key=lambda t: t.i):
-        if child.dep_ == "prt":
-            parts.append(child.text)
-
-    return " ".join(parts)
+    return " ".join(token.text for token in sorted(tokens, key=lambda token: token.i))
 
 
+def _is_phrasal_particle(token: Token) -> bool:
+    """Return whether a token is a strong phrasal-verb particle candidate."""
+    return token.text.lower() in {
+        "off",
+        "away",
+        "back",
+        "down",
+        "up",
+        "out",
+        "over",
+        "through",
+    }
+
+
+def _is_bare_particle(token: Token) -> bool:
+    """Backward-compatible alias for the old particle helper."""
+    return _is_phrasal_particle(token)
+
+
+# ---------------------------------------------------------------------------
 # Adjunct extraction
+# ---------------------------------------------------------------------------
 
 
 def _classify_adjunct(preposition: Token) -> str:
-    """Return the semantic category of a prepositional phrase."""
+    """Classify a prepositional phrase using entity type before marker fallback."""
     marker = preposition.text.lower()
+    pobj = _get_prepositional_object(preposition)
 
+    if pobj is not None:
+        span = list(pobj.subtree)
+
+        if any(token.ent_type_ in {"DATE", "TIME"} for token in span):
+            return "time"
+
+        if any(token.ent_type_ in {"GPE", "LOC", "FAC"} for token in span):
+            return "location"
+
+    if marker in _CAUSAL_MARKERS:
+        return "cause"
     if marker in _TEMPORAL_MARKERS:
         return "time"
     if marker in _SPATIAL_MARKERS:
         return "location"
-    if marker in _CAUSAL_MARKERS:
-        return "cause"
+
     return "context"
 
 
 def _extract_adjuncts(root: Token) -> dict[str, list[str]]:
-    """Extract adjunct information attached to the predicate."""
+    """Extract temporal, spatial, causal, contextual, and manner adjuncts."""
     adjuncts: dict[str, list[str]] = {}
 
     for child in root.children:
-        # Prepositional phrase
         if child.dep_ == "prep":
-            category = _classify_adjunct(child)
-            phrase = _get_prepositional_phrase(child)
-            if category not in adjuncts:
-                adjuncts[category] = []
-            adjuncts[category].append(phrase)
-            continue
-
-        # Temporal adverbs and noun phrases
-        if child.dep_ in {"advmod", "npadvmod"}:
-            if child.ent_type_ in {"DATE", "TIME"}:
-                if "time" not in adjuncts:
-                    adjuncts["time"] = []
-                adjuncts["time"].append(child.text)
+            # A passive "by" phrase is the agent, not an adjunct.
+            if child.text.lower() == "by" and _is_passive(root):
                 continue
 
-            # Manner adverbs (not negation, not temporal)
+            category = _classify_adjunct(child)
+            phrase = _get_prepositional_phrase(child)
+            adjuncts.setdefault(category, []).append(phrase)
+            continue
+
+        if child.dep_ in {"advmod", "npadvmod"}:
+            if child.ent_type_ in {"DATE", "TIME"}:
+                adjuncts.setdefault("time", []).append(child.text)
+                continue
+
             if child.dep_ == "neg":
-                continue  # Negation is handled separately
+                continue
 
-            if "manner" not in adjuncts:
-                adjuncts["manner"] = []
-            adjuncts["manner"].append(child.text)
+            adjuncts.setdefault("manner", []).append(child.text)
             continue
 
-        # Adverbial clause modifiers
         if child.dep_ == "advcl":
-            if "context" not in adjuncts:
-                adjuncts["context"] = []
-            adjuncts["context"].append(_get_span_text(child))
+            adjuncts.setdefault("context", []).append(_get_span_text(child))
             continue
 
-        # Adjectival modifiers that provide manner/quality
         if child.dep_ == "amod" and child.head == root:
-            if "manner" not in adjuncts:
-                adjuncts["manner"] = []
-            adjuncts["manner"].append(child.text)
+            adjuncts.setdefault("manner", []).append(child.text)
 
     return adjuncts
 
 
-# Modality detection
+# ---------------------------------------------------------------------------
+# Modality / attribution
+# ---------------------------------------------------------------------------
 
 
 def _get_modality(root: Token, sentence: Span) -> str:
-    """Return the epistemic modality of a proposition."""
+    """Return the coarse epistemic/status modality of a proposition."""
+    conditional_markers = {
+        marker for marker in _CONDITIONAL_MARKERS if " " not in marker
+    }
 
-    # Conditional propositions
-    for token in sentence:
-        if token.text.lower() in _CONDITIONAL_MARKERS and token.dep_ in {
-            "mark",
-            "advmod",
-            "prep",
-            "cc",
-        }:
-            return "conditional"
+    if any(
+        token.text.lower() in conditional_markers
+        and token.dep_ in {"mark", "advmod", "prep", "cc"}
+        for token in sentence
+    ):
+        return "conditional"
 
-    # Attributed propositions (reporting verbs)
     if root.lemma_.lower() in _REPORTING_VERBS:
         return "attributed"
 
-    # Hypothetical propositions (modal verbs)
-    for child in root.children:
-        if child.dep_ in {"aux", "auxpass"} and child.lemma_.lower() in _MODAL_VERBS:
-            return "hypothetical"
+        # Only attribute when a reporting predicate is actually part of the
+        # current proposition, rather than because an unrelated subordinate
+        # clause happens to contain one.
+    if any(token.lemma_.lower() in _REPORTING_VERBS for token in sentence) and any(
+        token.lemma_.lower() in _REPORTING_VERBS
+        and (token is root or token.head is root or root.head is token)
+        for token in sentence
+    ):
+        return "attributed"
 
-    # Check if the root itself is a modal
+    if any(
+        child.dep_ in {"aux", "auxpass"} and child.lemma_.lower() in _MODAL_VERBS
+        for child in root.children
+    ):
+        return "hypothetical"
+
     if root.lemma_.lower() in _MODAL_VERBS:
         return "hypothetical"
 
@@ -1003,13 +1072,15 @@ def _get_modality(root: Token, sentence: Span) -> str:
 
 
 def _get_attribution(root: Token) -> str | None:
-    """Return the source of an attributed proposition, if present."""
+    """Return the source of a proposition introduced by a reporting verb."""
     if root.lemma_.lower() not in _REPORTING_VERBS:
         return None
     return _get_subject(root)
 
 
-# Fact builder
+# ---------------------------------------------------------------------------
+# Fact construction / cleanup
+# ---------------------------------------------------------------------------
 
 
 def _build_fact(
@@ -1026,7 +1097,7 @@ def _build_fact(
     sentence_id: int = 0,
     raw_sentence: str = "",
 ) -> Fact:
-    """Construct a Fact with sensible defaults."""
+    """Construct a Fact with consistent defaults."""
     return Fact(
         subject=subject,
         verb=verb,
@@ -1042,3 +1113,27 @@ def _build_fact(
         sentence_id=sentence_id,
         raw_sentence=raw_sentence,
     )
+
+
+def _deduplicate_facts(facts: list[Fact]) -> list[Fact]:
+    """Remove exact duplicate facts while preserving extraction order."""
+    seen: set[tuple] = set()
+    result: list[Fact] = []
+
+    for fact in facts:
+        key = (
+            fact.subject,
+            fact.verb,
+            fact.object,
+            tuple(sorted((key, tuple(value)) for key, value in fact.adjuncts.items())),
+            fact.negated,
+            fact.modality,
+            fact.attributed_to,
+            fact.sentence_id,
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+        result.append(fact)
+
+    return result

@@ -78,16 +78,14 @@ class TestSanitization:
     def test_length_limit(self):
         long_text = "a" * 150_000
 
-        result = sanitize_document(long_text)
-
-        assert len(result) == 100_000
+        with pytest.raises(ValueError, match="maximum length"):
+            sanitize_document(long_text)
 
     def test_query_length_limit(self):
         long_query = "q" * 3_000
 
-        result = sanitize_query(long_query)
-
-        assert len(result) == 2_000
+        with pytest.raises(ValueError, match="maximum length"):
+            sanitize_query(long_query)
 
     def test_normalizes_whitespace(self):
         result = sanitize_query("   too    much   \n\t whitespace  ")

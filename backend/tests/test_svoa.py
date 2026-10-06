@@ -285,6 +285,23 @@ class TestModality:
         assert main_fact.modality == "attributed"
         assert main_fact.attributed_to is not None
 
+    def test_attributed_complement(self):
+        facts = extract_facts("Alice claimed that the results were false.")
+        complement_fact = next(f for f in facts if "were" in f.verb)
+        assert complement_fact.modality == "attributed"
+        assert complement_fact.attributed_to is not None
+        assert "Alice" in complement_fact.attributed_to
+
+    def test_reporting_verb_testify(self):
+        facts = extract_facts("The witness testified that the driver fled.")
+        assert len(facts) >= 2
+        testify_fact = next(f for f in facts if "testified" in f.verb)
+        assert testify_fact.modality == "attributed"
+        assert "witness" in (testify_fact.attributed_to or "").lower()
+        fled_fact = next(f for f in facts if "fled" in f.verb)
+        assert fled_fact.modality == "attributed"
+        assert "witness" in (fled_fact.attributed_to or "").lower()
+
     def test_hypothetical(self):
         facts = extract_facts("The plan might fail.")
         assert len(facts) >= 1
@@ -295,6 +312,238 @@ class TestModality:
         # The conditional clause fact should be marked conditional
         conditional_facts = [f for f in facts if f.modality == "conditional"]
         assert len(conditional_facts) >= 1
+
+    def test_future_assertion_will(self):
+        facts = extract_facts("The company will release the product.")
+        assert len(facts) >= 1
+        assert facts[0].modality == "asserted"
+
+    def test_capability_assertion_can(self):
+        facts = extract_facts("The system can process large documents.")
+        assert len(facts) >= 1
+        assert facts[0].modality == "asserted"
+
+    def test_obligation_assertion_must(self):
+        facts = extract_facts("The system must authenticate users.")
+        assert len(facts) >= 1
+        assert facts[0].modality == "asserted"
+
+    def test_hypothetical_might(self):
+        facts = extract_facts("The system might fail under heavy load.")
+        assert len(facts) >= 1
+        assert facts[0].modality == "hypothetical"
+
+    def test_hypothetical_may(self):
+        facts = extract_facts("The system may fail under heavy load.")
+        assert len(facts) >= 1
+        assert facts[0].modality == "hypothetical"
+
+    def test_hypothetical_could(self):
+        facts = extract_facts("The system could fail under heavy load.")
+        assert len(facts) >= 1
+        assert facts[0].modality == "hypothetical"
+
+    def test_explicit_conditional(self):
+        facts = extract_facts("The match will proceed if weather permits.")
+        conditional_facts = [f for f in facts if f.modality == "conditional"]
+        assert len(conditional_facts) >= 1
+
+    def test_attributed_statement(self):
+        facts = extract_facts("The spokesperson announced that the merger completed.")
+        assert any(f.modality == "attributed" for f in facts)
+
+    def test_mixed_conditional_and_epistemic_modal(self):
+        facts = extract_facts("If the server overheats, the system might restart.")
+        restart_facts = [f for f in facts if "restart" in f.verb]
+        assert len(restart_facts) >= 1
+        assert restart_facts[0].modality == "conditional"
+
+    def test_mixed_attribution_and_epistemic_modal(self):
+        facts = extract_facts("Analysts suggest that inflation might decline.")
+        decline_facts = [f for f in facts if "decline" in f.verb]
+        assert len(decline_facts) >= 1
+        assert decline_facts[0].modality == "attributed"
+        assert decline_facts[0].attributed_to == "Analysts"
+
+    def test_mixed_future_assertion_with_separate_conditional(self):
+        text = "The company will release the product, but if demand falls, prices might drop."
+        facts = extract_facts(text)
+        release_facts = [f for f in facts if "release" in f.verb]
+        assert len(release_facts) >= 1
+        assert release_facts[0].modality == "asserted"
+        drop_facts = [f for f in facts if "drop" in f.verb]
+        assert len(drop_facts) >= 1
+        assert drop_facts[0].modality == "conditional"
+
+    def test_mixed_capability_with_separate_conditional(self):
+        text = (
+            "The system can process documents because it is fast, "
+            "but if the network fails, it might retry."
+        )
+        facts = extract_facts(text)
+        process_facts = [f for f in facts if "process" in f.verb]
+        assert len(process_facts) >= 1
+        assert process_facts[0].modality == "asserted"
+        retry_facts = [f for f in facts if "retry" in f.verb]
+        assert len(retry_facts) >= 1
+        assert retry_facts[0].modality == "conditional"
+
+
+class TestContextDependentModals:
+    """Targeted adversarial and validation tests for 'could' and 'would'.
+
+    Tests the context-dependent behavior of 'could' and 'would', verifying
+    that conditional and attributed clauses take precedence, that hypothetical
+    uncertainties are properly tagged, and explicitly documenting the lightweight
+    heuristic's conservative classification on unconditioned capability/habitual uses.
+    """
+
+    def test_could_hypothetical_possibility(self):
+        """Uncertainty with 'could' must be classified as hypothetical."""
+        facts = extract_facts("The system could fail under heavy load.")
+        assert len(facts) >= 1
+        assert facts[0].modality == "hypothetical"
+
+    def test_could_adversarial_vulnerability(self):
+        """Speculative exploit statements must be classified as hypothetical."""
+        facts = extract_facts(
+            "An attacker could bypass authentication without valid credentials."
+        )
+        assert len(facts) >= 1
+        assert facts[0].modality == "hypothetical"
+
+    def test_could_unconditioned_capability_heuristic_limitation(self):
+        """Document heuristic behavior: unconditioned 'could' is treated as hypothetical.
+
+        Without explicit condition markers or tense framing, 'could' is conservatively
+        treated as epistemic possibility to prevent speculative claims from entering the
+        asserted fact store. (Unambiguous capability should use 'can').
+        """
+        facts = extract_facts("The system could process 10,000 requests per second.")
+        assert len(facts) >= 1
+        assert facts[0].modality == "hypothetical"
+
+    def test_would_hypothetical_counterfactual(self):
+        """Counterfactual/hypothetical apodosis with 'would' is classified as hypothetical."""
+        facts = extract_facts("The model would perform better with more training data.")
+        assert len(facts) >= 1
+        assert facts[0].modality == "hypothetical"
+
+    def test_would_hypothetical_projection(self):
+        """Projected impact with 'would' is classified as hypothetical."""
+        facts = extract_facts("Adopting microservices would increase deployment latency.")
+        assert len(facts) >= 1
+        assert facts[0].modality == "hypothetical"
+
+    def test_would_unconditioned_descriptive_heuristic_limitation(self):
+        """Document heuristic behavior: unconditioned 'would' is treated as hypothetical.
+
+        Without overt present or past tense verbs, isolated 'would' is conservatively
+        treated as hypothetical/counterfactual rather than asserted ground truth.
+        """
+        facts = extract_facts("The system would process requests sequentially.")
+        assert len(facts) >= 1
+        assert facts[0].modality == "hypothetical"
+
+    def test_would_past_framing_heuristic_limitation(self):
+        """Document heuristic: past framing without past tense verbs remains hypothetical."""
+        facts = extract_facts(
+            "The model would process larger batches in the previous implementation."
+        )
+        assert len(facts) >= 1
+        assert facts[0].modality == "hypothetical"
+
+    def test_could_with_preceding_conditional_clause(self):
+        """Explicit conditional clause takes precedence over 'could' modal."""
+        facts = extract_facts("If the service fails, it could restart automatically.")
+        conditional_facts = [f for f in facts if f.modality == "conditional"]
+        assert len(conditional_facts) >= 1
+
+    def test_could_with_postposed_conditional_clause(self):
+        """Post-posed conditional clause takes precedence over 'could' modal."""
+        facts = extract_facts("The service could restart automatically if it fails.")
+        conditional_facts = [f for f in facts if f.modality == "conditional"]
+        assert len(conditional_facts) >= 1
+
+    def test_would_with_preceding_conditional_clause(self):
+        """Explicit conditional clause takes precedence over 'would' modal."""
+        facts = extract_facts(
+            "If additional memory were available, the model would process larger batches."
+        )
+        conditional_facts = [f for f in facts if f.modality == "conditional"]
+        assert len(conditional_facts) >= 1
+
+    def test_would_with_postposed_conditional_clause(self):
+        """Post-posed conditional clause takes precedence over 'would' modal."""
+        facts = extract_facts(
+            "The model would process larger batches if additional memory were available."
+        )
+        conditional_facts = [f for f in facts if f.modality == "conditional"]
+        assert len(conditional_facts) >= 1
+
+    def test_could_with_unless_condition(self):
+        """Condition marker 'unless' takes precedence over 'could' modal."""
+        facts = extract_facts(
+            "Unless maintenance is scheduled, the service could remain active."
+        )
+        conditional_facts = [f for f in facts if f.modality == "conditional"]
+        assert len(conditional_facts) >= 1
+
+    def test_would_with_provided_condition(self):
+        """Condition marker 'provided' takes precedence over 'would' modal."""
+        facts = extract_facts(
+            "Provided that resources permit, the system would scale horizontally."
+        )
+        conditional_facts = [f for f in facts if f.modality == "conditional"]
+        assert len(conditional_facts) >= 1
+
+    def test_could_with_attribution(self):
+        """Attribution takes precedence over 'could' modal."""
+        facts = extract_facts(
+            "The engineers stated that the system could handle higher traffic."
+        )
+        attributed_facts = [f for f in facts if f.modality == "attributed"]
+        assert len(attributed_facts) >= 1
+        assert any("engineers" in (f.attributed_to or "").lower() for f in attributed_facts)
+
+    def test_would_with_attribution(self):
+        """Attribution takes precedence over 'would' modal."""
+        facts = extract_facts(
+            "The report suggested that the algorithm would converge faster."
+        )
+        attributed_facts = [f for f in facts if f.modality == "attributed"]
+        assert len(attributed_facts) >= 1
+        assert any("report" in (f.attributed_to or "").lower() for f in attributed_facts)
+
+    def test_baseline_may_hypothetical(self):
+        """Verify baseline 'may' remains hypothetical."""
+        facts = extract_facts("The service may become unavailable.")
+        assert len(facts) >= 1
+        assert facts[0].modality == "hypothetical"
+
+    def test_baseline_might_hypothetical(self):
+        """Verify baseline 'might' remains hypothetical."""
+        facts = extract_facts("The service might become unavailable.")
+        assert len(facts) >= 1
+        assert facts[0].modality == "hypothetical"
+
+    def test_baseline_can_capability(self):
+        """Verify baseline 'can' remains asserted capability."""
+        facts = extract_facts("The service can process requests asynchronously.")
+        assert len(facts) >= 1
+        assert facts[0].modality == "asserted"
+
+    def test_baseline_must_obligation(self):
+        """Verify baseline 'must' remains asserted obligation."""
+        facts = extract_facts("The service must authenticate every request.")
+        assert len(facts) >= 1
+        assert facts[0].modality == "asserted"
+
+    def test_baseline_will_future(self):
+        """Verify baseline 'will' remains asserted future assertion."""
+        facts = extract_facts("The service will restart automatically.")
+        assert len(facts) >= 1
+        assert facts[0].modality == "asserted"
 
 
 class TestEdgeCases:
@@ -346,7 +595,10 @@ class TestRealWorldExamples:
     """Test on realistic document-style sentences."""
 
     def test_legal_document(self):
-        text = "The Plaintiff filed a formal legal motion on March 5. The Supreme Court reviewed it."
+        text = (
+            "The Plaintiff filed a formal legal motion on March 5. "
+            "The Supreme Court reviewed it."
+        )
         facts = extract_facts(text)
         assert len(facts) >= 2
         subjects = [f.subject for f in facts]
@@ -385,3 +637,39 @@ class TestRealWorldExamples:
         assert len(facts) >= 3
         # Each sentence should produce at least one fact
         assert len({f.sentence_id for f in facts}) >= 3
+
+
+class TestAdversarialSVOA:
+    """Adversarial SVOA tests covering attribution and boundary edge cases."""
+
+    def test_reporting_verb_ccomp(self):
+        text = "Dr. Vance stated that the reactor will operate tomorrow."
+        facts = extract_facts(text)
+        assert len(facts) >= 2
+        comp_facts = [f for f in facts if "reactor" in f.subject.lower()]
+        assert len(comp_facts) >= 1
+        assert comp_facts[0].modality == "attributed"
+        assert comp_facts[0].attributed_to == "Dr. Vance"
+
+    def test_non_reporting_matrix_verb(self):
+        text = "The engineer wanted the motor to run."
+        facts = extract_facts(text)
+        assert len(facts) >= 1
+        for f in facts:
+            assert f.modality == "asserted"
+            assert f.attributed_to is None
+
+    def test_passive_reporting_construction(self):
+        text = "It was reported that the merger was finalized."
+        facts = extract_facts(text)
+        assert len(facts) >= 1
+        for f in facts:
+            assert f.modality == "attributed"
+
+    def test_ordinary_asserted_fact(self):
+        text = "The catalyst accelerates the chemical reaction."
+        facts = extract_facts(text)
+        assert len(facts) == 1
+        assert facts[0].modality == "asserted"
+        assert facts[0].attributed_to is None
+        assert facts[0].negated is False

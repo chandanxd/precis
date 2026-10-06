@@ -160,15 +160,27 @@ class RateLimiter:
         """Check if the client is within rate limits."""
         now = time.time()
         with self._lock:
-            # Clean old entries
-            self._requests[client_id] = [
+            # Clean old entries for current client
+            active = [
                 t for t in self._requests[client_id] if now - t < self.window
             ]
-            # Check limit
-            if len(self._requests[client_id]) >= self.max_requests:
+            if len(active) >= self.max_requests:
+                self._requests[client_id] = active
                 return False
-            # Record request
-            self._requests[client_id].append(now)
+
+            active.append(now)
+            self._requests[client_id] = active
+
+            # Prevent unbounded memory growth by pruning stale client entries
+            if len(self._requests) > 100:
+                dead_clients = [
+                    cid
+                    for cid, timestamps in self._requests.items()
+                    if not timestamps or now - timestamps[-1] >= self.window
+                ]
+                for cid in dead_clients:
+                    del self._requests[cid]
+
             return True
 
     def remaining(self, client_id: str) -> int:

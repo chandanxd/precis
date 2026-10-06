@@ -6,6 +6,7 @@ and evaluation metrics.
 import json
 from unittest.mock import patch
 
+import fastcoref.spacy_component  # noqa: F401
 import pytest
 from precis.evaluation.harness import (
     AggregateResult,
@@ -13,6 +14,7 @@ from precis.evaluation.harness import (
     format_ablation_table,
     format_results_table,
     load_natural_questions,
+    pack_svoa_similarity,
     run_ablation,
     run_evaluation,
 )
@@ -28,6 +30,8 @@ from precis.evaluation.naive_rag import (
     naive_rag_answer,
     naive_rag_retrieve,
 )
+from precis.graph.schema import Fact
+from precis.graph.store import FactStore
 from precis.pipeline.inference import InferenceResult
 
 
@@ -408,6 +412,28 @@ class TestHarness:
                 avg_compression_rate=0.0,
                 avg_latency_ms=200,
             ),
+            "svoa_similarity": AggregateResult(
+                condition="svoa_similarity",
+                num_samples=10,
+                avg_em=0.52,
+                avg_rouge_l=0.62,
+                avg_bert_score=0.71,
+                avg_context_words=90,
+                avg_generated_tokens=18,
+                avg_compression_rate=0.75,
+                avg_latency_ms=130,
+            ),
+            "svoa_no_modality": AggregateResult(
+                condition="svoa_no_modality",
+                num_samples=10,
+                avg_em=0.53,
+                avg_rouge_l=0.63,
+                avg_bert_score=0.71,
+                avg_context_words=88,
+                avg_generated_tokens=18,
+                avg_compression_rate=0.76,
+                avg_latency_ms=125,
+            ),
             "precis_full": AggregateResult(
                 condition="precis_full",
                 num_samples=10,
@@ -425,6 +451,8 @@ class TestHarness:
 
         assert "| Condition | EM | ROUGE-L |" in table
         assert "Baseline A" in table
+        assert "Baseline B (SVOA Pure Similarity)" in table
+        assert "Baseline C (SVOA w/o Modality)" in table
         assert "Précis (Full 6-Stage)" in table
         assert "Context Words" in table
         assert "Generated Tokens" in table
@@ -507,6 +535,8 @@ class TestHarness:
         )
 
         assert "naive_rag" in results
+        assert "svoa_similarity" in results
+        assert "svoa_no_modality" in results
         assert "precis_no_modality" in results
         assert "precis_full" in results
 
@@ -518,9 +548,53 @@ class TestHarness:
 
         assert results["precis_full"].avg_generated_tokens == 4
 
+        assert results["svoa_similarity"].avg_em == 1.0
+
+        assert results["svoa_no_modality"].avg_em == 1.0
+
         assert results["naive_rag"].avg_generated_tokens == 0
 
         assert results["naive_rag"].avg_context_words > 0
+
+    def test_pack_svoa_similarity(self):
+        col_name = "test_svoa_sim_harness"
+        store = FactStore(in_memory=True, collection_name=col_name)
+        try:
+            facts = [
+                Fact(
+                    subject="Alexander Fleming",
+                    verb="discovered",
+                    object="penicillin",
+                    modality="asserted",
+                    sdh_score=0.1,
+                ),
+                Fact(
+                    subject="Alien civilization",
+                    verb="might inhabit",
+                    object="distant galaxies",
+                    modality="hypothetical",
+                    sdh_score=0.9,
+                ),
+            ]
+            store.add_facts(facts)
+
+            # Test invalid inputs
+            assert pack_svoa_similarity("", store, 500).facts_packed == 0
+            assert pack_svoa_similarity("penicillin", store, 0).facts_packed == 0
+
+            # Test packing
+            res = pack_svoa_similarity("penicillin", store, token_ceiling=500)
+            assert res.facts_packed >= 1
+
+            # Modality filtering is bypassed: hypothetical facts are retained
+            res_all = pack_svoa_similarity(
+                "alien civilization distant galaxies",
+                store,
+                token_ceiling=500,
+            )
+            assert any(f.modality == "hypothetical" for f in res_all.packed_facts)
+        finally:
+            store.clear()
 
     @patch("precis.evaluation.harness.generate_answer")
     def test_run_ablation(

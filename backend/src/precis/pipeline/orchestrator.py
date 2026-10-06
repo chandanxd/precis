@@ -250,6 +250,7 @@ def query_pipeline(
 
         return stream_pipeline()
 
+    t0_inf = time.perf_counter()
     inference_result = generate_answer(
         query=query,
         context=context,
@@ -258,7 +259,7 @@ def query_pipeline(
         base_url=ollama_base_url,
     )
 
-    timings["inference"] = int((time.perf_counter() - t0) * 1000)
+    timings["inference"] = int((time.perf_counter() - t0_inf) * 1000)
 
     total_ms = int((time.perf_counter() - total_start) * 1000)
 

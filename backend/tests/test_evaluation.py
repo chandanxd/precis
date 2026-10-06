@@ -19,10 +19,13 @@ from precis.evaluation.harness import (
     run_evaluation,
 )
 from precis.evaluation.metrics import (
+    DEFAULT_BERTSCORE_MODEL,
     compute_bert_score,
     compute_exact_match,
+    compute_minilm_cosine,
     compute_rouge_l,
     compute_token_f1,
+    is_bertscore_model_cached,
     normalize_answer,
 )
 from precis.evaluation.naive_rag import (
@@ -111,17 +114,59 @@ class TestMetrics:
 
         assert score > 0.80
 
-    def test_bert_score(self):
+    @patch("bert_score.score")
+    @patch("precis.evaluation.metrics.is_bertscore_model_cached", return_value=True)
+    def test_bert_score(self, mock_cached, mock_bert):
+        import torch
+
+        mock_bert.return_value = (
+            torch.tensor([0.90]),
+            torch.tensor([0.92]),
+            torch.tensor([0.91]),
+        )
+
         gold = "Penicillin destroys bacterial cell walls."
         pred = "Penicillin kills bacteria by inhibiting cell wall synthesis."
 
         score = compute_bert_score(
             pred,
             gold,
+            model_type=DEFAULT_BERTSCORE_MODEL,
+            device="cpu",
+            batch_size=4,
         )
 
-        assert 0.0 <= score <= 1.0
-        assert score > 0.60
+        assert score == 0.91
+        mock_bert.assert_called_once_with(
+            [pred],
+            [gold],
+            lang="en",
+            model_type=DEFAULT_BERTSCORE_MODEL,
+            device="cpu",
+            batch_size=4,
+            verbose=False,
+        )
+
+    def test_bert_score_offline_missing_model_raises(self, monkeypatch):
+        monkeypatch.setenv("HF_HUB_OFFLINE", "1")
+        with patch(
+            "precis.evaluation.metrics.is_bertscore_model_cached",
+            return_value=False,
+        ):
+            with pytest.raises(FileNotFoundError, match="not cached locally"):
+                compute_bert_score(
+                    "predicted answer",
+                    "gold answer",
+                    model_type="microsoft/deberta-large-mnli",
+                )
+
+    def test_bert_score_missing_library_raises(self):
+        with patch.dict("sys.modules", {"bert_score": None}):
+            with pytest.raises(RuntimeError, match="requires the 'bert-score' package"):
+                compute_bert_score(
+                    "predicted answer",
+                    "gold answer",
+                )
 
     def test_bert_score_empty_input(self):
         assert (
@@ -139,6 +184,50 @@ class TestMetrics:
             )
             == 0.0
         )
+
+    def test_minilm_cosine(self):
+        gold = "Penicillin destroys bacterial cell walls."
+        pred = "Penicillin kills bacteria by inhibiting cell wall synthesis."
+
+        score = compute_minilm_cosine(
+            pred,
+            gold,
+        )
+
+        assert 0.0 <= score <= 1.0
+        assert score > 0.60
+
+    def test_minilm_cosine_empty_input(self):
+        assert compute_minilm_cosine("", "answer") == 0.0
+        assert compute_minilm_cosine("answer", "") == 0.0
+
+    def test_minilm_and_bertscore_are_distinct(self):
+        gold = "Dr. Alexander Fleming discovered penicillin in London."
+        pred = "Penicillin was discovered by Alexander Fleming."
+
+        minilm_sim = compute_minilm_cosine(pred, gold)
+        assert 0.0 <= minilm_sim <= 1.0
+
+        # Verify compute_bert_score does NOT call compute_minilm_cosine
+        with patch("precis.evaluation.metrics.compute_minilm_cosine") as mock_minilm:
+            with patch("bert_score.score") as mock_bert:
+                import torch
+
+                mock_bert.return_value = (
+                    torch.tensor([0.85]),
+                    torch.tensor([0.88]),
+                    torch.tensor([0.865]),
+                )
+                with patch(
+                    "precis.evaluation.metrics.is_bertscore_model_cached",
+                    return_value=True,
+                ):
+                    b_score = compute_bert_score(pred, gold)
+                    assert b_score == 0.865
+                    mock_minilm.assert_not_called()
+
+    def test_is_bertscore_model_cached(self):
+        assert is_bertscore_model_cached("nonexistent_model_xyz_123") is False
 
 
 class TestNaiveRAG:
@@ -458,6 +547,44 @@ class TestHarness:
         assert "Generated Tokens" in table
         assert "Compression Rate" in table
         assert "78.0%" in table
+        assert "BERTScore (DeBERTa)" in table
+
+    def test_format_results_table_with_both_metrics(self):
+        results = {
+            "naive_rag": AggregateResult(
+                condition="naive_rag",
+                num_samples=2,
+                avg_em=0.5,
+                avg_rouge_l=0.6,
+                avg_bert_score=0.75,
+                avg_context_words=400,
+                avg_generated_tokens=20,
+                avg_compression_rate=0.0,
+                avg_latency_ms=200,
+                avg_minilm_cosine=0.71,
+            ),
+            "precis_full": AggregateResult(
+                condition="precis_full",
+                num_samples=2,
+                avg_em=0.55,
+                avg_rouge_l=0.65,
+                avg_bert_score=0.82,
+                avg_context_words=85,
+                avg_generated_tokens=18,
+                avg_compression_rate=0.78,
+                avg_latency_ms=120,
+                avg_minilm_cosine=0.79,
+            ),
+        }
+
+        table = format_results_table(results)
+
+        assert "BERTScore (DeBERTa)" in table
+        assert "MiniLM Cosine" in table
+        assert "0.750" in table
+        assert "0.710" in table
+        assert "0.820" in table
+        assert "0.790" in table
 
     def test_format_ablation_table(self):
         results = {
@@ -555,6 +682,60 @@ class TestHarness:
         assert results["naive_rag"].avg_generated_tokens == 0
 
         assert results["naive_rag"].avg_context_words > 0
+
+        assert results["precis_full"].avg_bert_score is None
+
+        assert results["precis_full"].avg_minilm_cosine is not None
+
+        assert results["precis_full"].avg_minilm_cosine > 0.80
+
+    @patch("bert_score.score")
+    @patch("precis.evaluation.metrics.is_bertscore_model_cached", return_value=True)
+    @patch("precis.evaluation.harness.generate_answer")
+    @patch("precis.evaluation.naive_rag.generate_answer")
+    def test_run_evaluation_with_bertscore(
+        self,
+        mock_naive_inf,
+        mock_precis_inf,
+        mock_cached,
+        mock_bert,
+    ):
+        import torch
+
+        mock_bert.return_value = (
+            torch.tensor([0.90]),
+            torch.tensor([0.92]),
+            torch.tensor([0.91]),
+        )
+        mock_naive_inf.return_value = InferenceResult(
+            answer="Dr. Alexander Fleming.",
+            model="qwen2.5-coder:7b",
+            latency_ms=100,
+            tokens_generated=4,
+        )
+        mock_precis_inf.return_value = InferenceResult(
+            answer="Dr. Alexander Fleming.",
+            model="qwen2.5-coder:7b",
+            latency_ms=100,
+            tokens_generated=4,
+        )
+
+        sample = EvalSample(
+            question="Who discovered penicillin in 1928?",
+            gold_answer="Dr. Alexander Fleming",
+            document="In 1928, Dr. Alexander Fleming discovered penicillin in London.",
+            doc_id="sample_bert_eval",
+        )
+
+        results = run_evaluation(
+            [sample],
+            token_ceiling=35,
+            use_bertscore=True,
+        )
+
+        assert results["precis_full"].avg_bert_score == 0.91
+        assert results["precis_full"].avg_minilm_cosine is not None
+        assert mock_bert.call_count >= 1
 
     def test_pack_svoa_similarity(self):
         col_name = "test_svoa_sim_harness"

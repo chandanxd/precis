@@ -1,5 +1,5 @@
 """
-Précis — API Server
+Précis: API Server
 FastAPI application exposing the NLP pipeline as REST + WebSocket endpoints.
 """
 
@@ -31,6 +31,7 @@ from precis.api.security import (
     query_limiter,
     sanitize_document,
     sanitize_query,
+    validate_token,
 )
 from precis.graph.store import FactStore
 from precis.pipeline.hardware import HardwareProfile, profile_hardware
@@ -39,7 +40,12 @@ from precis.pipeline.inference import (
     OllamaInferenceError,
     generate_answer,
 )
-from precis.pipeline.orchestrator import ingest_document as run_ingest_document
+from precis.pipeline.orchestrator import (
+    ingest_document as run_ingest_document,
+)
+from precis.pipeline.orchestrator import (
+    query_pipeline,
+)
 from precis.pipeline.packer import pack_context, render_context
 
 # Global application state
@@ -175,7 +181,13 @@ async def ingest_document(req: IngestRequest) -> IngestResponse:
     3. SVOA extraction with negation & modality typing (Stage 2)
     4. 4-term SDH scoring & vector indexing (Stage 3)
     """
-    clean_text = sanitize_document(req.text)
+    try:
+        clean_text = sanitize_document(req.text)
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=400,
+            detail=str(exc),
+        ) from exc
 
     if not clean_text.strip():
         raise HTTPException(
@@ -189,11 +201,12 @@ async def ingest_document(req: IngestRequest) -> IngestResponse:
             detail="Input rejected: suspicious content detected",
         )
 
-    document_name = req.document_name.strip() or "document"
+    document_name = (req.document_name.strip() or "document")[:255]
     active_store = _get_store()
 
     try:
-        result = run_ingest_document(
+        result = await asyncio.to_thread(
+            run_ingest_document,
             text=clean_text,
             source_doc=document_name,
             store=active_store,
@@ -231,7 +244,13 @@ async def query(req: QueryRequest, request: Request) -> QueryResponse:
             headers={"Retry-After": "60"},
         )
 
-    clean_query = sanitize_query(req.question)
+    try:
+        clean_query = sanitize_query(req.question)
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=400,
+            detail=str(exc),
+        ) from exc
 
     if not clean_query.strip():
         raise HTTPException(
@@ -255,30 +274,38 @@ async def query(req: QueryRequest, request: Request) -> QueryResponse:
         )
 
     t0 = time.perf_counter()
+    selected_model = active_hardware.recommended_model
+    inf_tokens = 0
 
-    # Stage 4: Re-rank + Pack
-    pack = pack_context(
-        clean_query,
-        active_store,
-        active_hardware.token_ceiling,
-    )
-    context = render_context(pack.packed_facts)
-
-    # Stage 5: Inference
     try:
-        inference_result = generate_answer(
+        pipeline_res = await asyncio.to_thread(
+            query_pipeline,
             query=clean_query,
-            context=context,
+            store=active_store,
+            hardware=active_hardware,
             model=active_hardware.recommended_model,
             stream=False,
         )
-        answer = inference_result.answer
+        answer = pipeline_res.answer
+        packed_facts = pipeline_res.facts_used
+        tokens_used = pipeline_res.tokens_used
+        naive_rag_tokens = pipeline_res.naive_rag_tokens
+        compression_rate = pipeline_res.compression_rate
+        avg_sdh_score = pipeline_res.avg_sdh_score
+        elapsed_ms = pipeline_res.latency_ms
+        selected_model = pipeline_res.model or selected_model
+        inf_tokens = pipeline_res.inference_tokens
 
     except OllamaConnectionError:
         # Fallback when Ollama service is not running on localhost.
         if os.getenv("PRECIS_MOCK_OLLAMA") == "1" or not os.getenv(
             "PRECIS_STRICT_OLLAMA"
         ):
+            pack = pack_context(
+                clean_query,
+                active_store,
+                active_hardware.token_ceiling,
+            )
             facts_summary = "; ".join(
                 f"{fact.subject} "
                 f"{'NOT ' if fact.negated else ''}"
@@ -289,6 +316,12 @@ async def query(req: QueryRequest, request: Request) -> QueryResponse:
                 "Based on the extracted facts: "
                 f"{facts_summary or 'No relevant facts found'}."
             )
+            packed_facts = pack.packed_facts
+            tokens_used = pack.tokens_used
+            naive_rag_tokens = pack.naive_rag_tokens
+            compression_rate = pack.compression_rate
+            avg_sdh_score = pack.avg_sdh_score
+            elapsed_ms = int((time.perf_counter() - t0) * 1000)
         else:
             raise HTTPException(
                 status_code=503,
@@ -303,8 +336,6 @@ async def query(req: QueryRequest, request: Request) -> QueryResponse:
             detail=f"Local inference failed: {exc}",
         ) from exc
 
-    elapsed_ms = int((time.perf_counter() - t0) * 1000)
-
     facts_payload = [
         {
             "subject": fact.subject,
@@ -316,17 +347,19 @@ async def query(req: QueryRequest, request: Request) -> QueryResponse:
             "adjuncts": fact.adjuncts,
             "attributed_to": fact.attributed_to,
         }
-        for fact in pack.packed_facts
+        for fact in packed_facts
     ]
 
     return QueryResponse(
         answer=answer,
         facts_used=facts_payload,
-        tokens_used=pack.tokens_used,
-        naive_rag_tokens=pack.naive_rag_tokens,
-        compression_rate=pack.compression_rate,
-        avg_sdh_score=pack.avg_sdh_score,
+        tokens_used=tokens_used,
+        naive_rag_tokens=naive_rag_tokens,
+        compression_rate=compression_rate,
+        avg_sdh_score=avg_sdh_score,
         latency_ms=elapsed_ms,
+        model=selected_model,
+        inference_tokens=inf_tokens,
     )
 
 
@@ -450,7 +483,7 @@ class ConnectionManager:
     async def broadcast(self, data: dict[str, Any]) -> None:
         disconnected: list[WebSocket] = []
 
-        for ws in self.active:
+        for ws in list(self.active):
             try:
                 await ws.send_json(data)
             except WebSocketDisconnect as exc:
@@ -469,8 +502,27 @@ async def _handle_ws_query(
     data: dict[str, Any],
 ) -> None:
     """Handle a query over WebSocket with real-time token streaming."""
+    client_ip = ws.client.host if ws.client else "127.0.0.1"
+    if not query_limiter.is_allowed(client_ip):
+        await ws.send_json(
+            {
+                "type": "error",
+                "detail": "Rate limit exceeded. Max 10 queries per minute.",
+            }
+        )
+        return
+
     question = data.get("question", "")
-    clean_question = sanitize_query(question)
+    try:
+        clean_question = sanitize_query(question)
+    except ValueError as exc:
+        await ws.send_json(
+            {
+                "type": "error",
+                "detail": str(exc),
+            }
+        )
+        return
 
     if not clean_question.strip():
         await ws.send_json(
@@ -517,7 +569,8 @@ async def _handle_ws_query(
 
     t0_pack = time.perf_counter()
 
-    pack = pack_context(
+    pack = await asyncio.to_thread(
+        pack_context,
         clean_question,
         active_store,
         active_hardware.token_ceiling,
@@ -588,22 +641,35 @@ async def _handle_ws_query(
         )
 
     except OllamaConnectionError:
-        fallback_msg = (
-            f"Extracted facts for query: {render_context(pack.packed_facts[:2])}"
-        )
-
-        for word in fallback_msg.split(" "):
-            token = word + " "
-            full_answer.append(token)
-
-            await ws.send_json(
-                {
-                    "type": "pipeline:token",
-                    "payload": {"char": token},
-                }
+        if os.getenv("PRECIS_MOCK_OLLAMA") == "1" or not os.getenv(
+            "PRECIS_STRICT_OLLAMA"
+        ):
+            fallback_msg = (
+                f"Extracted facts for query: {render_context(pack.packed_facts[:2])}"
             )
 
-            await asyncio.sleep(0.01)
+            for word in fallback_msg.split(" "):
+                token = word + " "
+                full_answer.append(token)
+
+                await ws.send_json(
+                    {
+                        "type": "pipeline:token",
+                        "payload": {"char": token},
+                    }
+                )
+
+                await asyncio.sleep(0.01)
+        else:
+            await ws.send_json(
+                {
+                    "type": "error",
+                    "detail": (
+                        "Ollama service is unreachable. Ensure 'ollama serve' is running."
+                    ),
+                }
+            )
+            return
 
     except OllamaInferenceError as exc:
         await ws.send_json(
@@ -615,6 +681,7 @@ async def _handle_ws_query(
         return
 
     inference_ms = int((time.perf_counter() - t0_inf) * 1000)
+    total_latency_ms = int((time.perf_counter() - t0_pack) * 1000)
 
     generated_tokens = (
         inference_result.tokens_generated
@@ -662,7 +729,9 @@ async def _handle_ws_query(
                 "naive_rag_tokens": pack.naive_rag_tokens,
                 "compression_rate": pack.compression_rate,
                 "avg_sdh_score": pack.avg_sdh_score,
-                "latency_ms": inference_ms,
+                "latency_ms": total_latency_ms,
+                "model": active_hardware.recommended_model,
+                "inference_tokens": generated_tokens,
             },
         }
     )
@@ -674,9 +743,18 @@ async def _handle_ws_ingest(
 ) -> None:
     """Handle document ingestion with pipeline events over WebSocket."""
     text = data.get("text", "")
-    doc_name = str(data.get("document_name", "document")).strip() or "document"
+    doc_name = (str(data.get("document_name", "document")).strip() or "document")[:255]
 
-    clean_text = sanitize_document(text)
+    try:
+        clean_text = sanitize_document(text)
+    except ValueError as exc:
+        await ws.send_json(
+            {
+                "type": "error",
+                "detail": str(exc),
+            }
+        )
+        return
 
     if not clean_text.strip():
         await ws.send_json(
@@ -718,11 +796,11 @@ async def _handle_ws_ingest(
             }
         )
 
-    # Ingest document
     t0 = time.perf_counter()
 
     try:
-        result = run_ingest_document(
+        result = await asyncio.to_thread(
+            run_ingest_document,
             text=clean_text,
             source_doc=doc_name,
             store=active_store,
@@ -769,6 +847,24 @@ async def _handle_ws_ingest(
 @app.websocket("/ws")
 async def websocket_endpoint(ws: WebSocket):
     """Real-time bidirectional WebSocket connection for pipeline events and tokens."""
+    authenticated = False
+    auth_token = ws.query_params.get("token")
+    if not auth_token:
+        auth_header = ws.headers.get("authorization") or ws.headers.get("Authorization")
+        if auth_header:
+            auth_token = (
+                auth_header[7:].strip()
+                if auth_header.startswith("Bearer ")
+                else auth_header.strip()
+            )
+
+    if auth_token:
+        try:
+            validate_token(auth_token)
+            authenticated = True
+        except HTTPException:
+            authenticated = False
+
     await ws_manager.connect(ws)
 
     try:
@@ -776,14 +872,54 @@ async def websocket_endpoint(ws: WebSocket):
             data = await ws.receive_json()
             msg_type = data.get("type")
 
+            if msg_type == "ping":
+                await ws.send_json({"type": "pong"})
+                continue
+
+            if msg_type == "auth":
+                token_to_verify = data.get("token") or ""
+                try:
+                    validate_token(token_to_verify)
+                    authenticated = True
+                    await ws.send_json(
+                        {
+                            "type": "auth_ok",
+                            "detail": "Authenticated successfully.",
+                        }
+                    )
+                except HTTPException:
+                    authenticated = False
+                    await ws.send_json(
+                        {
+                            "type": "error",
+                            "detail": "Invalid or expired token.",
+                        }
+                    )
+                continue
+
+            if not authenticated:
+                payload_token = data.get("token")
+                if payload_token:
+                    try:
+                        validate_token(payload_token)
+                        authenticated = True
+                    except HTTPException:
+                        authenticated = False
+
+            if not authenticated:
+                await ws.send_json(
+                    {
+                        "type": "error",
+                        "detail": "Authentication required. Provide a valid token.",
+                    }
+                )
+                continue
+
             if msg_type == "query":
                 await _handle_ws_query(ws, data)
 
             elif msg_type == "ingest":
                 await _handle_ws_ingest(ws, data)
-
-            elif msg_type == "ping":
-                await ws.send_json({"type": "pong"})
 
             else:
                 await ws.send_json(

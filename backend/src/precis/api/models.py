@@ -15,7 +15,11 @@ class TokenResponse(BaseModel):
 
 class IngestRequest(BaseModel):
     text: str = Field(..., description="Document text to ingest")
-    document_name: str = Field(..., description="Identifier/name for the document")
+    document_name: str = Field(
+        ...,
+        max_length=255,
+        description="Identifier/name for the document",
+    )
 
 
 class IngestResponse(BaseModel):
@@ -37,6 +41,8 @@ class QueryResponse(BaseModel):
     compression_rate: float
     avg_sdh_score: float
     latency_ms: int
+    model: str = ""
+    inference_tokens: int = 0
 
 
 class HardwareResponse(BaseModel):
@@ -49,6 +55,7 @@ class HardwareResponse(BaseModel):
     recommended_model: str
     recommended_mode: str
     token_ceiling: int
+    ml_accelerator: str | None = None
 
 
 class StatsResponse(BaseModel):

@@ -2,22 +2,29 @@
 Integration and functional tests for the FastAPI application and WebSocket endpoints.
 """
 
+import uuid
 from unittest.mock import patch
 
+import main
 import pytest
 from fastapi.testclient import TestClient
-from main import _get_store, app
+from main import app
 from precis.api.security import generate_token
+from precis.graph.store import FactStore
 from precis.pipeline.inference import InferenceResult
 
 
 @pytest.fixture(autouse=True)
-def clean_store():
-    """Ensure a clean, isolated fact store for each test."""
-    store = _get_store()
-    store.clear()
-    yield store
-    store.clear()
+def clean_store(monkeypatch):
+    """Ensure a clean, isolated in-memory fact store for each test."""
+    test_store = FactStore(
+        in_memory=True,
+        collection_name=f"test_api_{uuid.uuid4().hex[:8]}",
+    )
+    monkeypatch.setattr(main, "store", test_store)
+    monkeypatch.setattr(main, "_get_store", lambda: test_store)
+    yield test_store
+    test_store.clear()
 
 
 @pytest.fixture
@@ -129,7 +136,29 @@ class TestRestPipelineFlow:
         assert resp_query.status_code == 400
         assert "suspicious" in resp_query.json()["detail"]
 
-    @patch("main.generate_answer")
+    def test_oversized_input_validation(self, client, auth_headers):
+        # Document exceeding MAX_DOCUMENT_LENGTH
+        resp_ingest = client.post(
+            "/api/ingest",
+            headers={**auth_headers},
+            json={
+                "text": "a" * 150_000,
+                "document_name": "too_big.txt",
+            },
+        )
+        assert resp_ingest.status_code == 400
+        assert "maximum length" in resp_ingest.json()["detail"].lower()
+
+        # Query exceeding MAX_QUERY_LENGTH
+        resp_query = client.post(
+            "/api/query",
+            headers={**auth_headers},
+            json={"question": "q" * 3_000},
+        )
+        assert resp_query.status_code == 400
+        assert "maximum length" in resp_query.json()["detail"].lower()
+
+    @patch("precis.pipeline.orchestrator.generate_answer")
     def test_end_to_end_ingest_and_query(
         self,
         mock_inf,
@@ -235,7 +264,7 @@ class TestRestPipelineFlow:
         assert clear_resp.status_code == 200
         assert clear_resp.json()["status"] == "cleared"
 
-    @patch("main.generate_answer")
+    @patch("precis.pipeline.orchestrator.generate_answer")
     def test_query_response_metrics(
         self,
         mock_inf,
@@ -294,7 +323,7 @@ class TestRestPipelineFlow:
         assert isinstance(data["facts_used"], list)
         assert len(data["facts_used"]) > 0
 
-    @patch("main.generate_answer")
+    @patch("precis.pipeline.orchestrator.generate_answer")
     def test_query_without_ingested_documents(
         self,
         mock_inf,
@@ -322,8 +351,47 @@ class TestWebSocketStream:
 
             assert resp == {"type": "pong"}
 
-    def test_websocket_empty_question(self, client):
+    def test_websocket_unauthenticated_query_blocked(self, client):
         with client.websocket_connect("/ws") as ws:
+            ws.send_json(
+                {
+                    "type": "query",
+                    "question": "What is precision?",
+                }
+            )
+            resp = ws.receive_json()
+            assert resp["type"] == "error"
+            assert "Authentication required" in resp["detail"]
+
+    def test_websocket_unauthenticated_ingest_blocked(self, client):
+        with client.websocket_connect("/ws") as ws:
+            ws.send_json(
+                {
+                    "type": "ingest",
+                    "text": "Some text to ingest.",
+                }
+            )
+            resp = ws.receive_json()
+            assert resp["type"] == "error"
+            assert "Authentication required" in resp["detail"]
+
+    def test_websocket_auth_flow(self, client):
+        token = generate_token("ws_test_user")
+        with client.websocket_connect("/ws") as ws:
+            ws.send_json({"type": "auth", "token": token})
+            resp = ws.receive_json()
+            assert resp["type"] == "auth_ok"
+
+    def test_websocket_auth_invalid(self, client):
+        with client.websocket_connect("/ws") as ws:
+            ws.send_json({"type": "auth", "token": "invalid_jwt_token"})
+            resp = ws.receive_json()
+            assert resp["type"] == "error"
+            assert "Invalid or expired token" in resp["detail"]
+
+    def test_websocket_empty_question(self, client):
+        token = generate_token("ws_test_user")
+        with client.websocket_connect(f"/ws?token={token}") as ws:
             ws.send_json(
                 {
                     "type": "query",
@@ -334,9 +402,11 @@ class TestWebSocketStream:
             resp = ws.receive_json()
 
             assert resp["type"] == "error"
+            assert "Empty question" in resp["detail"]
 
     def test_websocket_query_with_no_docs(self, client):
-        with client.websocket_connect("/ws") as ws:
+        token = generate_token("ws_test_user")
+        with client.websocket_connect(f"/ws?token={token}") as ws:
             ws.send_json(
                 {
                     "type": "query",
@@ -348,3 +418,22 @@ class TestWebSocketStream:
 
             assert resp["type"] == "error"
             assert "No documents ingested" in resp["detail"]
+
+    def test_websocket_query_rate_limiting(self, client):
+        token = generate_token("ws_test_user")
+        with client.websocket_connect(f"/ws?token={token}") as ws:
+            rate_limited = False
+            for _ in range(12):
+                ws.send_json(
+                    {
+                        "type": "query",
+                        "question": "Where is Paris?",
+                    }
+                )
+                resp = ws.receive_json()
+                if resp.get("type") == "error" and "Rate limit exceeded" in resp.get(
+                    "detail", ""
+                ):
+                    rate_limited = True
+                    break
+            assert rate_limited

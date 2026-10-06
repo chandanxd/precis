@@ -40,6 +40,7 @@ from precis.evaluation.metrics import (
     compute_rouge_l,
 )
 from precis.evaluation.naive_rag import naive_rag_answer
+from precis.graph.schema import Fact
 from precis.graph.store import FactStore
 from precis.pipeline.coref import resolve_coreferences
 from precis.pipeline.inference import (
@@ -47,7 +48,13 @@ from precis.pipeline.inference import (
     generate_answer,
 )
 from precis.pipeline.orchestrator import ingest_document
-from precis.pipeline.packer import pack_context, render_context
+from precis.pipeline.packer import (
+    PackResult,
+    _estimate_naive_rag_tokens,
+    estimate_fact_tokens,
+    pack_context,
+    render_context,
+)
 from precis.pipeline.sdh import (
     ABLATION_DROP_ALPHA,
     ABLATION_DROP_BETA,
@@ -319,6 +326,70 @@ def _evaluate_answer(
     )
 
 
+def pack_svoa_similarity(
+    query: str,
+    store: FactStore,
+    token_ceiling: int,
+    top_k: int = 100,
+) -> PackResult:
+    """
+    Execute SVOA similarity baseline packing.
+
+    Retrieves candidates using the identical ChromaDB query as `pack_context`,
+    disables modality filtering, and ranks facts strictly by embedding query similarity:
+        ranking_score = query_similarity
+    omitting the Semantic Density Heuristic (SDH) weighting entirely.
+    """
+    if (
+        not query
+        or not query.strip()
+        or store.count() == 0
+        or token_ceiling <= 0
+        or top_k <= 0
+    ):
+        return PackResult([], 0, 0, 0.0, 0.0, 0, 0)
+
+    # 1. Retrieve candidates from ChromaDB using identical vector similarity query.
+    candidates = store.query_similar(query, n_results=top_k)
+    if not candidates:
+        return PackResult([], 0, 0, 0.0, 0.0, 0, 0)
+
+    all_retrieved_facts = [fact for fact, _ in candidates]
+    naive_tokens = _estimate_naive_rag_tokens(all_retrieved_facts)
+
+    # 2. No modality filtering: all candidate facts are retained.
+    filtered_pairs = candidates
+
+    # 3. Pure query-similarity ranking (ranking_score = query_similarity; no SDH weighting).
+    scored_candidates = [
+        (fact, round(max(0.0, min(1.0, float(sim))), 4)) for fact, sim in filtered_pairs
+    ]
+    scored_candidates.sort(key=lambda item: item[1], reverse=True)
+
+    # 4. Greedily pack facts into the token ceiling using standard token estimation.
+    packed: list[Fact] = []
+    tokens_used = 0
+
+    for fact, _ in scored_candidates:
+        fact_tokens = estimate_fact_tokens(fact)
+        if tokens_used + fact_tokens <= token_ceiling:
+            packed.append(fact)
+            tokens_used += fact_tokens
+
+    compression_rate = 1.0 - (tokens_used / naive_tokens) if naive_tokens > 0 else 0.0
+    avg_sdh = sum(fact.sdh_score for fact in packed) / len(packed) if packed else 0.0
+
+    return PackResult(
+        packed_facts=packed,
+        tokens_used=tokens_used,
+        naive_rag_tokens=naive_tokens,
+        compression_rate=round(max(0.0, compression_rate), 4),
+        avg_sdh_score=round(avg_sdh, 4),
+        facts_considered=len(filtered_pairs),
+        facts_packed=len(packed),
+    )
+
+
 def run_evaluation(
     samples: list[EvalSample],
     model: str = DEFAULT_MODEL,
@@ -326,21 +397,22 @@ def run_evaluation(
     base_url: str = OLLAMA_DEFAULT_BASE_URL,
 ) -> dict[str, AggregateResult]:
     """
-    Execute the main evaluation across:
+    Execute the main evaluation across research conditions:
 
-    1. Baseline A: Naive RAG
-    2. Baseline B: Précis without modality filtering
-    3. Full Précis: modality-filtered packing
+    1. naive_rag: Baseline A (512-word chunking, top-k retrieval)
+    2. svoa_similarity: Baseline B (SVOA propositions ranked by query similarity only)
+    3. svoa_no_modality: Baseline C (SVOA ranked by SDH * similarity, no modality filter)
+    4. precis_full: Full Précis 6-stage pipeline (SVOA + SDH + modality-filtered packing)
 
-    Document ingestion is performed once per sample and is excluded from
-    query latency because the benchmark evaluates querying an indexed document.
+    Note: precis_no_modality is retained as an alias for svoa_no_modality.
     """
-
     if token_ceiling <= 0:
         raise ValueError("token_ceiling must be greater than zero.")
 
     conditions: dict[str, list[EvalResult]] = {
         "naive_rag": [],
+        "svoa_similarity": [],
+        "svoa_no_modality": [],
         "precis_no_modality": [],
         "precis_full": [],
     }
@@ -378,10 +450,8 @@ def run_evaluation(
         )
 
         # ------------------------------------------------------------------
-        # 2 & 3. Précis
-        #
-        # Ingest once, then run both query conditions against the same
-        # indexed representation.
+        # 2, 3, 4. Précis & SVOA Conditions
+        # Ingest once, then run all fact conditions against the identical store.
         # ------------------------------------------------------------------
 
         store = FactStore(
@@ -400,7 +470,43 @@ def run_evaluation(
             )
 
             # --------------------------------------------------------------
-            # Baseline B: No modality filtering
+            # Baseline B: SVOA Pure Similarity (No SDH, No Modality Filter)
+            # --------------------------------------------------------------
+
+            t0 = time.perf_counter()
+
+            pack_sim = pack_svoa_similarity(
+                query=sample.question,
+                store=store,
+                token_ceiling=token_ceiling,
+            )
+
+            ctx_sim = render_context(pack_sim.packed_facts)
+            context_words_sim = len(ctx_sim.split())
+
+            inf_sim = generate_answer(
+                sample.question,
+                ctx_sim,
+                model=model,
+                base_url=base_url,
+            )
+
+            lat_sim = int((time.perf_counter() - t0) * 1000)
+
+            conditions["svoa_similarity"].append(
+                _evaluate_answer(
+                    question=sample.question,
+                    gold_answer=sample.gold_answer,
+                    predicted_answer=inf_sim.answer,
+                    context_words=context_words_sim,
+                    generated_tokens=inf_sim.tokens_generated,
+                    compression_rate=pack_sim.compression_rate,
+                    latency_ms=lat_sim,
+                )
+            )
+
+            # --------------------------------------------------------------
+            # Baseline C: SVOA w/o Modality Filtering (SDH + Similarity)
             # --------------------------------------------------------------
 
             t0 = time.perf_counter()
@@ -424,20 +530,20 @@ def run_evaluation(
 
             lat_b = int((time.perf_counter() - t0) * 1000)
 
-            conditions["precis_no_modality"].append(
-                _evaluate_answer(
-                    question=sample.question,
-                    gold_answer=sample.gold_answer,
-                    predicted_answer=inf_b.answer,
-                    context_words=context_words_b,
-                    generated_tokens=inf_b.tokens_generated,
-                    compression_rate=pack_b.compression_rate,
-                    latency_ms=lat_b,
-                )
+            no_mod_eval = _evaluate_answer(
+                question=sample.question,
+                gold_answer=sample.gold_answer,
+                predicted_answer=inf_b.answer,
+                context_words=context_words_b,
+                generated_tokens=inf_b.tokens_generated,
+                compression_rate=pack_b.compression_rate,
+                latency_ms=lat_b,
             )
+            conditions["svoa_no_modality"].append(no_mod_eval)
+            conditions["precis_no_modality"].append(no_mod_eval)
 
             # --------------------------------------------------------------
-            # Full Précis
+            # Full Précis: 6-Stage (SDH + Similarity, Modality Filtered)
             # --------------------------------------------------------------
 
             t0 = time.perf_counter()
@@ -474,7 +580,6 @@ def run_evaluation(
 
         finally:
             # FactStore is in-memory, so clearing the collection is sufficient.
-            # Avoid reaching into Chroma's private `_client` API.
             store.clear()
 
     return {key: aggregate_results(key, values) for key, values in conditions.items()}
@@ -598,11 +703,15 @@ def format_results_table(
 
     names = {
         "naive_rag": "Baseline A (Naive RAG 512-chunk)",
-        "precis_no_modality": ("Baseline B (Précis w/o Modality)"),
-        "precis_full": ("**Précis (Full 6-Stage)**"),
+        "svoa_similarity": "Baseline B (SVOA Pure Similarity)",
+        "svoa_no_modality": "Baseline C (SVOA w/o Modality)",
+        "precis_no_modality": "Baseline C (SVOA w/o Modality)",
+        "precis_full": "**Précis (Full 6-Stage)**",
     }
 
     for key, result in results.items():
+        if key == "precis_no_modality" and "svoa_no_modality" in results:
+            continue
         display_name = names.get(
             key,
             key,
@@ -641,7 +750,7 @@ def format_ablation_table(
     descriptions = {
         "full": (
             "None (Full SDH)",
-            "—",
+            "-",
         ),
         "drop_E": (
             "Entity Relatedness E(s,o)",
@@ -672,7 +781,7 @@ def format_ablation_table(
 
         delta = result.avg_rouge_l - base_rouge
 
-        delta_str = f"{delta:+.3f}" if key != "full" else "—"
+        delta_str = f"{delta:+.3f}" if key != "full" else "-"
 
         bold_prefix = "**" if key == "full" else ""
 

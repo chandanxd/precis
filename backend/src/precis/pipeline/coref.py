@@ -1,4 +1,5 @@
 import os
+import threading
 import time
 from dataclasses import dataclass
 
@@ -6,12 +7,12 @@ os.environ.setdefault("HF_HUB_OFFLINE", "1")
 os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
 
 import spacy
-from fastcoref import spacy_component  # noqa: F401
 from spacy.language import Language
 
 from precis.pipeline.hardware import profile_hardware
 
 _nlp = None
+_nlp_lock = threading.Lock()
 
 
 @dataclass(slots=True)
@@ -20,11 +21,21 @@ class CoreferenceResult:
     elapsed: float
 
 
+def _get_hf_hub_cache() -> str:
+    """Return the base directory for Hugging Face Hub caches."""
+    if os.environ.get("HF_HUB_CACHE"):
+        return os.path.expanduser(os.environ["HF_HUB_CACHE"])
+    if os.environ.get("HF_HOME"):
+        return os.path.join(os.path.expanduser(os.environ["HF_HOME"]), "hub")
+    if os.environ.get("TRANSFORMERS_CACHE"):
+        return os.path.expanduser(os.environ["TRANSFORMERS_CACHE"])
+    return os.path.expanduser("~/.cache/huggingface/hub")
+
+
 def _resolve_model_path(model_id: str = "biu-nlp/f-coref") -> str:
     """Resolve a cached Hugging Face model to its local snapshot path."""
-    repo_dir = os.path.expanduser(
-        f"~/.cache/huggingface/hub/models--{model_id.replace('/', '--')}"
-    )
+    hub_dir = _get_hf_hub_cache()
+    repo_dir = os.path.join(hub_dir, f"models--{model_id.replace('/', '--')}")
     refs_main = os.path.join(repo_dir, "refs", "main")
 
     if not os.path.isfile(refs_main):
@@ -48,28 +59,40 @@ def _resolve_model_path(model_id: str = "biu-nlp/f-coref") -> str:
 
 
 def _get_nlp() -> Language:
+    """Load and return the fastcoref-augmented spaCy pipeline.
+
+    This pipeline excludes the rule-based lemmatizer, ner, and textcat
+    components for speed and memory efficiency. It must remain distinct
+    from the SVOA pipeline in svoa.py, which explicitly requires the
+    lemmatizer for predicate and reporting verb classification.
+    """
     global _nlp
 
-    hardware = profile_hardware()
-
     if _nlp is None:
-        device = "cpu" if hardware.ml_accelerator == "mps" else hardware.ml_accelerator
+        with _nlp_lock:
+            if _nlp is None:
+                hardware = profile_hardware()
+                device = (
+                    "cpu"
+                    if hardware.ml_accelerator == "mps"
+                    else hardware.ml_accelerator
+                )
 
-        _nlp = spacy.load(
-            "en_core_web_lg",
-            exclude=["lemmatizer", "ner", "textcat"],
-        )
+                _nlp = spacy.load(
+                    "en_core_web_lg",
+                    exclude=["lemmatizer", "ner", "textcat"],
+                )
 
-        model_path = _resolve_model_path("biu-nlp/f-coref")
+                model_path = _resolve_model_path("biu-nlp/f-coref")
 
-        _nlp.add_pipe(
-            "fastcoref",
-            config={
-                "model_architecture": "FCoref",
-                "model_path": model_path,
-                "device": device,
-            },
-        )
+                _nlp.add_pipe(
+                    "fastcoref",
+                    config={
+                        "model_architecture": "FCoref",
+                        "model_path": model_path,
+                        "device": device,
+                    },
+                )
 
     return _nlp
 

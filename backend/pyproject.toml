@@ -46,5 +46,3 @@ build-backend = "setuptools.build_meta"
 [project.scripts]
 precis-evaluation = "precis.evaluation.harness:main"
 precis-demo = "precis.demo.run_demo:main"
-precis-graph = "precis.graph:main"
-precis-pipeline = "precis.pipeline:main"

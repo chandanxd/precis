@@ -203,7 +203,7 @@ def generate_answer(
     if model is None:
         model = os.getenv(
             "PRECIS_OLLAMA_MODEL",
-            "qwen2.5-coder:7b",
+            "llama3:8b",
         )
 
     if not 0.0 <= temperature <= 2.0:

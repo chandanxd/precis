@@ -1,5 +1,9 @@
+import os
 import time
 from dataclasses import dataclass
+
+os.environ.setdefault("HF_HUB_OFFLINE", "1")
+os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
 
 import spacy
 from fastcoref import spacy_component  # noqa: F401
@@ -16,15 +20,55 @@ class CoreferenceResult:
     elapsed: float
 
 
+def _resolve_model_path(model_id: str = "biu-nlp/f-coref") -> str:
+    """Resolve a cached Hugging Face model to its local snapshot path."""
+    repo_dir = os.path.expanduser(
+        f"~/.cache/huggingface/hub/models--{model_id.replace('/', '--')}"
+    )
+    refs_main = os.path.join(repo_dir, "refs", "main")
+
+    if not os.path.isfile(refs_main):
+        raise FileNotFoundError(
+            f"Cached Hugging Face model not found: {model_id}. "
+            f"Expected cache at {repo_dir}"
+        )
+
+    with open(refs_main, encoding="utf-8") as f:
+        revision = f.read().strip()
+
+    if not revision:
+        raise FileNotFoundError(f"Cached model has an empty main revision: {model_id}")
+
+    snapshot_dir = os.path.join(repo_dir, "snapshots", revision)
+
+    if not os.path.isdir(snapshot_dir):
+        raise FileNotFoundError(f"Cached model snapshot not found: {snapshot_dir}")
+
+    return snapshot_dir
+
+
 def _get_nlp() -> Language:
     global _nlp
+
     hardware = profile_hardware()
+
     if _nlp is None:
         device = "cpu" if hardware.ml_accelerator == "mps" else hardware.ml_accelerator
-        _nlp = spacy.load("en_core_web_lg", exclude=["lemmatizer", "ner", "textcat"])
+
+        _nlp = spacy.load(
+            "en_core_web_lg",
+            exclude=["lemmatizer", "ner", "textcat"],
+        )
+
+        model_path = _resolve_model_path("biu-nlp/f-coref")
+
         _nlp.add_pipe(
             "fastcoref",
-            config={"model_architecture": "FCoref", "device": device},
+            config={
+                "model_architecture": "FCoref",
+                "model_path": model_path,
+                "device": device,
+            },
         )
 
     return _nlp
@@ -32,10 +76,10 @@ def _get_nlp() -> Language:
 
 def resolve_coreferences(text: str) -> str:
     """
-    Replace pronouns with their referents throughout the text
+    Replace pronouns with their referents throughout the text.
 
     Input: "Dr. Smith discovered a compound. He published his findings."
-    Output: "Dr. Smith discovered a compound. Dr. Smith published his findings."
+    Output: "Dr. Smith discovered a compound. Dr. Smith published Dr. Smith's findings."
     """
     nlp = _get_nlp()
     doc = nlp(text)
@@ -53,16 +97,16 @@ def resolve_coreferences(text: str) -> str:
 
         rep_clean = representative.strip()
 
-        # look at ALL items in the clusters, not just cluster
+        # Look at all mentions in the cluster, not just the representative.
         for start, end in cluster:
             mention = text[start:end]
 
-            # separate whitespace from the actual word
+            # Preserve whitespace around the actual mention.
             l_space = mention[: len(mention) - len(mention.lstrip())]
             r_space = mention[len(mention.rstrip()) :]
             mention_clean = mention.strip()
 
-            # if the mention is not a pronoun, skip it
+            # Only replace pronouns.
             if mention_clean.lower() not in _PRONOUN_SET:
                 continue
 
@@ -75,13 +119,12 @@ def resolve_coreferences(text: str) -> str:
                     replacement += "'s"
 
             full_replacement = l_space + replacement + r_space
-
             replacements.append((start, end, full_replacement))
 
     if not replacements:
         return text
 
-    # replace from end of string backwards so offsets stay valid
+    # Replace from the end of the string backwards so offsets stay valid.
     replacements.sort(key=lambda x: x[0], reverse=True)
 
     result = text
@@ -135,9 +178,11 @@ _REFLEXIVE_PRONOUNS = {
 _PRONOUN_SET = _PERSONAL_PRONOUNS | _POSSESSIVE_PRONOUNS | _REFLEXIVE_PRONOUNS
 
 
-def _find_representative(text: str, cluster: list[tuple[int, int]]) -> str | None:
-    """Return the first non-pronoun mention in the cluster"""
-
+def _find_representative(
+    text: str,
+    cluster: list[tuple[int, int]],
+) -> str | None:
+    """Return the first non-pronoun mention in the cluster."""
     for start, end in cluster:
         mention = text[start:end]
 
@@ -146,7 +191,10 @@ def _find_representative(text: str, cluster: list[tuple[int, int]]) -> str | Non
 
     return None
 
+
 def _match_case(replacement: str, original: str) -> str:
+    if not original:
+        return replacement
     if original.isupper():
         return replacement.upper()
     if original[0].isupper():
@@ -159,4 +207,5 @@ def resolve_document(text: str) -> CoreferenceResult:
 
     resolved = resolve_coreferences(text)
     elapsed = time.perf_counter() - start
+
     return CoreferenceResult(text=resolved, elapsed=elapsed)

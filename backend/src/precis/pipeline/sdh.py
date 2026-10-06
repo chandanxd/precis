@@ -207,7 +207,7 @@ def canonical_fact_text(fact: Fact) -> str:
     return " ".join(parts).strip()
 
 
-# Term 1: E(s,o) — Entity Relatedness / Salience
+# Term 1: E(s,o): Entity Relatedness / Salience
 
 
 def entity_relatedness(
@@ -256,7 +256,7 @@ def entity_relatedness(
     return round(float(np.clip(score, 0.0, 1.0)), 4)
 
 
-# Term 2: I(v) — Verb Informativeness
+# Term 2: I(v): Verb Informativeness
 
 
 def _extract_head_verb_lemma(verb_phrase: str) -> tuple[str, bool]:
@@ -357,7 +357,7 @@ def verb_informativeness(fact: Fact) -> float:
     return round(float(np.clip(score, 0.0, 1.0)), 4)
 
 
-# Term 3: U(t,G) — Uniqueness / Novelty
+# Term 3: U(t,G): Uniqueness / Novelty
 
 
 def uniqueness(
@@ -415,7 +415,7 @@ def uniqueness(
     return round(float(np.clip(u, 0.0, 1.0)), 4)
 
 
-# Term 4: A(t) — Adjunct Density / Context Richness
+# Term 4: A(t): Adjunct Density / Context Richness
 
 
 def adjunct_density(fact: Fact) -> float:

@@ -1,5 +1,5 @@
 """
-Précis — Query-Adaptive Context Packer
+Précis: Query-Adaptive Context Packer
 
 Combines intrinsic fact quality (SDH score) with query relevance:
 

@@ -12,9 +12,7 @@ __all__ = ["extract_facts"]
 
 MODEL_NAME = "en_core_web_lg"
 
-# ---------------------------------------------------------------------------
 # Lexical resources
-# ---------------------------------------------------------------------------
 
 _COPULAR_VERBS = {
     "be",
@@ -189,6 +187,7 @@ _REPORTING_VERBS = {
     "stress",
     "emphasise",
     "emphasize",
+    "testify",
 }
 
 _MODAL_VERBS = {
@@ -205,6 +204,25 @@ _MODAL_VERBS = {
     "need",
     "dare",
     "used",
+}
+
+# Modals that specifically introduce epistemic uncertainty or hypothetical possibility.
+# Dynamic/deontic/future modals ("will", "can", "must", "shall", "ought", "need")
+# convey asserted propositions rather than speculative or hypothetical assertions.
+#
+# Note on "could" and "would":
+# In English, "could" (past capability vs. epistemic possibility) and "would"
+# (past habitual vs. hypothetical apodosis) are context-dependent. Under Précis's
+# lightweight dependency heuristic, unconditioned occurrences are conservatively
+# classified as "hypothetical" to prevent speculative claims and counterfactuals
+# from leaking into the asserted fact store. When explicit condition markers
+# ("if", "unless", etc.) or reporting verbs are present, precedence rules
+# elevate them to "conditional" or "attributed" respectively.
+_EPISTEMIC_MODAL_VERBS = {
+    "might",
+    "may",
+    "could",
+    "would",
 }
 
 
@@ -235,14 +253,18 @@ _PHRASAL_PARTICLES = {
     "up",
 }
 
-# ---------------------------------------------------------------------------
 # spaCy model loading
-# ---------------------------------------------------------------------------
 
 
 @lru_cache(maxsize=1)
 def get_nlp() -> Language:
-    """Load and cache the spaCy pipeline."""
+    """Load and cache the spaCy pipeline.
+
+    SVOA extraction requires spaCy's rule-based lemmatizer for predicate
+    and reporting verb classification. It must remain distinct from the
+    coreference pipeline, which explicitly excludes the lemmatizer for speed
+    and attaches the neural fastcoref component.
+    """
     try:
         return load(MODEL_NAME)
     except OSError as exc:
@@ -252,9 +274,7 @@ def get_nlp() -> Language:
         ) from exc
 
 
-# ---------------------------------------------------------------------------
 # Public API
-# ---------------------------------------------------------------------------
 
 
 def extract_facts(text: str, source_doc: str = "") -> list[Fact]:
@@ -271,9 +291,7 @@ def extract_facts(text: str, source_doc: str = "") -> list[Fact]:
     return _deduplicate_facts(facts)
 
 
-# ---------------------------------------------------------------------------
 # Per-sentence extraction
-# ---------------------------------------------------------------------------
 
 
 def _extract_from_sentence(
@@ -309,9 +327,7 @@ def _find_root(sentence: Span) -> Token | None:
     return sentence.root if sentence else None
 
 
-# ---------------------------------------------------------------------------
 # Primary fact extraction
-# ---------------------------------------------------------------------------
 
 
 def _extract_primary_fact(
@@ -476,9 +492,7 @@ def _extract_svoa(
     )
 
 
-# ---------------------------------------------------------------------------
 # Coordination extraction
-# ---------------------------------------------------------------------------
 
 
 def _extract_coordination(
@@ -581,9 +595,7 @@ def _extract_coordination(
     return facts
 
 
-# ---------------------------------------------------------------------------
 # Relative clause extraction
-# ---------------------------------------------------------------------------
 
 
 def _extract_relative_clauses(
@@ -651,9 +663,7 @@ def _extract_relative_clauses(
     return facts
 
 
-# ---------------------------------------------------------------------------
 # Clausal complement extraction
-# ---------------------------------------------------------------------------
 
 
 def _extract_clausal_complements(
@@ -674,6 +684,11 @@ def _extract_clausal_complements(
         if not subject:
             continue
 
+        attribution = _get_attribution(root) or _get_attribution(child)
+        modality = _get_modality(child, sentence)
+        if attribution and modality == "asserted":
+            modality = "attributed"
+
         facts.append(
             _build_fact(
                 subject=subject,
@@ -682,8 +697,8 @@ def _extract_clausal_complements(
                 adjuncts=_extract_adjuncts(child),
                 negated=_is_negated(child)
                 or (_is_negated(root) if child.dep_ == "xcomp" else False),
-                modality=_get_modality(child, sentence),
-                attributed_to=_get_attribution(child),
+                modality=modality,
+                attributed_to=attribution,
                 source_doc=source_doc,
                 sentence_id=sentence_id,
                 raw_sentence=sentence.text,
@@ -693,21 +708,7 @@ def _extract_clausal_complements(
     return facts
 
 
-# ---------------------------------------------------------------------------
 # Ditransitive helpers
-# ---------------------------------------------------------------------------
-
-
-def _extract_ditransitive(
-    root: Token, sentence: Span, source_doc: str, sentence_id: int
-) -> list[Fact]:
-    """Compatibility helper for ditransitive detection.
-
-    Ditransitive information is now attached to the primary fact through the
-    ``recipient`` adjunct, so emitting another Fact here would duplicate the
-    same proposition.
-    """
-    return []
 
 
 def _get_recipient(root: Token) -> str | None:
@@ -745,9 +746,7 @@ def _get_recipient(root: Token) -> str | None:
     return None
 
 
-# ---------------------------------------------------------------------------
 # Lexical / predicate helpers
-# ---------------------------------------------------------------------------
 
 
 def _is_copular(root: Token) -> bool:
@@ -809,9 +808,7 @@ def _is_negated(root: Token) -> bool:
     return False
 
 
-# ---------------------------------------------------------------------------
 # Span helpers
-# ---------------------------------------------------------------------------
 
 
 def _get_span_text(token: Token) -> str:
@@ -848,9 +845,7 @@ def _get_antecedent_text(token: Token, reduced: bool = False) -> str:
     return token.doc[start:end].text.strip()
 
 
-# ---------------------------------------------------------------------------
 # Argument helpers
-# ---------------------------------------------------------------------------
 
 
 def _get_subject_from_sentence(root: Token, sentence: Span) -> str | None:
@@ -906,9 +901,7 @@ def _get_agent(root: Token) -> str | None:
     return None
 
 
-# ---------------------------------------------------------------------------
 # Predicate helpers
-# ---------------------------------------------------------------------------
 
 
 def _get_verb_phrase(root: Token, *, include_negation: bool = True) -> str:
@@ -963,9 +956,7 @@ def _is_bare_particle(token: Token) -> bool:
     return _is_phrasal_particle(token)
 
 
-# ---------------------------------------------------------------------------
 # Adjunct extraction
-# ---------------------------------------------------------------------------
 
 
 def _classify_adjunct(preposition: Token) -> str:
@@ -1028,44 +1019,83 @@ def _extract_adjuncts(root: Token) -> dict[str, list[str]]:
     return adjuncts
 
 
-# ---------------------------------------------------------------------------
 # Modality / attribution
-# ---------------------------------------------------------------------------
 
 
-def _get_modality(root: Token, sentence: Span) -> str:
-    """Return the coarse epistemic/status modality of a proposition."""
+def _is_conditional_proposition(root: Token) -> bool:
+    """Return True if the proposition headed by root is conditionally qualified."""
     conditional_markers = {
         marker for marker in _CONDITIONAL_MARKERS if " " not in marker
     }
 
-    if any(
-        token.text.lower() in conditional_markers
-        and token.dep_ in {"mark", "advmod", "prep", "cc"}
-        for token in sentence
-    ):
+    def _is_cond_token(tok: Token) -> bool:
+        return tok.text.lower() in conditional_markers and tok.dep_ in {
+            "mark",
+            "advmod",
+            "prep",
+            "cc",
+        }
+
+    # 1. Direct child conditional marker on the proposition predicate
+    if any(_is_cond_token(child) for child in root.children):
+        return True
+
+    # 2. Adverbial clause (advcl) or preposition (prep) directly attached to root
+    # that is introduced by a conditional marker
+    for child in root.children:
+        if child.dep_ in {"advcl", "prep", "condition"} and (
+            _is_cond_token(child) or any(_is_cond_token(gc) for gc in child.children)
+        ):
+            return True
+
+    # 3. Root is itself embedded inside a conditional clause (ancestor path)
+    curr = root
+    while curr.head != curr and curr.head is not None:
+        if curr.dep_ in {"advcl", "condition"} and (
+            _is_cond_token(curr) or any(_is_cond_token(c) for c in curr.children)
+        ):
+            return True
+        if curr.dep_ == "conj" and (
+            _is_cond_token(curr.head)
+            or any(
+                _is_cond_token(c)
+                for c in curr.head.children
+                if c.dep_ in {"mark", "advmod"}
+            )
+        ):
+            return True
+        curr = curr.head
+
+    return False
+
+
+def _get_modality(root: Token, sentence: Span) -> str:
+    """Return the coarse epistemic/status modality of a proposition."""
+    if _is_conditional_proposition(root):
         return "conditional"
 
-    if root.lemma_.lower() in _REPORTING_VERBS:
+    if root.lemma_.lower() in _REPORTING_VERBS and root.pos_ in {"VERB", "AUX"}:
         return "attributed"
 
-        # Only attribute when a reporting predicate is actually part of the
-        # current proposition, rather than because an unrelated subordinate
-        # clause happens to contain one.
-    if any(token.lemma_.lower() in _REPORTING_VERBS for token in sentence) and any(
-        token.lemma_.lower() in _REPORTING_VERBS
-        and (token is root or token.head is root or root.head is token)
+    # Only attribute when a reporting predicate is actually part of the
+    # current proposition, rather than because an unrelated subordinate
+    # clause happens to contain one.
+    if any(
+        token.pos_ in {"VERB", "AUX"}
+        and token.lemma_.lower() in _REPORTING_VERBS
+        and (token.i == root.i or token.head.i == root.i or root.head.i == token.i)
         for token in sentence
     ):
         return "attributed"
 
     if any(
-        child.dep_ in {"aux", "auxpass"} and child.lemma_.lower() in _MODAL_VERBS
+        child.dep_ in {"aux", "auxpass"}
+        and child.lemma_.lower() in _EPISTEMIC_MODAL_VERBS
         for child in root.children
     ):
         return "hypothetical"
 
-    if root.lemma_.lower() in _MODAL_VERBS:
+    if root.lemma_.lower() in _EPISTEMIC_MODAL_VERBS:
         return "hypothetical"
 
     return "asserted"
@@ -1073,14 +1103,12 @@ def _get_modality(root: Token, sentence: Span) -> str:
 
 def _get_attribution(root: Token) -> str | None:
     """Return the source of a proposition introduced by a reporting verb."""
-    if root.lemma_.lower() not in _REPORTING_VERBS:
+    if root.pos_ not in {"VERB", "AUX"} or root.lemma_.lower() not in _REPORTING_VERBS:
         return None
     return _get_subject(root)
 
 
-# ---------------------------------------------------------------------------
 # Fact construction / cleanup
-# ---------------------------------------------------------------------------
 
 
 def _build_fact(

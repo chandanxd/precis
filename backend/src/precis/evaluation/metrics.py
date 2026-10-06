@@ -8,13 +8,11 @@ Metrics:
 - Exact Match (EM): normalized string equality.
 - Token F1: token-level overlap between prediction and reference.
 - ROUGE-L: longest common subsequence F1.
-- BERTScore: optional model-based BERTScore using DeBERTa.
-- Embedding similarity: offline-first MiniLM cosine similarity fallback.
+- BERTScore: genuine token-level contextual BERTScore using DeBERTa.
+- MiniLM Cosine: sentence-embedding cosine similarity using all-MiniLM-L6-v2.
 
-When DeBERTa BERTScore is unavailable or disabled, `compute_bert_score`
-falls back to embedding cosine similarity. The fallback is intentionally
-documented as semantic similarity rather than being treated as equivalent
-to canonical BERTScore.
+Genuine BERTScore and MiniLM cosine similarity are strictly separated:
+`compute_bert_score` never silently falls back to sentence embeddings.
 """
 
 from __future__ import annotations
@@ -161,19 +159,60 @@ def compute_rouge_l(
     )
 
 
-def compute_embedding_similarity(
+DEFAULT_BERTSCORE_MODEL = "microsoft/deberta-large-mnli"
+DEFAULT_BERTSCORE_BATCH_SIZE = 4
+
+
+def is_bertscore_model_cached(
+    model_type: str = DEFAULT_BERTSCORE_MODEL,
+) -> bool:
+    """Check if the requested model is locally available without network access."""
+    if os.path.isdir(model_type) and os.path.isfile(os.path.join(model_type, "config.json")):
+        return True
+
+    hf_cache = os.environ.get("HF_HUB_CACHE")
+    if not hf_cache:
+        hf_home = os.environ.get("HF_HOME")
+        if hf_home:
+            hf_cache = os.path.join(os.path.expanduser(hf_home), "hub")
+        else:
+            hf_cache = os.path.expanduser("~/.cache/huggingface/hub")
+
+    repo_dir = os.path.join(hf_cache, f"models--{model_type.replace('/', '--')}")
+    refs_main = os.path.join(repo_dir, "refs", "main")
+    if os.path.isfile(refs_main):
+        try:
+            with open(refs_main, "r", encoding="utf-8") as f:
+                rev = f.read().strip()
+            if rev and os.path.isdir(os.path.join(repo_dir, "snapshots", rev)):
+                return True
+        except OSError:
+            pass
+
+    snapshots_dir = os.path.join(repo_dir, "snapshots")
+    if os.path.isdir(snapshots_dir):
+        try:
+            for snap in os.listdir(snapshots_dir):
+                if os.path.isfile(os.path.join(snapshots_dir, snap, "config.json")):
+                    return True
+        except OSError:
+            pass
+
+    return False
+
+
+def compute_minilm_cosine(
     predicted: str,
     gold: str,
 ) -> float:
     """
-    Compute semantic similarity using the cached MiniLM embeddings
-    already used by Précis' SDH layer.
+    Compute sentence-level semantic similarity using MiniLM embeddings.
 
-    This is not canonical BERTScore. It is an offline-friendly
-    cosine-similarity fallback for environments where the full
-    BERTScore model is unavailable.
+    Important:
+        This is sentence-embedding cosine similarity using all-MiniLM-L6-v2.
+        It is NOT BERTScore (which performs greedy token-level alignment over
+        contextual token embeddings from DeBERTa/BERT).
     """
-
     _validate_text(predicted, "predicted")
     _validate_text(gold, "gold")
 
@@ -204,77 +243,80 @@ def compute_embedding_similarity(
     )
 
 
+# Backward-compatible alias for existing callers.
+compute_embedding_similarity = compute_minilm_cosine
+
+
 def compute_bert_score(
     predicted: str,
     gold: str,
-    model_type: str = "microsoft/deberta-xlarge-mnli",
+    model_type: str = DEFAULT_BERTSCORE_MODEL,
+    device: str | None = None,
+    batch_size: int = DEFAULT_BERTSCORE_BATCH_SIZE,
 ) -> float:
     """
-    Compute semantic similarity for evaluation.
+    Compute genuine BERTScore F1 using token-level contextual representations.
 
-    When PRECIS_USE_DEBERTA_BERTSCORE=1 is set, this attempts to use
-    canonical BERTScore with the configured DeBERTa model.
-
-    Otherwise, or when the requested BERTScore backend cannot be
-    loaded, it falls back to MiniLM embedding cosine similarity.
+    Parameters:
+    - predicted: The candidate answer string.
+    - gold: The ground-truth reference answer string.
+    - model_type: Pretrained model identifier (default: microsoft/deberta-large-mnli).
+    - device: "cuda" or "cpu" (auto-detected if None).
+    - batch_size: Batch size for token embedding generation (default: 4).
 
     Important:
-        The fallback is NOT mathematically equivalent to BERTScore.
-        It is an offline semantic-similarity substitute.
+    - This function computes actual BERTScore using `bert_score.score()`.
+    - It does NOT fall back to sentence-level cosine similarity.
+    - If the model is not cached locally in offline mode, or the `bert-score`
+      package is missing, an explicit exception is raised.
     """
-
     _validate_text(predicted, "predicted")
     _validate_text(gold, "gold")
 
     if not predicted or not gold:
         return 0.0
 
-    use_deberta = os.environ.get("PRECIS_USE_DEBERTA_BERTSCORE") == "1"
+    try:
+        from bert_score import score as bert_score_fn
+    except ImportError as exc:
+        raise RuntimeError(
+            "Genuine BERTScore requires the 'bert-score' package. "
+            "Install it with: pip install bert-score"
+        ) from exc
 
-    if use_deberta:
-        try:
-            from bert_score import score as bert_score_fn
-        except ImportError:
-            # The optional dependency is not installed.
-            return compute_embedding_similarity(
-                predicted,
-                gold,
-            )
+    is_offline = (
+        os.environ.get("HF_HUB_OFFLINE") == "1"
+        or os.environ.get("TRANSFORMERS_OFFLINE") == "1"
+    )
+    if is_offline and not is_bertscore_model_cached(model_type):
+        raise FileNotFoundError(
+            f"BERTScore model '{model_type}' is not cached locally for offline execution. "
+            "Pre-cache the model before running offline benchmarks."
+        )
 
-        try:
-            os.environ.setdefault(
-                "MPLCONFIGDIR",
-                "/tmp/matplotlib",
-            )
+    if device is None:
+        import torch
 
-            scores = bert_score_fn(
-                [predicted.strip()],
-                [gold.strip()],
-                lang="en",
-                model_type=model_type,
-                verbose=False,
-            )
+        device = "cuda" if torch.cuda.is_available() else "cpu"
 
-            f1 = cast(Any, scores[2])
+    os.environ.setdefault(
+        "MPLCONFIGDIR",
+        "/tmp/matplotlib",
+    )
 
-            return round(
-                float(f1.mean().item()),
-                4,
-            )
+    scores = bert_score_fn(
+        [predicted.strip()],
+        [gold.strip()],
+        lang="en",
+        model_type=model_type,
+        device=device,
+        batch_size=batch_size,
+        verbose=False,
+    )
 
-        except (
-            OSError,
-            RuntimeError,
-            ValueError,
-        ):
-            # Model loading can fail in offline environments when the
-            # requested Hugging Face model is not already cached.
-            return compute_embedding_similarity(
-                predicted,
-                gold,
-            )
+    f1 = cast(Any, scores[2])
 
-    return compute_embedding_similarity(
-        predicted,
-        gold,
+    return round(
+        float(f1.mean().item()),
+        4,
     )

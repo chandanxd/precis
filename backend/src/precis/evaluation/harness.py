@@ -35,9 +35,12 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 
 from precis.evaluation.metrics import (
+    DEFAULT_BERTSCORE_MODEL,
     compute_bert_score,
     compute_exact_match,
+    compute_minilm_cosine,
     compute_rouge_l,
+    is_bertscore_model_cached,
 )
 from precis.evaluation.naive_rag import naive_rag_answer
 from precis.graph.schema import Fact
@@ -89,7 +92,7 @@ class EvalResult:
     predicted_answer: str
     exact_match: bool
     rouge_l: float
-    bert_score: float
+    bert_score: float | None
 
     # Context/prompt-side measurements.
     context_words: int
@@ -103,6 +106,9 @@ class EvalResult:
     # Query-time latency only. Document ingestion is intentionally excluded.
     latency_ms: int
 
+    # MiniLM sentence embedding cosine similarity (distinct from BERTScore).
+    minilm_cosine: float | None = None
+
 
 @dataclass
 class AggregateResult:
@@ -113,13 +119,15 @@ class AggregateResult:
 
     avg_em: float
     avg_rouge_l: float
-    avg_bert_score: float
+    avg_bert_score: float | None
 
     avg_context_words: int
     avg_generated_tokens: int
 
     avg_compression_rate: float
     avg_latency_ms: int
+
+    avg_minilm_cosine: float | None = None
 
 
 ABLATION_CONFIGS: dict[str, dict[str, float]] = {
@@ -251,7 +259,6 @@ def aggregate_results(
     results: Sequence[EvalResult],
 ) -> AggregateResult:
     """Compute mean averages across sample results."""
-
     n = len(results)
 
     if n == 0:
@@ -260,12 +267,21 @@ def aggregate_results(
             num_samples=0,
             avg_em=0.0,
             avg_rouge_l=0.0,
-            avg_bert_score=0.0,
+            avg_bert_score=None,
             avg_context_words=0,
             avg_generated_tokens=0,
             avg_compression_rate=0.0,
             avg_latency_ms=0,
+            avg_minilm_cosine=None,
         )
+
+    valid_bert = [r.bert_score for r in results if r.bert_score is not None]
+    avg_bert = round(sum(valid_bert) / len(valid_bert), 4) if valid_bert else None
+
+    valid_minilm = [r.minilm_cosine for r in results if r.minilm_cosine is not None]
+    avg_minilm = (
+        round(sum(valid_minilm) / len(valid_minilm), 4) if valid_minilm else None
+    )
 
     return AggregateResult(
         condition=condition,
@@ -278,10 +294,7 @@ def aggregate_results(
             sum(r.rouge_l for r in results) / n,
             4,
         ),
-        avg_bert_score=round(
-            sum(r.bert_score for r in results) / n,
-            4,
-        ),
+        avg_bert_score=avg_bert,
         avg_context_words=int(sum(r.context_words for r in results) / n),
         avg_generated_tokens=int(sum(r.generated_tokens for r in results) / n),
         avg_compression_rate=round(
@@ -289,6 +302,7 @@ def aggregate_results(
             4,
         ),
         avg_latency_ms=int(sum(r.latency_ms for r in results) / n),
+        avg_minilm_cosine=avg_minilm,
     )
 
 
@@ -300,29 +314,45 @@ def _evaluate_answer(
     generated_tokens: int,
     compression_rate: float,
     latency_ms: int,
+    use_bertscore: bool = False,
+    bertscore_model: str = DEFAULT_BERTSCORE_MODEL,
+    device: str | None = None,
 ) -> EvalResult:
     """Construct a standardized evaluation result."""
+    exact_match = compute_exact_match(
+        predicted_answer,
+        gold_answer,
+    )
+    rouge_l = compute_rouge_l(
+        predicted_answer,
+        gold_answer,
+    )
+    minilm_cosine = compute_minilm_cosine(
+        predicted_answer,
+        gold_answer,
+    )
+
+    bert_score: float | None = None
+    if use_bertscore:
+        bert_score = compute_bert_score(
+            predicted_answer,
+            gold_answer,
+            model_type=bertscore_model,
+            device=device,
+        )
 
     return EvalResult(
         question=question,
         gold_answer=gold_answer,
         predicted_answer=predicted_answer,
-        exact_match=compute_exact_match(
-            predicted_answer,
-            gold_answer,
-        ),
-        rouge_l=compute_rouge_l(
-            predicted_answer,
-            gold_answer,
-        ),
-        bert_score=compute_bert_score(
-            predicted_answer,
-            gold_answer,
-        ),
+        exact_match=exact_match,
+        rouge_l=rouge_l,
+        bert_score=bert_score,
         context_words=context_words,
         generated_tokens=generated_tokens,
         compression_rate=compression_rate,
         latency_ms=latency_ms,
+        minilm_cosine=minilm_cosine,
     )
 
 
@@ -395,6 +425,8 @@ def run_evaluation(
     model: str = DEFAULT_MODEL,
     token_ceiling: int = DEFAULT_TOKEN_CEILING,
     base_url: str = OLLAMA_DEFAULT_BASE_URL,
+    use_bertscore: bool | None = None,
+    bertscore_model: str = DEFAULT_BERTSCORE_MODEL,
 ) -> dict[str, AggregateResult]:
     """
     Execute the main evaluation across research conditions:
@@ -408,6 +440,12 @@ def run_evaluation(
     """
     if token_ceiling <= 0:
         raise ValueError("token_ceiling must be greater than zero.")
+
+    if use_bertscore is None:
+        use_bertscore = (
+            os.environ.get("PRECIS_USE_BERTSCORE") == "1"
+            or os.environ.get("PRECIS_USE_DEBERTA_BERTSCORE") == "1"
+        )
 
     conditions: dict[str, list[EvalResult]] = {
         "naive_rag": [],
@@ -446,6 +484,8 @@ def run_evaluation(
                 generated_tokens=0,
                 compression_rate=0.0,
                 latency_ms=naive_latency,
+                use_bertscore=use_bertscore,
+                bertscore_model=bertscore_model,
             )
         )
 
@@ -502,6 +542,8 @@ def run_evaluation(
                     generated_tokens=inf_sim.tokens_generated,
                     compression_rate=pack_sim.compression_rate,
                     latency_ms=lat_sim,
+                    use_bertscore=use_bertscore,
+                    bertscore_model=bertscore_model,
                 )
             )
 
@@ -538,6 +580,8 @@ def run_evaluation(
                 generated_tokens=inf_b.tokens_generated,
                 compression_rate=pack_b.compression_rate,
                 latency_ms=lat_b,
+                use_bertscore=use_bertscore,
+                bertscore_model=bertscore_model,
             )
             conditions["svoa_no_modality"].append(no_mod_eval)
             conditions["precis_no_modality"].append(no_mod_eval)
@@ -575,6 +619,8 @@ def run_evaluation(
                     generated_tokens=inf_full.tokens_generated,
                     compression_rate=pack_full.compression_rate,
                     latency_ms=lat_full,
+                    use_bertscore=use_bertscore,
+                    bertscore_model=bertscore_model,
                 )
             )
 
@@ -590,6 +636,8 @@ def run_ablation(
     model: str = DEFAULT_MODEL,
     token_ceiling: int = DEFAULT_TOKEN_CEILING,
     base_url: str = OLLAMA_DEFAULT_BASE_URL,
+    use_bertscore: bool | None = None,
+    bertscore_model: str = DEFAULT_BERTSCORE_MODEL,
 ) -> dict[str, AggregateResult]:
     """
     Execute the SDH ablation study.
@@ -607,6 +655,12 @@ def run_ablation(
 
     if token_ceiling <= 0:
         raise ValueError("token_ceiling must be greater than zero.")
+
+    if use_bertscore is None:
+        use_bertscore = (
+            os.environ.get("PRECIS_USE_BERTSCORE") == "1"
+            or os.environ.get("PRECIS_USE_DEBERTA_BERTSCORE") == "1"
+        )
 
     ablation_results: dict[str, list[EvalResult]] = {
         key: [] for key in ABLATION_CONFIGS
@@ -674,6 +728,8 @@ def run_ablation(
                         generated_tokens=inf.tokens_generated,
                         compression_rate=pack.compression_rate,
                         latency_ms=lat,
+                        use_bertscore=use_bertscore,
+                        bertscore_model=bertscore_model,
                     )
                 )
 
@@ -691,14 +747,25 @@ def format_results_table(
 ) -> str:
     """Format evaluation comparison table as GitHub markdown."""
 
+    has_bert = any(r.avg_bert_score is not None for r in results.values())
+    has_minilm = any(r.avg_minilm_cosine is not None for r in results.values())
+
+    headers = ["Condition", "EM", "ROUGE-L"]
+    if has_bert:
+        headers.append("BERTScore (DeBERTa)")
+    if has_minilm:
+        headers.append("MiniLM Cosine")
+    headers.extend([
+        "Context Words",
+        "Generated Tokens",
+        "Compression Rate",
+        "Latency",
+    ])
+
     lines = [
         f"### {title}\n",
-        (
-            "| Condition | EM | ROUGE-L | BERTScore | "
-            "Context Words | Generated Tokens | "
-            "Compression Rate | Latency |"
-        ),
-        "|---|---|---|---|---|---|---|---|",
+        "| " + " | ".join(headers) + " |",
+        "|" + "|".join(["---"] * len(headers)) + "|",
     ]
 
     names = {
@@ -717,16 +784,30 @@ def format_results_table(
             key,
         )
 
-        lines.append(
-            f"| {display_name} | "
-            f"{result.avg_em:.3f} | "
-            f"{result.avg_rouge_l:.3f} | "
-            f"{result.avg_bert_score:.3f} | "
-            f"{result.avg_context_words} | "
-            f"{result.avg_generated_tokens} | "
-            f"{result.avg_compression_rate:.1%} | "
-            f"{result.avg_latency_ms}ms |"
-        )
+        row = [
+            display_name,
+            f"{result.avg_em:.3f}",
+            f"{result.avg_rouge_l:.3f}",
+        ]
+        if has_bert:
+            row.append(
+                f"{result.avg_bert_score:.3f}"
+                if result.avg_bert_score is not None
+                else "-"
+            )
+        if has_minilm:
+            row.append(
+                f"{result.avg_minilm_cosine:.3f}"
+                if result.avg_minilm_cosine is not None
+                else "-"
+            )
+        row.extend([
+            f"{result.avg_context_words}",
+            f"{result.avg_generated_tokens}",
+            f"{result.avg_compression_rate:.1%}",
+            f"{result.avg_latency_ms}ms",
+        ])
+        lines.append("| " + " | ".join(row) + " |")
 
     return "\n".join(lines)
 
@@ -737,14 +818,24 @@ def format_ablation_table(
 ) -> str:
     """Format SDH ablation table as GitHub markdown."""
 
+    has_bert = any(r.avg_bert_score is not None for r in results.values())
+    has_minilm = any(r.avg_minilm_cosine is not None for r in results.values())
+
+    headers = ["Configuration", "Dropped Term", "EM", "ROUGE-L"]
+    if has_bert:
+        headers.append("BERTScore (DeBERTa)")
+    if has_minilm:
+        headers.append("MiniLM Cosine")
+    headers.extend([
+        "Δ ROUGE-L",
+        "Context Words",
+        "Compression Rate",
+    ])
+
     lines = [
         f"### {title}\n",
-        (
-            "| Configuration | Dropped Term | EM | ROUGE-L | "
-            "BERTScore | Δ ROUGE-L | Context Words | "
-            "Compression Rate |"
-        ),
-        "|---|---|---|---|---|---|---|---|",
+        "| " + " | ".join(headers) + " |",
+        "|" + "|".join(["---"] * len(headers)) + "|",
     ]
 
     descriptions = {
@@ -787,16 +878,30 @@ def format_ablation_table(
 
         bold_suffix = "**" if key == "full" else ""
 
-        lines.append(
-            f"| {bold_prefix}{key}{bold_suffix} | "
-            f"{term_desc} ({dropped}) | "
-            f"{result.avg_em:.3f} | "
-            f"{result.avg_rouge_l:.3f} | "
-            f"{result.avg_bert_score:.3f} | "
-            f"{delta_str} | "
-            f"{result.avg_context_words} | "
-            f"{result.avg_compression_rate:.1%} |"
-        )
+        row = [
+            f"{bold_prefix}{key}{bold_suffix}",
+            f"{term_desc} ({dropped})",
+            f"{result.avg_em:.3f}",
+            f"{result.avg_rouge_l:.3f}",
+        ]
+        if has_bert:
+            row.append(
+                f"{result.avg_bert_score:.3f}"
+                if result.avg_bert_score is not None
+                else "-"
+            )
+        if has_minilm:
+            row.append(
+                f"{result.avg_minilm_cosine:.3f}"
+                if result.avg_minilm_cosine is not None
+                else "-"
+            )
+        row.extend([
+            delta_str,
+            f"{result.avg_context_words}",
+            f"{result.avg_compression_rate:.1%}",
+        ])
+        lines.append("| " + " | ".join(row) + " |")
 
     return "\n".join(lines)
 
@@ -872,6 +977,18 @@ def parse_args() -> argparse.Namespace:
         help="Run only the main benchmark.",
     )
 
+    parser.add_argument(
+        "--bertscore",
+        action="store_true",
+        help="Compute genuine BERTScore using DeBERTa contextual embeddings.",
+    )
+
+    parser.add_argument(
+        "--bertscore-model",
+        default=DEFAULT_BERTSCORE_MODEL,
+        help="Pretrained model identifier for BERTScore.",
+    )
+
     return parser.parse_args()
 
 
@@ -885,6 +1002,22 @@ def main() -> None:
 
     if args.token_ceiling <= 0:
         raise SystemExit("--token-ceiling must be greater than zero.")
+
+    use_bertscore = args.bertscore or (
+        os.environ.get("PRECIS_USE_BERTSCORE") == "1"
+        or os.environ.get("PRECIS_USE_DEBERTA_BERTSCORE") == "1"
+    )
+
+    if use_bertscore:
+        is_offline = (
+            os.environ.get("HF_HUB_OFFLINE") == "1"
+            or os.environ.get("TRANSFORMERS_OFFLINE") == "1"
+        )
+        if is_offline and not is_bertscore_model_cached(args.bertscore_model):
+            raise SystemExit(
+                f"BERTScore model '{args.bertscore_model}' is not cached locally. "
+                "Cannot download in offline mode. Pre-cache the model first."
+            )
 
     if args.synthetic:
         samples = [build_synthetic_sample()]
@@ -916,6 +1049,8 @@ def main() -> None:
         samples,
         model=args.model,
         token_ceiling=args.token_ceiling,
+        use_bertscore=use_bertscore,
+        bertscore_model=args.bertscore_model,
     )
 
     main_table = format_results_table(main_results)
@@ -931,6 +1066,8 @@ def main() -> None:
             samples,
             model=args.model,
             token_ceiling=args.token_ceiling,
+            use_bertscore=use_bertscore,
+            bertscore_model=args.bertscore_model,
         )
 
         ablation_table = format_ablation_table(ablation_results)

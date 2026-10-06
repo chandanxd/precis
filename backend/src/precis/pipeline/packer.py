@@ -1,5 +1,8 @@
 """
+Précis — Query-Adaptive Context Packer
+
 Combines intrinsic fact quality (SDH score) with query relevance:
+
     pack_score(t, q) = SDH(t) × cosine_sim(embed(t), embed(q))
 
 Enforces epistemic modality filtering (asserted > attributed > conditional;
@@ -33,36 +36,10 @@ class PackResult:
     packed_facts: list[Fact]
     tokens_used: int
     naive_rag_tokens: int
-    compression_ratio: float
+    compression_rate: float
     avg_sdh_score: float
     facts_considered: int
     facts_packed: int
-
-    def __init__(
-        self,
-        packed_facts: list[Fact],
-        tokens_used: int,
-        naive_rag_tokens: int,
-        compression_ratio: float = 0.0,
-        avg_sdh_score: float = 0.0,
-        facts_considered: int = 0,
-        facts_packed: int = 0,
-        compression_rate: float | None = None,
-    ) -> None:
-        self.packed_facts = packed_facts
-        self.tokens_used = tokens_used
-        self.naive_rag_tokens = naive_rag_tokens
-        self.compression_ratio = (
-            compression_rate if compression_rate is not None else compression_ratio
-        )
-        self.avg_sdh_score = avg_sdh_score
-        self.facts_considered = facts_considered
-        self.facts_packed = facts_packed
-
-    @property
-    def compression_rate(self) -> float:
-        """Compatibility alias for compression_ratio."""
-        return self.compression_ratio
 
 
 def _get_excluded_modalities(
@@ -71,6 +48,7 @@ def _get_excluded_modalities(
     """Return the modality set to exclude from retrieval context."""
     if exclude_modalities is None:
         return DEFAULT_EXCLUDED_MODALITIES
+
     return exclude_modalities
 
 
@@ -231,7 +209,9 @@ def pack_context(
     1. Retrieve candidate facts from the vector store by query similarity.
     2. Filter excluded epistemic modalities.
     3. Re-rank surviving candidates using:
+
            pack_score(t, q) = SDH(t) × query_similarity
+
     4. Greedily pack highest-scoring facts into the token ceiling.
     5. Compute compression and quality telemetry.
     """

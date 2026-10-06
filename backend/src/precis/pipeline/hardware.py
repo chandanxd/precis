@@ -1,4 +1,5 @@
 import csv
+import os
 import platform
 import re
 import subprocess
@@ -348,20 +349,23 @@ class HardwareProfile:
 
 
 def select_mode(ram_gb: float, has_gpu: bool, vram_gb: float | None) -> str:
-    if ram_gb >= 16 and has_gpu and vram_gb is not None and vram_gb >= 6:
+    if ram_gb >= 8 and has_gpu and vram_gb is not None and vram_gb >= 6:
         return "gpu"
-    if ram_gb >= 16 and has_gpu and vram_gb is not None:
+    if ram_gb >= 8 and has_gpu and vram_gb is not None and vram_gb >= 2:
         return "gpu-partial"
     if ram_gb >= 16:
         return "cpu"
     return "cpu-light"
 
 
+PRIMARY_MODEL = os.getenv("PRECIS_OLLAMA_MODEL", "llama3:8b")
+FALLBACK_MODEL = os.getenv("PRECIS_OLLAMA_FALLBACK_MODEL", "qwen2.5-coder:7b")
+
 MODE_TO_MODEL: dict[str, str] = {
-    "gpu": "llama3:8b",
-    "gpu-partial": "llama3:8b",
-    "cpu": "llama3:8b",
-    "cpu-light": "qwen2.5v1:7b",
+    "gpu": PRIMARY_MODEL,
+    "gpu-partial": PRIMARY_MODEL,
+    "cpu": PRIMARY_MODEL,
+    "cpu-light": FALLBACK_MODEL,
 }
 
 MODE_TO_CEILING: dict[str, int] = {
@@ -391,19 +395,3 @@ def profile_hardware() -> HardwareProfile:
         recommended_mode=mode,
         token_ceiling=MODE_TO_CEILING[mode],
     )
-
-
-def validate_ollama(model: str) -> bool:
-    try:
-        result = subprocess.run(
-            ["ollama", "list"], capture_output=True, text=True, timeout=10, check=True
-        )
-        if result.returncode == 0:
-            return model.split(":")[0] in result.stdout
-    except (
-        FileNotFoundError,
-        subprocess.TimeoutExpired,
-        subprocess.CalledProcessError,
-    ):
-        pass
-    return False

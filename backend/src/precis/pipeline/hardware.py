@@ -141,14 +141,15 @@ def _detect_linux_gpu() -> tuple[bool, str | None, float | None]:
                 for line in result.stdout.splitlines():
                     if "VRAM Total Memory" not in line:
                         continue
-                    match = re.search(r"\d+", line)
+                    match = re.search(r"(\d+)\s*$", line.strip())
                     if not match:
                         continue
                     value = int(match.group(1))
-                    if "B" in line:
-                        vram = round(value / (1024**3), 1)
-                    elif "MiB" in line:
+                    # Check MiB first: "MiB" also contains "B".
+                    if "MiB" in line:
                         vram = round(value / 1024, 1)
+                    else:
+                        vram = round(value / (1024**3), 1)
                     break
                 return True, name, vram
             except (
@@ -358,7 +359,7 @@ def select_mode(ram_gb: float, has_gpu: bool, vram_gb: float | None) -> str:
     return "cpu-light"
 
 
-PRIMARY_MODEL = os.getenv("PRECIS_OLLAMA_MODEL", "llama3:8b")
+PRIMARY_MODEL = os.getenv("PRECIS_OLLAMA_MODEL", "qwen3.5:4b")
 FALLBACK_MODEL = os.getenv("PRECIS_OLLAMA_FALLBACK_MODEL", "qwen2.5-coder:7b")
 
 MODE_TO_MODEL: dict[str, str] = {
@@ -376,12 +377,21 @@ MODE_TO_CEILING: dict[str, int] = {
 }
 
 
+def get_model_for_mode(mode: str) -> str:
+    """Resolve active model tag for operating mode with runtime env overrides."""
+    primary = os.getenv("PRECIS_OLLAMA_MODEL", PRIMARY_MODEL)
+    fallback = os.getenv("PRECIS_OLLAMA_FALLBACK_MODEL", FALLBACK_MODEL)
+    return fallback if mode == "cpu-light" else primary
+
+
 def profile_hardware() -> HardwareProfile:
     cores, cpu_model = detect_cpu()
     ram = detect_ram()
     has_gpu, gpu_name, vram = detect_gpu()
     _, ml_accelerator = detect_ml_accelerator()
-    mode = select_mode(ram["usable"], has_gpu, vram)
+    # Tier on nominal installed RAM: "usable" is the OS-reported figure and
+    # sits just under it (e.g. 15.5 GB on a 16 GB machine).
+    mode = select_mode(ram["total"], has_gpu, vram)
 
     return HardwareProfile(
         cpu_cores=cores,
@@ -391,7 +401,7 @@ def profile_hardware() -> HardwareProfile:
         gpu_name=gpu_name,
         vram_gb=vram,
         ml_accelerator=ml_accelerator,
-        recommended_model=MODE_TO_MODEL[mode],
+        recommended_model=get_model_for_mode(mode),
         recommended_mode=mode,
         token_ceiling=MODE_TO_CEILING[mode],
     )

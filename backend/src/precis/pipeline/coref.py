@@ -6,10 +6,11 @@ from dataclasses import dataclass
 os.environ.setdefault("HF_HUB_OFFLINE", "1")
 os.environ.setdefault("TRANSFORMERS_OFFLINE", "1")
 
-import spacy
-from spacy.language import Language
+import spacy  # noqa: E402
+from fastcoref import spacy_component  # noqa: E402, F401
+from spacy.language import Language  # noqa: E402
 
-from precis.pipeline.hardware import profile_hardware
+from precis.pipeline.hardware import profile_hardware  # noqa: E402
 
 _nlp = None
 _nlp_lock = threading.Lock()
@@ -48,12 +49,16 @@ def _resolve_model_path(model_id: str = "biu-nlp/f-coref") -> str:
         revision = f.read().strip()
 
     if not revision:
-        raise FileNotFoundError(f"Cached model has an empty main revision: {model_id}")
+        raise FileNotFoundError(
+            f"Cached model has an empty main revision: {model_id}"
+        )
 
     snapshot_dir = os.path.join(repo_dir, "snapshots", revision)
 
     if not os.path.isdir(snapshot_dir):
-        raise FileNotFoundError(f"Cached model snapshot not found: {snapshot_dir}")
+        raise FileNotFoundError(
+            f"Cached model snapshot not found: {snapshot_dir}"
+        )
 
     return snapshot_dir
 
@@ -102,7 +107,8 @@ def resolve_coreferences(text: str) -> str:
     Replace pronouns with their referents throughout the text.
 
     Input: "Dr. Smith discovered a compound. He published his findings."
-    Output: "Dr. Smith discovered a compound. Dr. Smith published Dr. Smith's findings."
+    Output: "Dr. Smith discovered a compound. "
+            "Dr. Smith published Dr. Smith's findings."
     """
     nlp = _get_nlp()
     doc = nlp(text)
@@ -126,7 +132,7 @@ def resolve_coreferences(text: str) -> str:
 
             # Preserve whitespace around the actual mention.
             l_space = mention[: len(mention) - len(mention.lstrip())]
-            r_space = mention[len(mention.rstrip()) :]
+            r_space = mention[len(mention.rstrip()):]
             mention_clean = mention.strip()
 
             # Only replace pronouns.

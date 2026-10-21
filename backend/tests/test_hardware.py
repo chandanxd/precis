@@ -1,8 +1,11 @@
 import pytest
 from precis.pipeline.hardware import (
+    FALLBACK_MODEL,
+    PRIMARY_MODEL,
     HardwareProfile,
     MODE_TO_CEILING,
     MODE_TO_MODEL,
+    get_model_for_mode,
     profile_hardware,
     select_mode,
 )
@@ -33,13 +36,13 @@ class TestSelectMode:
         [
             (4, False, None, "cpu-light", 1024, "qwen2.5-coder:7b"),
             (8, False, None, "cpu-light", 1024, "qwen2.5-coder:7b"),
-            (8, True, 4, "gpu-partial", 3072, "llama3:8b"),
-            (8, True, 6, "gpu", 4096, "llama3:8b"),
-            (8, True, 8, "gpu", 4096, "llama3:8b"),
-            (16, False, None, "cpu", 2048, "llama3:8b"),
-            (16, True, 6, "gpu", 4096, "llama3:8b"),
-            (16, True, 8, "gpu", 4096, "llama3:8b"),
-            (32, True, 8, "gpu", 4096, "llama3:8b"),
+            (8, True, 4, "gpu-partial", 3072, "qwen3.5:4b"),
+            (8, True, 6, "gpu", 4096, "qwen3.5:4b"),
+            (8, True, 8, "gpu", 4096, "qwen3.5:4b"),
+            (16, False, None, "cpu", 2048, "qwen3.5:4b"),
+            (16, True, 6, "gpu", 4096, "qwen3.5:4b"),
+            (16, True, 8, "gpu", 4096, "qwen3.5:4b"),
+            (32, True, 8, "gpu", 4096, "qwen3.5:4b"),
         ],
     )
     def test_all_decision_matrix_scenarios(
@@ -52,6 +55,14 @@ class TestSelectMode:
 
 
 class TestProfileHardware:
+    def test_default_primary_model_is_qwen35(self):
+        assert PRIMARY_MODEL == "qwen3.5:4b"
+        assert FALLBACK_MODEL == "qwen2.5-coder:7b"
+        assert get_model_for_mode("gpu") == "qwen3.5:4b"
+        assert get_model_for_mode("gpu-partial") == "qwen3.5:4b"
+        assert get_model_for_mode("cpu") == "qwen3.5:4b"
+        assert get_model_for_mode("cpu-light") == "qwen2.5-coder:7b"
+
     def test_returns_hardware_profile(self):
         profile = profile_hardware()
         assert isinstance(profile, HardwareProfile)
@@ -76,3 +87,15 @@ class TestProfileHardware:
             "ml_accelerator",
         }
         assert set(d.keys()) == expected_keys
+
+    def test_primary_model_env_override(self, monkeypatch):
+        monkeypatch.setenv("PRECIS_OLLAMA_MODEL", "custom-model:latest")
+        assert get_model_for_mode("gpu") == "custom-model:latest"
+        assert get_model_for_mode("gpu-partial") == "custom-model:latest"
+        assert get_model_for_mode("cpu") == "custom-model:latest"
+        assert get_model_for_mode("cpu-light") == "qwen2.5-coder:7b"
+
+    def test_fallback_model_env_override(self, monkeypatch):
+        monkeypatch.setenv("PRECIS_OLLAMA_FALLBACK_MODEL", "custom-fallback:3b")
+        assert get_model_for_mode("cpu-light") == "custom-fallback:3b"
+        assert get_model_for_mode("cpu") == "qwen3.5:4b"

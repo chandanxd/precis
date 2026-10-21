@@ -16,6 +16,7 @@ from precis.pipeline.inference import (
     build_prompt,
     check_ollama,
     generate_answer,
+    strip_thinking_tags,
 )
 from precis.pipeline.orchestrator import (
     IngestionResult,
@@ -67,6 +68,26 @@ class TestPromptBuilding:
     def test_build_prompt_rejects_whitespace_query(self):
         with pytest.raises(ValueError, match="Query must not be empty"):
             build_prompt("Fact 1: Something happened.", "   ")
+
+    def test_build_prompt_concise_style(self):
+        context = "Fact 1: Alexander Fleming discovered penicillin."
+        query = "Who discovered penicillin?"
+
+        prompt = build_prompt(context, query, prompt_style="concise")
+
+        assert "Provide ONLY the shortest complete answer" in prompt
+        assert 'output "Insufficient information"' in prompt
+        assert "Give only the entity, name, date, number, or exact phrase" in prompt
+        assert "FACTS FROM DOCUMENT:" in prompt
+        assert context in prompt
+        assert "QUESTION:\nWho discovered penicillin?" in prompt
+
+    def test_build_prompt_env_style(self, monkeypatch):
+        monkeypatch.setenv("PRECIS_PROMPT_STYLE", "concise")
+        prompt = build_prompt("Fact 1: Paris is capital.", "Capital?")
+
+        assert "Provide ONLY the shortest complete answer" in prompt
+        assert 'output "Insufficient information"' in prompt
 
 
 class TestOllamaClient:
@@ -281,6 +302,45 @@ class TestOllamaClient:
         payload = mock_post.call_args.kwargs["json"]
         assert payload["model"] == "deepseek-r1:8b"
 
+    @patch("requests.post")
+    def test_generate_answer_defaults_to_qwen35(self, mock_post, monkeypatch):
+        monkeypatch.delenv("PRECIS_OLLAMA_MODEL", raising=False)
+
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.json.return_value = {
+            "response": "Answer",
+            "eval_count": 1,
+            "prompt_eval_count": 10,
+        }
+        mock_post.return_value = mock_resp
+
+        res = generate_answer("Question?", "Fact 1: Answer.")
+        assert res.model == "qwen3.5:4b"
+
+        payload = mock_post.call_args.kwargs["json"]
+        assert payload["model"] == "qwen3.5:4b"
+
+    @patch("requests.post")
+    def test_generate_answer_with_prompt_style(self, mock_post):
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.json.return_value = {
+            "response": "Answer",
+            "eval_count": 1,
+            "prompt_eval_count": 10,
+        }
+        mock_post.return_value = mock_resp
+
+        generate_answer(
+            "Who was it?",
+            "Fact 1: Answer.",
+            prompt_style="concise",
+        )
+
+        payload = mock_post.call_args.kwargs["json"]
+        assert "Provide ONLY the shortest complete answer" in payload["prompt"]
+
 
 class TestOrchestrator:
     def test_ingest_document(self, mem_store):
@@ -377,3 +437,45 @@ class TestOrchestrator:
         assert isinstance(res, PipelineResult)
         assert res.answer == "Penicillin was discovered in 1928."
         assert mem_store.count() >= 1
+
+    @patch("precis.pipeline.orchestrator.generate_answer")
+    def test_query_pipeline_forwards_prompt_style(self, mock_generate, mem_store):
+        fact = Fact(
+            subject="Fleming",
+            verb="discovered",
+            object="penicillin",
+            modality="asserted",
+            negated=False,
+            source_doc="doc.txt",
+        )
+        mem_store.add_facts([fact])
+
+        mock_generate.return_value = InferenceResult(
+            answer="penicillin",
+            model="qwen3.5:4b",
+            latency_ms=100,
+            tokens_generated=2,
+        )
+
+        query_pipeline(
+            "What was discovered?",
+            store=mem_store,
+            prompt_style="concise",
+        )
+
+        assert mock_generate.call_args.kwargs["prompt_style"] == "concise"
+
+
+class TestThinkTagStripping:
+    def test_strip_complete_think_block(self):
+        text = "<think>\nThinking about the climate bill...\n</think>\nThe government approved the climate bill."
+        assert strip_thinking_tags(text) == "The government approved the climate bill."
+
+    def test_strip_unclosed_think_block(self):
+        text = "<think>\nThinking about the climate bill and nuclear subsidies being excluded..."
+        assert "climate bill" in strip_thinking_tags(text)
+
+    def test_strip_empty_outside_think(self):
+        text = "<think>\nOnly thinking text generated before hitting token limit...\n</think>"
+        assert "Only thinking text" in strip_thinking_tags(text)
+

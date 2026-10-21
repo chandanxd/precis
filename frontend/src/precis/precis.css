@@ -21,7 +21,7 @@
   --tx: #fbfbfd;
   --tx-2: #c9c9d0;
   --tx-3: #909098;
-  --tx-4: #5d5d66;
+  --tx-4: #76767f;
   --inv-bg: #f5f5f7;
   --inv-tx: #0a0a0a;
   --code-bg: rgba(0, 0, 0, 0.6);
@@ -74,7 +74,7 @@
   --tx: #121216;
   --tx-2: #3f3f48;
   --tx-3: #6a6a74;
-  --tx-4: #a0a0aa;
+  --tx-4: #6e6e77;
   --inv-tx: #ffffff;
   --code-bg: rgba(244, 244, 246, 0.9);
   --tag-tx: #4b4b54;
@@ -887,6 +887,12 @@ pre {
 :root[data-theme="light"] ::selection {
   background: #1a1a1e;
   color: #fff;
+}
+:root[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: rgba(10, 10, 10, 0.22);
+}
+:root[data-theme="light"] :focus-visible {
+  outline-color: rgba(10, 10, 10, 0.7);
 }
 :root[data-theme="light"] .precis-user-bubble {
   background: linear-gradient(135deg, rgba(10, 10, 10, 0.85), rgba(10, 10, 10, 0.7));

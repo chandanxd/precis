@@ -197,7 +197,7 @@ export const SettingsView = ({ theme, onThemeChange }: SettingsViewProps) => {
             <span className="text-[0.5625rem] text-[var(--tx-4)] uppercase">STAGE 5 SYNTHESIS</span>
           </div>
 
-          {/* Device preset: the backend's four hardware tiers */}
+          {/* Device preset: the backend's hardware tiers */}
           <div className="flex flex-col gap-1">
             <label className="text-[0.625rem] text-[var(--tx-3)] uppercase font-semibold">
               Device Preset

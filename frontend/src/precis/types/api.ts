@@ -51,7 +51,7 @@ export interface QueryResponse {
   answer_source?: "conversation" | "general" | "document";
 }
 
-export type HardwareMode = "gpu" | "gpu-partial" | "cpu" | "cpu-light";
+export type HardwareMode = "gpu-large" | "gpu" | "gpu-partial" | "cpu" | "cpu-light";
 export interface HardwareProfile {
   cpu_cores: number;
   cpu_model?: string;

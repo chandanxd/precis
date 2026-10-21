@@ -531,6 +531,23 @@ class TestModelsAndTiers:
         tiers = {t["mode"]: t for t in hardware_tiers()}
         assert tiers["cpu-light"]["token_ceiling"] == 1024
         assert tiers["gpu"]["model"] == "qwen3.5:4b"
+        assert tiers["gpu-large"]["model"] == "qwen3.5:9b"
+        assert tiers["gpu-large"]["token_ceiling"] == tiers["gpu"]["token_ceiling"] == 4096
+        assert list(tiers) == ["gpu-large", "gpu", "gpu-partial", "cpu", "cpu-light"]
+
+    @pytest.mark.parametrize(
+        "installed,expected",
+        [(["qwen3.5:9b", "qwen3.5:4b"], "qwen3.5:9b"), (["qwen3.5:4b"], "qwen3.5:4b")],
+    )
+    def test_large_tier_falls_back_when_9b_missing(self, installed, expected):
+        import main
+
+        profile = self._profile(model="qwen3.5:9b", mode="gpu-large", ceiling=4096)
+        with (
+            patch.object(main, "_get_hardware", return_value=profile),
+            patch.object(main, "_installed_models", return_value=installed),
+        ):
+            assert main._default_model() == expected
 
     @pytest.mark.parametrize(
         "installed,expected",

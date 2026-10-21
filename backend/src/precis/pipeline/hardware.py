@@ -351,6 +351,10 @@ class HardwareProfile:
 
 
 def select_mode(ram_gb: float, has_gpu: bool, vram_gb: float | None) -> str:
+    # gpu-large only changes the default model: its ceiling equals gpu's, so the
+    # token-ceiling rules (4,096 for RAM >= 8 GB and VRAM >= 6 GB) are unchanged.
+    if ram_gb >= 8 and has_gpu and vram_gb is not None and vram_gb >= 10:
+        return "gpu-large"
     if ram_gb >= 8 and has_gpu and vram_gb is not None and vram_gb >= 6:
         return "gpu"
     if ram_gb >= 8 and has_gpu and vram_gb is not None and vram_gb >= 2:
@@ -365,8 +369,12 @@ PRIMARY_MODEL = os.getenv("PRECIS_OLLAMA_MODEL", "qwen3.5:4b")
 # model of the same family (q4_K_M, 1.9 GB on disk against 3.3 GB for 4b), so
 # it fits beside spaCy, the coreference model and the embedder in 8 GB.
 FALLBACK_MODEL = os.getenv("PRECIS_OLLAMA_FALLBACK_MODEL", "qwen3.5:2b")
+# Model for GPUs with 10 GB+ VRAM: the 9b model (q4_K_M, 6.6 GB) fits with room
+# for the context, which a 6-8 GB card does not reliably give it.
+LARGE_MODEL = os.getenv("PRECIS_OLLAMA_LARGE_MODEL", "qwen3.5:9b")
 
 MODE_TO_MODEL: dict[str, str] = {
+    "gpu-large": LARGE_MODEL,
     "gpu": PRIMARY_MODEL,
     "gpu-partial": PRIMARY_MODEL,
     "cpu": PRIMARY_MODEL,
@@ -374,6 +382,7 @@ MODE_TO_MODEL: dict[str, str] = {
 }
 
 MODE_TO_CEILING: dict[str, int] = {
+    "gpu-large": 4096,
     "gpu": 4096,
     "gpu-partial": 3072,
     "cpu": 2048,
@@ -384,7 +393,8 @@ MODE_TO_CEILING: dict[str, int] = {
 # Human-readable rule per mode, in the order of select_mode. Settings shows
 # these as device presets.
 MODE_LABELS: dict[str, str] = {
-    "gpu": "GPU with 6 GB+ VRAM (and 8 GB+ RAM)",
+    "gpu-large": "GPU with 10 GB+ VRAM (and 8 GB+ RAM)",
+    "gpu": "GPU with 6-10 GB VRAM (and 8 GB+ RAM)",
     "gpu-partial": "GPU with 2-6 GB VRAM (and 8 GB+ RAM)",
     "cpu": "16 GB+ RAM, no usable GPU",
     "cpu-light": "Under 16 GB RAM, no usable GPU",
@@ -392,7 +402,7 @@ MODE_LABELS: dict[str, str] = {
 
 
 def hardware_tiers() -> list[dict[str, Any]]:
-    """The four hardware modes with their default model and token ceiling."""
+    """The hardware modes with their default model and token ceiling."""
     return [
         {
             "mode": mode,
@@ -400,7 +410,7 @@ def hardware_tiers() -> list[dict[str, Any]]:
             "model": get_model_for_mode(mode),
             "token_ceiling": MODE_TO_CEILING[mode],
         }
-        for mode in ("gpu", "gpu-partial", "cpu", "cpu-light")
+        for mode in ("gpu-large", "gpu", "gpu-partial", "cpu", "cpu-light")
     ]
 
 
@@ -408,7 +418,12 @@ def get_model_for_mode(mode: str) -> str:
     """Resolve active model tag for operating mode with runtime env overrides."""
     primary = os.getenv("PRECIS_OLLAMA_MODEL", PRIMARY_MODEL)
     fallback = os.getenv("PRECIS_OLLAMA_FALLBACK_MODEL", FALLBACK_MODEL)
-    return fallback if mode == "cpu-light" else primary
+    large = os.getenv("PRECIS_OLLAMA_LARGE_MODEL", LARGE_MODEL)
+    if mode == "cpu-light":
+        return fallback
+    if mode == "gpu-large":
+        return large
+    return primary
 
 
 def profile_hardware() -> HardwareProfile:

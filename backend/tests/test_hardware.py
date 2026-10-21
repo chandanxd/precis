@@ -43,6 +43,9 @@ class TestSelectMode:
             (16, True, 6, "gpu", 4096, "qwen3.5:4b"),
             (16, True, 8, "gpu", 4096, "qwen3.5:4b"),
             (32, True, 8, "gpu", 4096, "qwen3.5:4b"),
+            (8, True, 10, "gpu-large", 4096, "qwen3.5:9b"),
+            (32, True, 24, "gpu-large", 4096, "qwen3.5:9b"),
+            (4, True, 24, "cpu-light", 1024, "qwen3.5:2b"),
         ],
     )
     def test_all_decision_matrix_scenarios(
@@ -68,7 +71,7 @@ class TestProfileHardware:
         assert isinstance(profile, HardwareProfile)
         assert profile.cpu_cores > 0
         assert profile.ram_gb > 0
-        assert profile.recommended_mode in ("gpu", "gpu-partial", "cpu", "cpu-light")
+        assert profile.recommended_mode in ("gpu-large", "gpu", "gpu-partial", "cpu", "cpu-light")
         assert profile.token_ceiling > 0
 
     def test_to_dict_has_all_keys(self):
@@ -94,6 +97,11 @@ class TestProfileHardware:
         assert get_model_for_mode("gpu-partial") == "custom-model:latest"
         assert get_model_for_mode("cpu") == "custom-model:latest"
         assert get_model_for_mode("cpu-light") == "qwen3.5:2b"
+
+    def test_large_model_env_override(self, monkeypatch):
+        monkeypatch.setenv("PRECIS_OLLAMA_LARGE_MODEL", "custom-large:14b")
+        assert get_model_for_mode("gpu-large") == "custom-large:14b"
+        assert get_model_for_mode("gpu") == "qwen3.5:4b"
 
     def test_fallback_model_env_override(self, monkeypatch):
         monkeypatch.setenv("PRECIS_OLLAMA_FALLBACK_MODEL", "custom-fallback:3b")

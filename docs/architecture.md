@@ -68,6 +68,7 @@ flowchart LR
 ### 3.1 Hardware-Budget Control vs. Evaluation Context Ceiling
 The diagram and codebase distinguish between runtime operational profiles and the experimental evaluation budget:
 - **Runtime Hardware Profiles (`hardware.py`)**: Senses available physical host RAM, VRAM, and GPU acceleration to dynamically calibrate operating mode context ceilings:
+  - `gpu-large` (VRAM ≥ 10 GB): 4,096 tokens, default model `qwen3.5:9b`
   - `gpu`: 4,096 tokens
   - `gpu-partial`: 3,072 tokens
   - `cpu`: 2,048 tokens
@@ -96,5 +97,5 @@ Every node, module, and data boundary in the architecture is verified against ph
 | **Similarity Retrieval** | `backend/src/precis/pipeline/packer.py` | **Implemented** | Uses `store.query_similar()` and `store.query_similar_structural()` to retrieve top-$k$ candidate propositions and structural blocks via cosine similarity with the query embedding. |
 | **Hardware-Budget Control** | `backend/src/precis/pipeline/hardware.py` | **Implemented** | Inspects RAM and VRAM; sets runtime profile ceilings (1,024–4,096 tokens). The reported confirmatory evaluation enforced an evaluation-specific 2,048-token ceiling. |
 | **Guarded Packing (Candidate G)** | `backend/src/precis/pipeline/structural.py` | **Implemented** | Function `assemble_structural_query_context()` enforces table priority, suppresses same-document propositions, and caps packing at the specified token ceiling. |
-| **Local LLM Inference** | `backend/src/precis/pipeline/inference.py` | **Implemented** | Dispatches prompts to local Ollama HTTP endpoint (`http://localhost:11434`) using deterministic greedy decoding ($T=0.0$). The reported confirmatory evaluation used `qwen2.5-coder:7b`; the runtime profiler in `hardware.py` defaults to `qwen3.5:4b` (`qwen3.5:2b` on the `cpu-light` profile, falling back to `qwen3.5:4b` when it is not installed). |
+| **Local LLM Inference** | `backend/src/precis/pipeline/inference.py` | **Implemented** | Dispatches prompts to local Ollama HTTP endpoint (`http://localhost:11434`) using deterministic greedy decoding ($T=0.0$). The reported confirmatory evaluation used `qwen2.5-coder:7b`; the runtime profiler in `hardware.py` defaults to `qwen3.5:4b` (`qwen3.5:9b` on the `gpu-large` profile and `qwen3.5:2b` on the `cpu-light` profile, each falling back to `qwen3.5:4b` when it is not installed). |
 | **Generated Answer** | `backend/src/precis/pipeline/orchestrator.py` | **Implemented** | Returns generated string response to caller without external cloud network calls in nominal deployment. |

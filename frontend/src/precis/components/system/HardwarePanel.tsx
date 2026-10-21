@@ -52,7 +52,7 @@ export const HardwarePanel = () => {
       title: "Hardware Detection & Calibration",
       short: "Hardware",
       tech: "psutil · nvidia-smi / rocm-smi · PyTorch",
-      role: "Reads CPU cores, RAM and GPU memory and picks one of four modes, each with a default model and a token ceiling between 1,024 and 4,096 (Settings → Device preset). These rules were not evaluated in the paper.",
+      role: "Reads CPU cores, RAM and GPU memory and picks one of five modes, each with a default model and a token ceiling between 1,024 and 4,096 (Settings → Device preset). These rules were not evaluated in the paper.",
       inputs: "Host CPU, RAM and GPU",
       outputs: "Hardware profile: mode, default model, token ceiling",
     },

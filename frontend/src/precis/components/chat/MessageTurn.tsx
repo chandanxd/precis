@@ -3,7 +3,8 @@ import type { Message, PipelineEvent, Fact } from "../../types/api";
 import { EvidencePanel } from "./EvidencePanel";
 import { PipelineTracker } from "./PipelineTracker";
 import { MarkdownContent } from "./MarkdownContent";
-import { User, Bot, Clock, Zap, Copy, Check, RefreshCw, Activity } from "lucide-react";
+import { useState } from "react";
+import { User, Bot, Clock, Zap, Copy, Check, RefreshCw, Activity, Pencil } from "lucide-react";
 
 function splitIntoSentences(text: string): string[] {
   if (!text) return [];
@@ -54,8 +55,12 @@ interface MessageTurnProps {
   hoveredSentenceIndex: number | null;
   onHoverSentence: (index: number | null) => void;
   copiedMsgId: string | null;
-  onCopyAnswer: (text: string, msgId: string) => void;
+  onCopyAnswer: (text: string, msgId: string, kind?: "answer" | "question") => void;
   onRegenerate: (msgId: string) => void;
+  /** Replace a question and ask again; everything after it is dropped. */
+  onEditMessage?: (msgId: string, text: string) => void;
+  /** An answer is streaming: editing is unavailable until it finishes. */
+  isBusy?: boolean;
   isEvidenceExpanded: boolean;
   onToggleEvidence: () => void;
   premiseRowRefs: React.MutableRefObject<Record<string, HTMLButtonElement | null>>;
@@ -79,11 +84,22 @@ export const MessageTurn = ({
   copiedMsgId,
   onCopyAnswer,
   onRegenerate,
+  onEditMessage,
+  isBusy = false,
   isEvidenceExpanded,
   onToggleEvidence,
   premiseRowRefs,
   evidenceHeaderRef,
 }: MessageTurnProps) => {
+  const [editText, setEditText] = useState<string | null>(null);
+  const isEditing = editText !== null;
+  const submitEdit = () => {
+    const text = (editText ?? "").trim();
+    if (!text || !userMsg || isBusy) return;
+    setEditText(null);
+    if (text !== userMsg.content) onEditMessage?.(userMsg.id, text);
+  };
+
   return (
     <section
       onClick={onSelectMessage}
@@ -91,24 +107,100 @@ export const MessageTurn = ({
     >
       {/* User Message Block */}
       {userMsg && (
-        <div className="precis-user-bubble flex flex-col gap-1">
+        <div className="precis-user-bubble group flex flex-col gap-1">
           <div className="flex items-center justify-between text-xs text-[var(--tx-3)] font-mono">
             <div className="flex items-center gap-1.5 font-medium text-[var(--tx-2)]">
               <User size={12} strokeWidth={1.5} />
               <span>You</span>
             </div>
-            <span className="text-[0.625rem] text-[var(--tx-4)] font-mono">
-              {new Date(userMsg.timestamp).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </span>
+            <div className="flex items-center gap-2">
+              {/* Shown only while the message is hovered (or the button has keyboard focus). */}
+              {onEditMessage && !isEditing && (
+                <button
+                  type="button"
+                  disabled={isBusy}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setEditText(userMsg.content);
+                  }}
+                  title="Edit and ask again"
+                  aria-label="Edit message"
+                  className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100 disabled:hidden text-[var(--tx-4)] hover:text-[var(--accent-strong)] p-0.5 transition-opacity cursor-pointer"
+                >
+                  <Pencil size={12} strokeWidth={1.5} />
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onCopyAnswer(userMsg.content, userMsg.id, "question");
+                }}
+                title="Copy message"
+                aria-label="Copy message"
+                className="opacity-0 group-hover:opacity-100 focus-visible:opacity-100 text-[var(--tx-4)] hover:text-[var(--accent-strong)] p-0.5 transition-opacity cursor-pointer"
+              >
+                {copiedMsgId === userMsg.id ? (
+                  <Check size={12} className="text-[var(--tx)]" />
+                ) : (
+                  <Copy size={12} strokeWidth={1.5} />
+                )}
+              </button>
+              <span className="text-[0.625rem] text-[var(--tx-4)] font-mono">
+                {new Date(userMsg.timestamp).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </span>
+            </div>
           </div>
 
           {/* User Prompt: Prose in font-sans */}
-          <div className="font-sans text-[0.9375rem] leading-relaxed text-[var(--tx)] font-normal">
-            {userMsg.content}
-          </div>
+          {isEditing ? (
+            <div className="flex flex-col gap-2" onClick={(e) => e.stopPropagation()}>
+              <textarea
+                aria-label="Edit your message"
+                autoFocus
+                value={editText}
+                onChange={(e) => setEditText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    submitEdit();
+                  } else if (e.key === "Escape") {
+                    e.preventDefault();
+                    setEditText(null);
+                  }
+                }}
+                rows={Math.min(8, Math.max(2, (editText ?? "").split("\n").length))}
+                className="w-full resize-y bg-[var(--bg)] border border-[var(--bd-2)] px-2 py-1.5 font-sans text-[0.9375rem] leading-relaxed text-[var(--tx)] outline-none focus:border-[var(--bd-3)]"
+              />
+              <div className="flex items-center justify-end gap-2 text-[0.6875rem] font-mono">
+                <span className="text-[var(--tx-4)] mr-auto">
+                  Answers after this message are replaced
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setEditText(null)}
+                  className="px-2 py-1 text-[var(--tx-3)] hover:text-[var(--tx)] cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={submitEdit}
+                  disabled={isBusy || !(editText ?? "").trim()}
+                  className="px-2.5 py-1 bg-[var(--inv-bg)] text-[var(--inv-tx)] disabled:opacity-40 cursor-pointer"
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="font-sans text-[0.9375rem] leading-relaxed text-[var(--tx)] font-normal whitespace-pre-wrap">
+              {userMsg.content}
+            </div>
+          )}
         </div>
       )}
 
@@ -128,22 +220,6 @@ export const MessageTurn = ({
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onCopyAnswer(aiMsg.query_response?.answer || aiMsg.content, aiMsg.id);
-                    }}
-                    title="Copy response (Ctrl/Cmd + Shift + C)"
-                    className="text-[var(--tx-4)] hover:text-[var(--accent-strong)] p-0.5 transition-colors cursor-pointer"
-                  >
-                    {copiedMsgId === aiMsg.id ? (
-                      <Check size={12} className="text-[var(--tx)]" />
-                    ) : (
-                      <Copy size={12} strokeWidth={1.5} />
-                    )}
-                  </button>
-
                   <button
                     type="button"
                     onClick={(e) => {
@@ -171,40 +247,67 @@ export const MessageTurn = ({
                 className="font-sans text-[0.9375rem] sm:text-[1rem]"
               />
 
-              {/* Response Telemetry Metrics Bar (Decluttered Minimal Line) */}
-              {aiMsg.query_response && (
-                <div className="flex items-center gap-2 text-[0.625rem] text-[var(--tx-4)] font-mono pt-1">
-                  {aiMsg.query_response.answer_source === "general" && (
+              {/* Footer: telemetry on the left, copy on the right */}
+              <div className="flex items-center justify-between gap-2 pt-1">
+                {aiMsg.query_response ? (
+                  <div className="flex items-center gap-2 text-[0.625rem] text-[var(--tx-4)] font-mono">
+                    {aiMsg.query_response.answer_source === "general" && (
+                      <>
+                        <span className="text-[var(--tx-3)]">general knowledge</span>
+                        <span>·</span>
+                      </>
+                    )}
+                    {aiMsg.query_response.answer_source === "document" && (
+                      <>
+                        <span className="text-[var(--tx-3)]">from documents</span>
+                        <span>·</span>
+                      </>
+                    )}
+                    <span className="text-[var(--tx-3)]">
+                      {aiMsg.query_response.inference_tokens ?? aiMsg.query_response.tokens_used}{" "}
+                      tok
+                    </span>
+                    {aiMsg.query_response.compression_rate > 0 && (
+                      <>
+                        <span>·</span>
+                        <span className="flex items-center gap-1">
+                          <Zap size={9} />
+                          {(aiMsg.query_response.compression_rate * 100).toFixed(1)}% comp
+                        </span>
+                      </>
+                    )}
+                    <span>·</span>
+                    <span className="flex items-center gap-1">
+                      <Clock size={9} />
+                      {aiMsg.query_response.latency_ms}ms
+                    </span>
+                  </div>
+                ) : (
+                  <span />
+                )}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onCopyAnswer(aiMsg.query_response?.answer || aiMsg.content, aiMsg.id);
+                  }}
+                  title="Copy response (Ctrl/Cmd + Shift + C)"
+                  aria-label="Copy response"
+                  className="flex items-center gap-1 text-[0.625rem] font-mono text-[var(--tx-4)] hover:text-[var(--accent-strong)] p-0.5 transition-colors cursor-pointer shrink-0"
+                >
+                  {copiedMsgId === aiMsg.id ? (
                     <>
-                      <span className="text-[var(--tx-3)]">general knowledge</span>
-                      <span>·</span>
+                      <Check size={11} className="text-[var(--tx)]" />
+                      <span>Copied</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy size={11} strokeWidth={1.5} />
+                      <span>Copy</span>
                     </>
                   )}
-                  {aiMsg.query_response.answer_source === "document" && (
-                    <>
-                      <span className="text-[var(--tx-3)]">from documents</span>
-                      <span>·</span>
-                    </>
-                  )}
-                  <span className="text-[var(--tx-3)]">
-                    {aiMsg.query_response.inference_tokens ?? aiMsg.query_response.tokens_used} tok
-                  </span>
-                  {aiMsg.query_response.compression_rate > 0 && (
-                    <>
-                      <span>·</span>
-                      <span className="flex items-center gap-1">
-                        <Zap size={9} />
-                        {(aiMsg.query_response.compression_rate * 100).toFixed(1)}% comp
-                      </span>
-                    </>
-                  )}
-                  <span>·</span>
-                  <span className="flex items-center gap-1">
-                    <Clock size={9} />
-                    {aiMsg.query_response.latency_ms}ms
-                  </span>
-                </div>
-              )}
+                </button>
+              </div>
 
               {/* Supporting Evidence Panel */}
               {facts.length > 0 && (

@@ -1,7 +1,7 @@
 // @ts-nocheck — ported code written for a less strict TS config
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import type { Message, PipelineEvent, QueryResponse, Fact, Conversation } from "../../types/api";
-import { buildChatHistory, streamQueryPipeline } from "../../services/api";
+import { buildChatHistory, fetchChatTitle, streamQueryPipeline } from "../../services/api";
 import {
   loadConversations,
   saveConversations,
@@ -10,8 +10,9 @@ import {
   createConversation,
   deleteConversation,
   renameConversation,
-  getActiveConversationId,
+  getPageConversationId,
   newConversationId,
+  setPageConversationId,
   setActiveConversationId,
   getSidebarCollapsed,
   setSidebarCollapsed,
@@ -32,9 +33,20 @@ export const ChatView = () => {
 
   // Conversation sessions & persistence
   const [conversations, setConversations] = useState<Conversation[]>(() => loadConversations());
-  const [activeConvId, setActiveConvId] = useState<string>(
-    () => routeConvId || getActiveConversationId(),
+  // First mount of this page load: start a new, unsaved session whatever the URL
+  // (a restored tab or autocompleted address still points at the old chat).
+  const [isFreshStart] = useState(() => getPageConversationId() === null);
+  const [activeConvId, setActiveConvId] = useState<string>(() =>
+    isFreshStart ? newConversationId() : routeConvId || getPageConversationId()!,
   );
+  useEffect(() => {
+    setPageConversationId(activeConvId);
+  }, [activeConvId]);
+  useEffect(() => {
+    if (isFreshStart && routeConvId) navigate("/chat", { replace: true });
+    // Only on mount: later route changes are handled below.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [messages, setMessages] = useState<Message[]>(() => loadMessages(activeConvId));
   // A new session is a draft until its first message is sent: it has an ID but is
   // not stored or listed yet.
@@ -272,14 +284,20 @@ export const ChatView = () => {
       const words = queryText.split(" ").slice(0, 5).join(" ");
       const newTitle = words.length > 30 ? `${words.slice(0, 30)}...` : words;
       const currentConv = conversations.find((c) => c.id === activeConvId);
+      // Set when this message names the session; the model's title replaces it
+      // once the first answer arrives.
+      let placeholderTitle: string | null = null;
       if (!currentConv) {
         createConversation(newTitle, "", activeConvId);
         setConversations(loadConversations());
         navigate(`/chat/${activeConvId}`, { replace: true });
+        placeholderTitle = newTitle;
       } else if (currentConv.title === "New Query Session") {
         renameConversation(activeConvId, newTitle);
         setConversations(loadConversations());
+        placeholderTitle = newTitle;
       }
+      const convId = activeConvId;
 
       const priorMessages = baseMessages ?? messages;
       const updatedWithUser = [...priorMessages, userMsg];
@@ -324,14 +342,23 @@ export const ChatView = () => {
               return finalMsgs;
             });
 
-            // Update message count in conversation header
-            setConversations((prev) => {
-              const updated = prev.map((c) =>
-                c.id === activeConvId ? { ...c, message_count: messageCount } : c,
-              );
-              saveConversations(updated);
-              return updated;
-            });
+            // Update message count in conversation header. Read from storage, not
+            // React state, so a rename made meanwhile is not overwritten.
+            const updatedConvs = loadConversations().map((c) =>
+              c.id === activeConvId ? { ...c, message_count: messageCount } : c,
+            );
+            saveConversations(updatedConvs);
+            setConversations(updatedConvs);
+
+            if (placeholderTitle && response.answer) {
+              void fetchChatTitle(queryText, response.answer).then((title) => {
+                // Keep a name the user chose while the title was being made.
+                const conv = loadConversations().find((c) => c.id === convId);
+                if (!title || !conv || conv.title !== placeholderTitle) return;
+                renameConversation(convId, title);
+                setConversations(loadConversations());
+              });
+            }
 
             handleSelectMessage(aiMsgId);
             setSelectedFact(null);
@@ -411,11 +438,17 @@ export const ChatView = () => {
     setSelectedFact(null);
   };
 
-  const handleCopyAnswer = async (text: string, msgId: string) => {
+  const handleCopyAnswer = async (
+    text: string,
+    msgId: string,
+    kind: "answer" | "question" = "answer",
+  ) => {
     try {
       await navigator.clipboard.writeText(text);
       setCopiedMsgId(msgId);
-      setCopyFeedback("COPIED ANSWER TO CLIPBOARD");
+      setCopyFeedback(
+        kind === "question" ? "COPIED MESSAGE TO CLIPBOARD" : "COPIED ANSWER TO CLIPBOARD",
+      );
       setTimeout(() => {
         setCopiedMsgId(null);
         setCopyFeedback(null);
@@ -443,6 +476,13 @@ export const ChatView = () => {
       })
       .catch(() => {});
   }, [activeMsg, messages]);
+
+  // Edit a question: drop it and everything after it, then ask the new text.
+  const handleEditMessage = (msgId: string, text: string) => {
+    const msgIndex = messages.findIndex((m) => m.id === msgId);
+    if (msgIndex < 0 || messages[msgIndex]!.role !== "user") return;
+    handleSend(text, messages.slice(0, msgIndex));
+  };
 
   const handleRegenerate = (msgId: string) => {
     const msgIndex = messages.findIndex((m) => m.id === msgId);
@@ -651,6 +691,8 @@ export const ChatView = () => {
                 copiedMsgId={copiedMsgId}
                 onCopyAnswer={handleCopyAnswer}
                 onRegenerate={handleRegenerate}
+                onEditMessage={handleEditMessage}
+                isBusy={isStreaming}
                 isEvidenceExpanded={isEvidenceExpanded}
                 onToggleEvidence={() => {
                   if (turn.aiMsg) toggleEvidence(turn.aiMsg.id);

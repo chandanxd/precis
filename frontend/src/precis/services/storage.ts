@@ -174,6 +174,19 @@ export function setActiveConversationId(id: string): void {
   }
 }
 
+// The conversation open during this page load (in memory only). Leaving the
+// Chat tab and coming back reopens it; a fresh page load starts with none, so
+// the app opens on a new, unsaved session.
+let pageConversationId: string | null = null;
+
+export function getPageConversationId(): string | null {
+  return pageConversationId;
+}
+
+export function setPageConversationId(id: string | null): void {
+  pageConversationId = id;
+}
+
 /**
  * Gets sidebar collapsed state.
  */

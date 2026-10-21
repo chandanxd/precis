@@ -1,8 +1,15 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { PipelineEvent, QueryResponse } from "../../types/api";
 import { RouterContext } from "../../services/router";
-import { createConversation, loadConversations, loadMessages } from "../../services/storage";
+import {
+  createConversation,
+  loadConversations,
+  loadMessages,
+  renameConversation,
+  saveMessages,
+  setPageConversationId,
+} from "../../services/storage";
 
 type Callbacks = {
   onStage: (e: PipelineEvent) => void;
@@ -13,8 +20,16 @@ type Callbacks = {
 
 const streams: { question: string; callbacks: Callbacks; abort: ReturnType<typeof vi.fn> }[] = [];
 
+// What the fake title endpoint answers (null = it failed).
+let nextTitle: string | null = null;
+const titleRequests: { question: string; answer: string }[] = [];
+
 vi.mock("../../services/api", () => ({
   buildChatHistory: () => [],
+  fetchChatTitle: async (question: string, answer: string) => {
+    titleRequests.push({ question, answer });
+    return nextTitle;
+  },
   // Like the real streamQueryPipeline, callbacks stop firing once aborted.
   streamQueryPipeline: (question: string, callbacks: Callbacks) => {
     let cancelled = false;
@@ -64,12 +79,18 @@ const stage = (n: 4 | 5): PipelineEvent => ({
 
 let lastNavigate: ReturnType<typeof vi.fn> = vi.fn();
 
-function renderChat(): void {
+function renderChat(conversationId?: string): void {
   const navigate = vi.fn();
   lastNavigate = navigate;
   render(
     <RouterContext.Provider
-      value={{ path: "/chat", activeTab: "chat", navigate, navigateToTab: vi.fn() }}
+      value={{
+        path: "/chat",
+        activeTab: "chat",
+        ...(conversationId ? { conversationId } : {}),
+        navigate,
+        navigateToTab: vi.fn(),
+      }}
     >
       <ChatView />
     </RouterContext.Provider>,
@@ -85,6 +106,8 @@ function ask(text: string) {
 describe("ChatView streaming", () => {
   beforeEach(() => {
     streams.length = 0;
+    // Every test starts as a fresh page load.
+    setPageConversationId(null);
   });
 
   it("saves the answer and its pipeline events into the conversation", () => {
@@ -108,8 +131,9 @@ describe("ChatView streaming", () => {
   it("aborts the stream when switching conversation and never writes into the other one", () => {
     const first = createConversation("First chat");
     const second = createConversation("Other chat");
+    // Already on `second` in this page load (e.g. back from another tab); ask there.
+    setPageConversationId(second.id);
     renderChat();
-    // createConversation made `second` the active one; ask there.
     ask("question for second");
     expect(streams).toHaveLength(1);
 
@@ -135,6 +159,8 @@ describe("ChatView streaming", () => {
 describe("ChatView sessions and focus", () => {
   beforeEach(() => {
     streams.length = 0;
+    // Every test starts as a fresh page load.
+    setPageConversationId(null);
   });
 
   it("does not store a new session until its first message is sent", () => {
@@ -173,5 +199,148 @@ describe("ChatView sessions and focus", () => {
     box.blur();
     act(() => streams[0]!.callbacks.onError("backend down"));
     expect(document.activeElement).toBe(box);
+  });
+
+  it("opens a fresh page load on a new session, even with an old chat in the URL", () => {
+    const old = createConversation("Old chat");
+    saveMessages(old.id, [
+      {
+        id: "m1",
+        role: "user",
+        content: "old question",
+        timestamp: "",
+        pipeline_events: [],
+      } as never,
+    ]);
+    renderChat(old.id);
+    expect(screen.queryByText("old question")).toBeNull();
+    expect(lastNavigate).toHaveBeenCalledWith("/chat", { replace: true });
+  });
+
+  it("reopens the same chat when coming back to the Chat tab", () => {
+    renderChat();
+    ask("first question");
+    act(() => streams[0]!.callbacks.onDone(response("first answer")));
+    cleanup(); // leave the Chat tab
+
+    renderChat();
+    expect(screen.getByText("first answer")).toBeTruthy();
+  });
+
+  it("copies a question from its hover button", async () => {
+    const writeText = vi.fn(async () => {});
+    vi.stubGlobal("navigator", { ...navigator, clipboard: { writeText } });
+    renderChat();
+    ask("copy me");
+    fireEvent.click(screen.getByLabelText("Copy message"));
+    expect(writeText).toHaveBeenCalledWith("copy me");
+    vi.unstubAllGlobals();
+  });
+});
+
+describe("ChatView titles", () => {
+  beforeEach(() => {
+    streams.length = 0;
+    titleRequests.length = 0;
+    nextTitle = null;
+    setPageConversationId(null);
+  });
+
+  const answerFirst = async (answer = "Pawns move forward.") => {
+    await act(async () => {
+      streams[0]!.callbacks.onDone(response(answer));
+    });
+  };
+
+  it("names a new chat with the model's title after the first answer", async () => {
+    nextTitle = "Chess Piece Movements";
+    renderChat();
+    ask("how do the chess pieces move around the board");
+    expect(loadConversations()[0]!.title).toBe("how do the chess pieces");
+    await answerFirst();
+    expect(titleRequests).toEqual([
+      { question: "how do the chess pieces move around the board", answer: "Pawns move forward." },
+    ]);
+    expect(loadConversations()[0]!.title).toBe("Chess Piece Movements");
+  });
+
+  it("keeps the first words when no title comes back", async () => {
+    renderChat();
+    ask("revenue in 2021");
+    await answerFirst();
+    expect(loadConversations()[0]!.title).toBe("revenue in 2021");
+  });
+
+  it("keeps a name the user chose while the answer was streaming", async () => {
+    nextTitle = "Model Title";
+    renderChat();
+    ask("revenue in 2021");
+    renameConversation(loadConversations()[0]!.id, "My name");
+    await answerFirst();
+    expect(loadConversations()[0]!.title).toBe("My name");
+  });
+
+  it("does not retitle on later messages", async () => {
+    nextTitle = "First Title";
+    renderChat();
+    ask("first");
+    await answerFirst();
+    nextTitle = "Second Title";
+    ask("second");
+    await act(async () => {
+      streams[1]!.callbacks.onDone(response("again"));
+    });
+    expect(titleRequests).toHaveLength(1);
+    expect(loadConversations()[0]!.title).toBe("First Title");
+  });
+});
+
+describe("ChatView edit", () => {
+  beforeEach(() => {
+    streams.length = 0;
+    setPageConversationId(null);
+  });
+
+  const answer = (i: number, text: string) =>
+    act(() => streams[i]!.callbacks.onDone(response(text)));
+
+  it("replaces a question and everything after it, then asks again", () => {
+    renderChat();
+    ask("first question");
+    answer(0, "first answer");
+    ask("second question");
+    answer(1, "second answer");
+    const convId = loadConversations()[0]!.id;
+
+    fireEvent.click(screen.getAllByLabelText("Edit message")[0]!);
+    const box = screen.getByLabelText("Edit your message");
+    fireEvent.change(box, { target: { value: "edited question" } });
+    fireEvent.keyDown(box, { key: "Enter" });
+
+    expect(streams).toHaveLength(3);
+    expect(streams[2]!.question).toBe("edited question");
+    expect(loadMessages(convId).map((m) => m.content)).toEqual(["edited question"]);
+    answer(2, "new answer");
+    expect(loadMessages(convId).map((m) => m.content)).toEqual(["edited question", "new answer"]);
+  });
+
+  it("cancels with Escape and does not resend unchanged text", () => {
+    renderChat();
+    ask("only question");
+    answer(0, "only answer");
+
+    fireEvent.click(screen.getByLabelText("Edit message"));
+    fireEvent.keyDown(screen.getByLabelText("Edit your message"), { key: "Escape" });
+    expect(screen.queryByLabelText("Edit your message")).toBeNull();
+
+    fireEvent.click(screen.getByLabelText("Edit message"));
+    fireEvent.keyDown(screen.getByLabelText("Edit your message"), { key: "Enter" });
+    expect(streams).toHaveLength(1);
+  });
+
+  it("offers no edit while an answer is streaming", () => {
+    renderChat();
+    ask("pending question");
+    expect((screen.getByLabelText("Edit message") as HTMLButtonElement).disabled).toBe(true);
   });
 });

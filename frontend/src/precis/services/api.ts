@@ -337,6 +337,25 @@ export async function fetchAllFacts(
   }
 }
 
+/**
+ * Ask the backend's local model for a short title for a new chat.
+ * Returns null on any failure, so callers keep their fallback title.
+ */
+export async function fetchChatTitle(question: string, answer: string): Promise<string | null> {
+  try {
+    const res = await authFetch(`${apiBase()}/api/chat/title`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question, answer, options: getQueryOptions() }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return typeof data.title === "string" && data.title.trim() ? data.title.trim() : null;
+  } catch {
+    return null;
+  }
+}
+
 /** One earlier turn of the conversation, sent with a query for follow-up context. */
 export interface ChatTurn {
   role: "user" | "assistant";

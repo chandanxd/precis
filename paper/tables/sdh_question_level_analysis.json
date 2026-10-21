@@ -1,0 +1,1701 @@
+{
+  "metadata": {
+    "total_benchmark_samples": 200,
+    "total_differing_answers": 59,
+    "differing_answers_identical_fact_sets": 47,
+    "differing_answers_different_fact_sets": 12,
+    "exact_match_wins": 2,
+    "exact_match_losses": 0,
+    "exact_match_ties": 198,
+    "containment_wins": 9,
+    "containment_losses": 3,
+    "containment_ties": 188,
+    "classification_breakdown_of_outcome_changes": {
+      "1. removes irrelevant lexical matches": 1,
+      "2. promotes informative propositions": 2,
+      "3. removes redundant propositions": 0,
+      "4. promotes qualified/context-rich propositions": 1,
+      "5. suppresses useful evidence": 3,
+      "6. ranking change without meaningful semantic effect": 2,
+      "7. other (modality filtering confound)": 3
+    }
+  },
+  "audited_cases": [
+    {
+      "sample_id": "bad74caad55343f9ad68de7cd705689a",
+      "query": "name three large lakes other than the great lakes in the united states",
+      "gold_answer": "Great Salt Lake",
+      "alternative_answers": [
+        "Great Salt Lake",
+        "Lake of the Woods",
+        "Iliamna Lake"
+      ],
+      "outcome_type": "CONTAINMENT_WIN",
+      "classification": "1. removes irrelevant lexical matches",
+      "secondary_classification": "3. removes redundant propositions",
+      "mechanistic_explanation": "Demotes uninformative bloated table-header propositions (SDH 0.19-0.31) that had high lexical match, allowing 19 informative lake entries to fit into the 2048 token ceiling instead of 9, successfully admitting the answer-bearing Great Salt Lake proposition.",
+      "metrics": {
+        "pure_sim": {
+          "exact_match": false,
+          "containment": false,
+          "rouge_l": 0.2,
+          "bert_score": 0.5091,
+          "minilm_cosine": 0.5568,
+          "context_words": 1579,
+          "facts_packed": 9
+        },
+        "no_modality_sdh": {
+          "exact_match": false,
+          "containment": true,
+          "rouge_l": 0.4615,
+          "bert_score": 0.6483,
+          "minilm_cosine": 0.753,
+          "context_words": 1404,
+          "facts_packed": 19
+        },
+        "full_sdh": {
+          "exact_match": false,
+          "containment": true,
+          "rouge_l": 0.4615,
+          "bert_score": 0.6483,
+          "minilm_cosine": 0.753,
+          "context_words": 1404,
+          "facts_packed": 19
+        }
+      },
+      "generated_answers": {
+        "pure_sim": "Lake Powell, Kentucky Lake, and Lake Mead.",
+        "no_modality_sdh": "Great Salt Lake, Lake of the Woods, and Lake Champlain",
+        "full_sdh": "Great Salt Lake, Lake of the Woods, and Lake Champlain"
+      },
+      "pure_sim_packed_facts": [
+        {
+          "rank": 1,
+          "sdh_score": 0.2445,
+          "modality": "asserted",
+          "rendered": "Rank     Name     U.S. states / Canadian provinces / Mexican states     Area     Type     Notes             Lake Superior     Michigan - Minnesota - Wisconsin - Ontario     31,700 sq mi     82,103 km     natural                 Lake Huron     Michigan - Ontario     23,000 sq mi     59,570 km     natural                 Lake Michigan     Illinois - Indiana - Michigan - Wisconsin     22,300 sq mi     57,757 km     natural                 Lake Erie     Michigan - New York - Ohio - Ontario - Pennsylvania     9,910 sq mi     25,667 km     natural                 Lake Ontario     New York - Ontario     7,340 sq mi     19,011 km     natural             6     Great Salt Lake     Utah     2,117 sq mi     5,483 km     natural     salt         7     Lake of the Woods     Manitoba - Minnesota - Ontario     1,679 sq mi     4,349 km     natural             8     Iliamna Lake     Alaska     1,014 sq mi     2,626 km     natural             9     Lake Oahe     North Dakota - South Dakota     685 sq mi     1,774 km     man - made             10     Lake Okeechobee     Florida     662 sq mi     1,715 km     natural             11     Lake Pontchartrain     Louisiana     631 sq mi     1,634 km     natural     salt         12     Lake Sakakawea     North Dakota     520 sq mi     1,347 km     man - made             13     Lake Champlain     New York - Vermont - Quebec is 490 sq mi"
+        },
+        {
+          "rank": 2,
+          "sdh_score": 0.2668,
+          "modality": "asserted",
+          "rendered": "Rank     Name     U.S. states / Canadian provinces / Mexican states     Area     Type     Notes             Lake Superior     Michigan - Minnesota - Wisconsin - Ontario     31,700 sq mi     82,103 km     natural                 Lake Huron     Michigan - Ontario     23,000 sq mi     59,570 km     natural                 Lake Michigan     Illinois - Indiana - Michigan - Wisconsin     22,300 sq mi     57,757 km     natural                 Lake Erie     Michigan - New York - Ohio - Ontario - Pennsylvania     9,910 sq mi     25,667 km     natural                 Lake Ontario     New York - Ontario     7,340 sq mi     19,011 km     natural             6     Great Salt Lake     Utah     2,117 sq mi     5,483 km     natural     salt         7     Lake of the Woods     Manitoba - Minnesota - Ontario     1,679 sq mi     4,349 km     natural             8     Iliamna Lake     Alaska     1,014 sq mi     2,626 km     natural             9     Lake Oahe     North Dakota - South Dakota     685 sq mi     1,774 km     man - made             10     Lake Okeechobee     Florida     662 sq mi     1,715 km     natural             11     Lake Pontchartrain     Louisiana     631 sq mi     1,634 km     natural     salt         12     Lake Sakakawea     North Dakota     520 sq mi     1,347 km     man - made             13     Lake Champlain     New York - Vermont - Quebec     490 sq mi is 1,269 km     natural             14     Becharof Lake     Alaska"
+        },
+        {
+          "rank": 3,
+          "sdh_score": 0.3085,
+          "modality": "asserted",
+          "rendered": "Rank     Name     U.S. states / Canadian provinces / Mexican states     Area     Type     Notes             Lake Superior     Michigan - Minnesota - Wisconsin - Ontario     31,700 sq mi     82,103 km     natural                 Lake Huron     Michigan - Ontario     23,000 sq mi     59,570 km     natural                 Lake Michigan     Illinois - Indiana - Michigan - Wisconsin     22,300 sq mi     57,757 km     natural                 Lake Erie     Michigan - New York - Ohio - Ontario - Pennsylvania     9,910 sq mi     25,667 km     natural                 Lake Ontario     New York - Ontario     7,340 sq mi     19,011 km     natural             6     Great Salt Lake     Utah     2,117 sq mi     5,483 km     natural     salt         7     Lake of the Woods     Manitoba - Minnesota - Ontario     1,679 sq mi     4,349 km     natural             8     Iliamna Lake     Alaska     1,014 sq mi     2,626 km     natural             9     Lake Oahe     North Dakota - South Dakota     685 sq mi     1,774 km     man - made             10     Lake Okeechobee     Florida     662 sq mi     1,715 km     natural             11     Lake Pontchartrain     Louisiana     631 sq mi     1,634 km     natural     salt         12     Lake Sakakawea     North Dakota     520 sq mi     1,347 km     man - made             13     Lake Champlain     New York - Vermont - Quebec     490 sq mi     1,269 km     natural             14     Becharof Lake     Alaska     453 sq mi     1,173 km     natural             15     Lake St. Clair     Michigan - Ontario     440 sq mi     1,140 km     natural             16     Red Lake     Minnesota     427 sq mi is 1,106 km     natural             17     Selawik Lake     Alaska     404 sq mi     1,046 km     natural             18     Fort Peck Lake     Montana     393 sq mi     1,018 km     man - made             19     Salton Sea     California"
+        },
+        {
+          "rank": 4,
+          "sdh_score": 0.2732,
+          "modality": "asserted",
+          "rendered": "Rank     Name     U.S. states / Canadian provinces / Mexican states     Area     Type     Notes             Lake Superior     Michigan - Minnesota - Wisconsin - Ontario     31,700 sq mi     82,103 km     natural                 Lake Huron     Michigan - Ontario     23,000 sq mi     59,570 km     natural                 Lake Michigan     Illinois - Indiana - Michigan - Wisconsin     22,300 sq mi     57,757 km     natural                 Lake Erie     Michigan - New York - Ohio - Ontario - Pennsylvania     9,910 sq mi     25,667 km     natural                 Lake Ontario     New York - Ontario     7,340 sq mi     19,011 km     natural             6     Great Salt Lake     Utah     2,117 sq mi     5,483 km     natural     salt         7     Lake of the Woods     Manitoba - Minnesota - Ontario     1,679 sq mi     4,349 km     natural             8     Iliamna Lake     Alaska     1,014 sq mi     2,626 km     natural             9     Lake Oahe     North Dakota - South Dakota     685 sq mi     1,774 km     man - made             10     Lake Okeechobee     Florida     662 sq mi     1,715 km     natural             11     Lake Pontchartrain     Louisiana     631 sq mi     1,634 km     natural     salt         12     Lake Sakakawea     North Dakota     520 sq mi     1,347 km     man - made             13     Lake Champlain     New York - Vermont - Quebec     490 sq mi     1,269 km     natural             14     Becharof Lake     Alaska     453 sq mi     1,173 km     natural             15     Lake St. Clair     Michigan - Ontario     440 sq mi     1,140 km     natural             16     Red Lake     Minnesota     427 sq mi     1,106 km     natural             17     Selawik Lake     Alaska     404 sq mi     1,046 km     natural             18     Fort Peck Lake     Montana     393 sq mi     1,018 km     man - made             19     Salton Sea     California     347 sq mi     899 km     man - made     salt         20     Rainy Lake     Minnesota - Ontario     345 sq mi is 894 km     natural             21     Devils Lake     North Dakota     300.0 sq mi"
+        },
+        {
+          "rank": 5,
+          "sdh_score": 0.212,
+          "modality": "asserted",
+          "rendered": "Rank     Name     U.S. states / Canadian provinces / Mexican states     Area     Type     Notes             Lake Superior     Michigan - Minnesota - Wisconsin - Ontario     31,700 sq mi     82,103 km     natural                 Lake Huron     Michigan - Ontario     23,000 sq mi     59,570 km     natural                 Lake Michigan     Illinois - Indiana - Michigan - Wisconsin     22,300 sq mi     57,757 km     natural                 Lake Erie     Michigan - New York - Ohio - Ontario - Pennsylvania     9,910 sq mi     25,667 km     natural                 Lake Ontario     New York - Ontario     7,340 sq mi     19,011 km     natural             6     Great Salt Lake     Utah     2,117 sq mi     5,483 km     natural     salt         7     Lake of the Woods     Manitoba - Minnesota - Ontario     1,679 sq mi     4,349 km     natural             8     Iliamna Lake     Alaska     1,014 sq mi     2,626 km     natural             9     Lake Oahe     North Dakota - South Dakota     685 sq mi     1,774 km     man - made             10     Lake Okeechobee     Florida     662 sq mi     1,715 km     natural             11     Lake Pontchartrain     Louisiana     631 sq mi     1,634 km     natural     salt         12     Lake Sakakawea     North Dakota     520 sq mi     1,347 km     man - made             13     Lake Champlain     New York - Vermont - Quebec     490 sq mi     1,269 km     natural             14     Becharof Lake     Alaska     453 sq mi     1,173 km     natural             15     Lake St. Clair     Michigan - Ontario     440 sq mi     1,140 km     natural             16     Red Lake     Minnesota     427 sq mi     1,106 km     natural             17     Selawik Lake     Alaska     404 sq mi     1,046 km     natural             18     Fort Peck Lake     Montana     393 sq mi     1,018 km     man - made             19     Salton Sea     California     347 sq mi     899 km     man - made     salt         20     Rainy Lake     Minnesota - Ontario     345 sq mi     894 km     natural             21     Devils Lake     North Dakota     300.0 sq mi     777 km     natural             22 is Toledo Bend Reservoir     Louisiana - Texas"
+        },
+        {
+          "rank": 6,
+          "sdh_score": 0.197,
+          "modality": "asserted",
+          "rendered": "Rank     Name     U.S. states / Canadian provinces / Mexican states     Area     Type     Notes             Lake Superior     Michigan - Minnesota - Wisconsin - Ontario     31,700 sq mi     82,103 km     natural                 Lake Huron     Michigan - Ontario     23,000 sq mi     59,570 km     natural                 Lake Michigan     Illinois - Indiana - Michigan - Wisconsin     22,300 sq mi     57,757 km     natural                 Lake Erie     Michigan - New York - Ohio - Ontario - Pennsylvania     9,910 sq mi     25,667 km     natural                 Lake Ontario     New York - Ontario     7,340 sq mi     19,011 km     natural             6     Great Salt Lake     Utah     2,117 sq mi     5,483 km     natural     salt         7     Lake of the Woods     Manitoba - Minnesota - Ontario     1,679 sq mi     4,349 km     natural             8     Iliamna Lake     Alaska     1,014 sq mi     2,626 km     natural             9     Lake Oahe     North Dakota - South Dakota     685 sq mi     1,774 km     man - made             10     Lake Okeechobee     Florida     662 sq mi     1,715 km     natural             11     Lake Pontchartrain     Louisiana     631 sq mi     1,634 km     natural     salt         12     Lake Sakakawea     North Dakota     520 sq mi     1,347 km     man - made             13     Lake Champlain     New York - Vermont - Quebec     490 sq mi     1,269 km     natural             14     Becharof Lake     Alaska     453 sq mi     1,173 km     natural             15     Lake St. Clair     Michigan - Ontario     440 sq mi     1,140 km     natural             16     Red Lake     Minnesota     427 sq mi     1,106 km     natural             17     Selawik Lake     Alaska     404 sq mi     1,046 km     natural             18     Fort Peck Lake     Montana     393 sq mi     1,018 km     man - made             19     Salton Sea     California     347 sq mi     899 km     man - made     salt         20     Rainy Lake     Minnesota - Ontario     345 sq mi     894 km     natural             21     Devils Lake     North Dakota     300.0 sq mi     777 km     natural             22     Toledo Bend Reservoir     Louisiana - Texas     284 sq mi     736 km     man - made             23     Lake Powell     Arizona - Utah     251 sq mi     650 km     man - made             24     Kentucky Lake is Kentucky - Tennessee"
+        },
+        {
+          "rank": 7,
+          "sdh_score": 0.314,
+          "modality": "asserted",
+          "rendered": "Rank     Name     U.S. states / Canadian provinces / Mexican states     Area     Type     Notes             Lake Superior     Michigan - Minnesota - Wisconsin - Ontario     31,700 sq mi     82,103 km     natural                 Lake Huron     Michigan - Ontario     23,000 sq mi     59,570 km     natural                 Lake Michigan     Illinois - Indiana - Michigan - Wisconsin     22,300 sq mi     57,757 km     natural                 Lake Erie     Michigan - New York - Ohio - Ontario - Pennsylvania     9,910 sq mi is 25,667 km     natural                 Lake Ontario     New York - Ontario     7,340 sq mi     19,011 km     natural             6     Great Salt Lake     Utah     2,117 sq mi     5,483 km     natural     salt         7     Lake of the Woods     Manitoba - Minnesota - Ontario"
+        },
+        {
+          "rank": 8,
+          "sdh_score": 0.6222,
+          "modality": "asserted",
+          "rendered": "Rank     Name     U.S. states / Canadian provinces / Mexican states     Area     Type     Notes             Lake Superior     Michigan - Minnesota - Wisconsin - Ontario     31,700 sq mi     82,103 km     natural                 Lake Huron     Michigan - Ontario     23,000 sq mi     59,570 km     natural                 Lake Michigan     Illinois - Indiana - Michigan - Wisconsin     22,300 sq mi     57,757 km     natural                 Lake Erie     Michigan - New York - Ohio - Ontario - Pennsylvania     9,910 sq mi made 10     Lake Okeechobee     Florida     662 sq mi (manner: man) (manner: Louisiana)"
+        },
+        {
+          "rank": 9,
+          "sdh_score": 0.2903,
+          "modality": "asserted",
+          "rendered": "Rank     Name     U.S. states / Canadian provinces / Mexican states     Area     Type     Notes             Lake Superior     Michigan - Minnesota - Wisconsin - Ontario     31,700 sq mi     82,103 km     natural                 Lake Huron     Michigan - Ontario     23,000 sq mi     59,570 km     natural                 Lake Michigan     Illinois - Indiana - Michigan - Wisconsin     22,300 sq mi is 57,757 km     natural                 Lake Erie     Michigan - New York - Ohio - Ontario - Pennsylvania"
+        },
+        {
+          "rank": 10,
+          "sdh_score": 0.3795,
+          "modality": "asserted",
+          "rendered": "57,757 km     natural                 Lake Erie     Michigan - New York - is Ohio - Ontario - Pennsylvania"
+        }
+      ],
+      "full_sdh_packed_facts": [
+        {
+          "rank": 1,
+          "sdh_score": 0.6222,
+          "modality": "asserted",
+          "rendered": "Rank     Name     U.S. states / Canadian provinces / Mexican states     Area     Type     Notes             Lake Superior     Michigan - Minnesota - Wisconsin - Ontario     31,700 sq mi     82,103 km     natural                 Lake Huron     Michigan - Ontario     23,000 sq mi     59,570 km     natural                 Lake Michigan     Illinois - Indiana - Michigan - Wisconsin     22,300 sq mi     57,757 km     natural                 Lake Erie     Michigan - New York - Ohio - Ontario - Pennsylvania     9,910 sq mi made 10     Lake Okeechobee     Florida     662 sq mi (manner: man) (manner: Louisiana)"
+        },
+        {
+          "rank": 2,
+          "sdh_score": 0.4423,
+          "modality": "asserted",
+          "rendered": "59,570 km     natural                 Lake Michigan is Illinois - Indiana - Michigan - Wisconsin"
+        },
+        {
+          "rank": 3,
+          "sdh_score": 0.4406,
+          "modality": "asserted",
+          "rendered": "25,667 km     natural                 Lake Ontario     New York - Ontario is 7,340 sq mi     19,011 km     natural             6     Great Salt Lake     Utah     2,117 sq mi     5,483 km     natural     salt         7     Lake of the Woods     Manitoba - Minnesota - Ontario"
+        },
+        {
+          "rank": 4,
+          "sdh_score": 0.3795,
+          "modality": "asserted",
+          "rendered": "57,757 km     natural                 Lake Erie     Michigan - New York - is Ohio - Ontario - Pennsylvania"
+        },
+        {
+          "rank": 5,
+          "sdh_score": 0.4327,
+          "modality": "asserted",
+          "rendered": "1,106 km     natural             17     Selawik Lake     Alaska     404 sq mi     1,046 km     natural             18     Fort Peck Lake     Montana is 393 sq mi     1,018 km     man - made             19     Salton Sea     California"
+        },
+        {
+          "rank": 6,
+          "sdh_score": 0.4778,
+          "modality": "asserted",
+          "rendered": "Lake Powell is Arizona - Utah"
+        },
+        {
+          "rank": 7,
+          "sdh_score": 0.3085,
+          "modality": "asserted",
+          "rendered": "Rank     Name     U.S. states / Canadian provinces / Mexican states     Area     Type     Notes             Lake Superior     Michigan - Minnesota - Wisconsin - Ontario     31,700 sq mi     82,103 km     natural                 Lake Huron     Michigan - Ontario     23,000 sq mi     59,570 km     natural                 Lake Michigan     Illinois - Indiana - Michigan - Wisconsin     22,300 sq mi     57,757 km     natural                 Lake Erie     Michigan - New York - Ohio - Ontario - Pennsylvania     9,910 sq mi     25,667 km     natural                 Lake Ontario     New York - Ontario     7,340 sq mi     19,011 km     natural             6     Great Salt Lake     Utah     2,117 sq mi     5,483 km     natural     salt         7     Lake of the Woods     Manitoba - Minnesota - Ontario     1,679 sq mi     4,349 km     natural             8     Iliamna Lake     Alaska     1,014 sq mi     2,626 km     natural             9     Lake Oahe     North Dakota - South Dakota     685 sq mi     1,774 km     man - made             10     Lake Okeechobee     Florida     662 sq mi     1,715 km     natural             11     Lake Pontchartrain     Louisiana     631 sq mi     1,634 km     natural     salt         12     Lake Sakakawea     North Dakota     520 sq mi     1,347 km     man - made             13     Lake Champlain     New York - Vermont - Quebec     490 sq mi     1,269 km     natural             14     Becharof Lake     Alaska     453 sq mi     1,173 km     natural             15     Lake St. Clair     Michigan - Ontario     440 sq mi     1,140 km     natural             16     Red Lake     Minnesota     427 sq mi is 1,106 km     natural             17     Selawik Lake     Alaska     404 sq mi     1,046 km     natural             18     Fort Peck Lake     Montana     393 sq mi     1,018 km     man - made             19     Salton Sea     California"
+        },
+        {
+          "rank": 8,
+          "sdh_score": 0.4536,
+          "modality": "asserted",
+          "rendered": "Lake Okeechobee is Florida"
+        },
+        {
+          "rank": 9,
+          "sdh_score": 0.314,
+          "modality": "asserted",
+          "rendered": "Rank     Name     U.S. states / Canadian provinces / Mexican states     Area     Type     Notes             Lake Superior     Michigan - Minnesota - Wisconsin - Ontario     31,700 sq mi     82,103 km     natural                 Lake Huron     Michigan - Ontario     23,000 sq mi     59,570 km     natural                 Lake Michigan     Illinois - Indiana - Michigan - Wisconsin     22,300 sq mi     57,757 km     natural                 Lake Erie     Michigan - New York - Ohio - Ontario - Pennsylvania     9,910 sq mi is 25,667 km     natural                 Lake Ontario     New York - Ontario     7,340 sq mi     19,011 km     natural             6     Great Salt Lake     Utah     2,117 sq mi     5,483 km     natural     salt         7     Lake of the Woods     Manitoba - Minnesota - Ontario"
+        },
+        {
+          "rank": 10,
+          "sdh_score": 0.3253,
+          "modality": "asserted",
+          "rendered": "Rank     Name     U.S. states / Canadian provinces / Mexican states     Area     Type     Notes             Lake Superior     Michigan - Minnesota - Wisconsin - Ontario     31,700 sq mi is 82,103 km     natural                 Lake Huron     Michigan - Ontario     23,000"
+        }
+      ]
+    },
+    {
+      "sample_id": "fdf29e259657404aa8c91943f7ec6bbd",
+      "query": "how many seasons of prison break are on netflix",
+      "gold_answer": "five",
+      "alternative_answers": [
+        "five"
+      ],
+      "outcome_type": "CONTAINMENT_WIN",
+      "classification": "4. promotes qualified/context-rich propositions",
+      "secondary_classification": "2. promotes informative propositions",
+      "mechanistic_explanation": "Promotes Netflix-specific streaming proposition with rich adjunct context (SDH 0.7139) over the generic DVD/Blu-ray release proposition (SDH 0.5957), leading LLM to generate the correct five seasons count.",
+      "metrics": {
+        "pure_sim": {
+          "exact_match": false,
+          "containment": false,
+          "rouge_l": 0.0,
+          "bert_score": 0.243,
+          "minilm_cosine": 0.0,
+          "context_words": 103,
+          "facts_packed": 4
+        },
+        "no_modality_sdh": {
+          "exact_match": false,
+          "containment": true,
+          "rouge_l": 0.1818,
+          "bert_score": 0.3272,
+          "minilm_cosine": 0.2106,
+          "context_words": 103,
+          "facts_packed": 4
+        },
+        "full_sdh": {
+          "exact_match": false,
+          "containment": true,
+          "rouge_l": 0.1818,
+          "bert_score": 0.3272,
+          "minilm_cosine": 0.2106,
+          "context_words": 103,
+          "facts_packed": 4
+        }
+      },
+      "generated_answers": {
+        "pure_sim": "The document does not provide information on how many seasons of Prison Break are available on Netflix.",
+        "no_modality_sdh": "The first five seasons of Prison Break are on Netflix.",
+        "full_sdh": "The first five seasons of Prison Break are on Netflix."
+      },
+      "pure_sim_packed_facts": [
+        {
+          "rank": 1,
+          "sdh_score": 0.5957,
+          "modality": "asserted",
+          "rendered": "The first five seasons of Prison Break have been released DVD and Blu - ray in Regions 1 , 2 , and 4 (time: on DVD and Blu - ray in Regions 1 , 2 , and 4)"
+        },
+        {
+          "rank": 2,
+          "sdh_score": 0.7139,
+          "modality": "asserted",
+          "rendered": "Prison Break is including available (context: including iTunes , Amazon Video , and Netflix) (manner: also) (manner: online)"
+        },
+        {
+          "rank": 3,
+          "sdh_score": 0.6839,
+          "modality": "asserted",
+          "rendered": "Fox began online streaming of the prior week 's episode (context: though Fox originally restricted viewing to the United States) (time: After the premiere of the second season of Prison Break)"
+        },
+        {
+          "rank": 4,
+          "sdh_score": 0.7228,
+          "modality": "asserted",
+          "rendered": "Each DVD boxed set (manner: episode) (manner: commentary)"
+        }
+      ],
+      "full_sdh_packed_facts": [
+        {
+          "rank": 1,
+          "sdh_score": 0.7139,
+          "modality": "asserted",
+          "rendered": "Prison Break is including available (context: including iTunes , Amazon Video , and Netflix) (manner: also) (manner: online)"
+        },
+        {
+          "rank": 2,
+          "sdh_score": 0.5957,
+          "modality": "asserted",
+          "rendered": "The first five seasons of Prison Break have been released DVD and Blu - ray in Regions 1 , 2 , and 4 (time: on DVD and Blu - ray in Regions 1 , 2 , and 4)"
+        },
+        {
+          "rank": 3,
+          "sdh_score": 0.6839,
+          "modality": "asserted",
+          "rendered": "Fox began online streaming of the prior week 's episode (context: though Fox originally restricted viewing to the United States) (time: After the premiere of the second season of Prison Break)"
+        },
+        {
+          "rank": 4,
+          "sdh_score": 0.7228,
+          "modality": "asserted",
+          "rendered": "Each DVD boxed set (manner: episode) (manner: commentary)"
+        }
+      ]
+    },
+    {
+      "sample_id": "7d5c58aa361b4805ac0f547ec51a0220",
+      "query": "what is the baby elephants name in jungle book",
+      "gold_answer": "Hathi Jr .",
+      "alternative_answers": [
+        "Hathi Jr ."
+      ],
+      "outcome_type": "EM_WIN_AND_CONTAINMENT_WIN",
+      "classification": "2. promotes informative propositions",
+      "secondary_classification": "1. removes irrelevant lexical matches",
+      "mechanistic_explanation": "Demotes uninformative copular distractor fragment \"Lucky is\" (SDH 0.3543) that caused pure similarity to answer \"Lucky\". Highlighting informative parentage proposition (SDH 0.5216) enabled LLM to produce the exact gold answer \"Hathi Jr.\".",
+      "metrics": {
+        "pure_sim": {
+          "exact_match": false,
+          "containment": false,
+          "rouge_l": 0.0,
+          "bert_score": 0.33,
+          "minilm_cosine": 0.0982,
+          "context_words": 1447,
+          "facts_packed": 79
+        },
+        "no_modality_sdh": {
+          "exact_match": true,
+          "containment": true,
+          "rouge_l": 1.0,
+          "bert_score": 0.9729,
+          "minilm_cosine": 1.0,
+          "context_words": 1447,
+          "facts_packed": 79
+        },
+        "full_sdh": {
+          "exact_match": true,
+          "containment": true,
+          "rouge_l": 1.0,
+          "bert_score": 0.9729,
+          "minilm_cosine": 1.0,
+          "context_words": 1422,
+          "facts_packed": 78
+        }
+      },
+      "generated_answers": {
+        "pure_sim": "Lucky",
+        "no_modality_sdh": "Hathi Jr.",
+        "full_sdh": "Hathi Jr."
+      },
+      "pure_sim_packed_facts": [
+        {
+          "rank": 1,
+          "sdh_score": 0.4976,
+          "modality": "asserted",
+          "rendered": "who elephant "
+        },
+        {
+          "rank": 2,
+          "sdh_score": 0.3543,
+          "modality": "asserted",
+          "rendered": "Lucky is ( The Jungle Book 2 )"
+        },
+        {
+          "rank": 3,
+          "sdh_score": 0.5216,
+          "modality": "asserted",
+          "rendered": "The baby elephant who is the son of Hathi and Winifred and is a good friend of Mowgli . is the son of Hathi and Winifred"
+        },
+        {
+          "rank": 4,
+          "sdh_score": 0.4279,
+          "modality": "asserted",
+          "rendered": "Ranjan ( is The Jungle Book 2 )"
+        },
+        {
+          "rank": 5,
+          "sdh_score": 0.6781,
+          "modality": "asserted",
+          "rendered": "He is voiced Clint Howard (time: in the first movie and by Jimmy Bennett) (time: in The Jungle Book 2)"
+        },
+        {
+          "rank": 6,
+          "sdh_score": 0.56,
+          "modality": "asserted",
+          "rendered": "Flunkey - King Louie 's monkey servant and is voiced Leo De Lyon (time: in the first film and by Jim Cummings in The Jungle Book 2)"
+        },
+        {
+          "rank": 7,
+          "sdh_score": 0.7612,
+          "modality": "asserted",
+          "rendered": "The vultures ' friend who loves teasing Shere Kahn as seen in The Jungle Book 2 . loves teasing Shere Kahn as seen in The Jungle Book 2"
+        },
+        {
+          "rank": 8,
+          "sdh_score": 0.5112,
+          "modality": "asserted",
+          "rendered": "The vultures ' friend who loves teasing Shere Kahn as seen in The Jungle Book 2 . loves teasing Shere Kahn as seen in The Jungle Book 2"
+        },
+        {
+          "rank": 9,
+          "sdh_score": 0.4542,
+          "modality": "asserted",
+          "rendered": "Shanti named  (time: only in The Jungle Book 2 ))"
+        },
+        {
+          "rank": 10,
+          "sdh_score": 0.5444,
+          "modality": "asserted",
+          "rendered": "Buzzie was voiced J. Pat O'Malley (time: in the first film and by Jim Cummings in The Jungle Book 2)"
+        }
+      ],
+      "full_sdh_packed_facts": [
+        {
+          "rank": 1,
+          "sdh_score": 0.6781,
+          "modality": "asserted",
+          "rendered": "He is voiced Clint Howard (time: in the first movie and by Jimmy Bennett) (time: in The Jungle Book 2)"
+        },
+        {
+          "rank": 2,
+          "sdh_score": 0.7612,
+          "modality": "asserted",
+          "rendered": "The vultures ' friend who loves teasing Shere Kahn as seen in The Jungle Book 2 . loves teasing Shere Kahn as seen in The Jungle Book 2"
+        },
+        {
+          "rank": 3,
+          "sdh_score": 0.5216,
+          "modality": "asserted",
+          "rendered": "The baby elephant who is the son of Hathi and Winifred and is a good friend of Mowgli . is the son of Hathi and Winifred"
+        },
+        {
+          "rank": 4,
+          "sdh_score": 0.4976,
+          "modality": "asserted",
+          "rendered": "who elephant "
+        },
+        {
+          "rank": 5,
+          "sdh_score": 0.56,
+          "modality": "asserted",
+          "rendered": "Flunkey - King Louie 's monkey servant and is voiced Leo De Lyon (time: in the first film and by Jim Cummings in The Jungle Book 2)"
+        },
+        {
+          "rank": 6,
+          "sdh_score": 0.6553,
+          "modality": "asserted",
+          "rendered": "Flaps is voiced Chad Stuart (time: in the first film and by Jeff Bennett) (time: in The Jungle Book 2)"
+        },
+        {
+          "rank": 7,
+          "sdh_score": 0.6484,
+          "modality": "asserted",
+          "rendered": "King Louie - The orangutan who leads the Bandar - log . leads the Bandar - log"
+        },
+        {
+          "rank": 8,
+          "sdh_score": 0.4279,
+          "modality": "asserted",
+          "rendered": "Ranjan ( is The Jungle Book 2 )"
+        },
+        {
+          "rank": 9,
+          "sdh_score": 0.5889,
+          "modality": "asserted",
+          "rendered": "Ziggy is voiced Digby Wolfe (time: in the first film and by Jess Harnell in The Jungle Book 2)"
+        },
+        {
+          "rank": 10,
+          "sdh_score": 0.5112,
+          "modality": "asserted",
+          "rendered": "The vultures ' friend who loves teasing Shere Kahn as seen in The Jungle Book 2 . loves teasing Shere Kahn as seen in The Jungle Book 2"
+        }
+      ]
+    },
+    {
+      "sample_id": "93940ca0846b454b833df8e69353a758",
+      "query": "what is the baby elephants name in jungle book",
+      "gold_answer": "Hathi Jr .",
+      "alternative_answers": [
+        "Hathi Jr ."
+      ],
+      "outcome_type": "EM_WIN_AND_CONTAINMENT_WIN",
+      "classification": "2. promotes informative propositions",
+      "secondary_classification": "1. removes irrelevant lexical matches",
+      "mechanistic_explanation": "Identical duplicate of sample 7d5c58aa361b4805ac0f547ec51a0220 on \"what is the baby elephants name in jungle book\". Demotes copular fragment \"Lucky is\", promoting informative proposition for \"Hathi Jr.\".",
+      "metrics": {
+        "pure_sim": {
+          "exact_match": false,
+          "containment": false,
+          "rouge_l": 0.0,
+          "bert_score": 0.33,
+          "minilm_cosine": 0.0982,
+          "context_words": 1447,
+          "facts_packed": 79
+        },
+        "no_modality_sdh": {
+          "exact_match": true,
+          "containment": true,
+          "rouge_l": 1.0,
+          "bert_score": 0.9729,
+          "minilm_cosine": 1.0,
+          "context_words": 1447,
+          "facts_packed": 79
+        },
+        "full_sdh": {
+          "exact_match": true,
+          "containment": true,
+          "rouge_l": 1.0,
+          "bert_score": 0.9729,
+          "minilm_cosine": 1.0,
+          "context_words": 1422,
+          "facts_packed": 78
+        }
+      },
+      "generated_answers": {
+        "pure_sim": "Lucky",
+        "no_modality_sdh": "Hathi Jr.",
+        "full_sdh": "Hathi Jr."
+      },
+      "pure_sim_packed_facts": [
+        {
+          "rank": 1,
+          "sdh_score": 0.4976,
+          "modality": "asserted",
+          "rendered": "who elephant "
+        },
+        {
+          "rank": 2,
+          "sdh_score": 0.3543,
+          "modality": "asserted",
+          "rendered": "Lucky is ( The Jungle Book 2 )"
+        },
+        {
+          "rank": 3,
+          "sdh_score": 0.5216,
+          "modality": "asserted",
+          "rendered": "The baby elephant who is the son of Hathi and Winifred and is a good friend of Mowgli . is the son of Hathi and Winifred"
+        },
+        {
+          "rank": 4,
+          "sdh_score": 0.4279,
+          "modality": "asserted",
+          "rendered": "Ranjan ( is The Jungle Book 2 )"
+        },
+        {
+          "rank": 5,
+          "sdh_score": 0.6781,
+          "modality": "asserted",
+          "rendered": "He is voiced Clint Howard (time: in the first movie and by Jimmy Bennett) (time: in The Jungle Book 2)"
+        },
+        {
+          "rank": 6,
+          "sdh_score": 0.56,
+          "modality": "asserted",
+          "rendered": "Flunkey - King Louie 's monkey servant and is voiced Leo De Lyon (time: in the first film and by Jim Cummings in The Jungle Book 2)"
+        },
+        {
+          "rank": 7,
+          "sdh_score": 0.7612,
+          "modality": "asserted",
+          "rendered": "The vultures ' friend who loves teasing Shere Kahn as seen in The Jungle Book 2 . loves teasing Shere Kahn as seen in The Jungle Book 2"
+        },
+        {
+          "rank": 8,
+          "sdh_score": 0.5112,
+          "modality": "asserted",
+          "rendered": "The vultures ' friend who loves teasing Shere Kahn as seen in The Jungle Book 2 . loves teasing Shere Kahn as seen in The Jungle Book 2"
+        },
+        {
+          "rank": 9,
+          "sdh_score": 0.4542,
+          "modality": "asserted",
+          "rendered": "Shanti named  (time: only in The Jungle Book 2 ))"
+        },
+        {
+          "rank": 10,
+          "sdh_score": 0.5444,
+          "modality": "asserted",
+          "rendered": "Buzzie was voiced J. Pat O'Malley (time: in the first film and by Jim Cummings in The Jungle Book 2)"
+        }
+      ],
+      "full_sdh_packed_facts": [
+        {
+          "rank": 1,
+          "sdh_score": 0.6781,
+          "modality": "asserted",
+          "rendered": "He is voiced Clint Howard (time: in the first movie and by Jimmy Bennett) (time: in The Jungle Book 2)"
+        },
+        {
+          "rank": 2,
+          "sdh_score": 0.7612,
+          "modality": "asserted",
+          "rendered": "The vultures ' friend who loves teasing Shere Kahn as seen in The Jungle Book 2 . loves teasing Shere Kahn as seen in The Jungle Book 2"
+        },
+        {
+          "rank": 3,
+          "sdh_score": 0.5216,
+          "modality": "asserted",
+          "rendered": "The baby elephant who is the son of Hathi and Winifred and is a good friend of Mowgli . is the son of Hathi and Winifred"
+        },
+        {
+          "rank": 4,
+          "sdh_score": 0.4976,
+          "modality": "asserted",
+          "rendered": "who elephant "
+        },
+        {
+          "rank": 5,
+          "sdh_score": 0.56,
+          "modality": "asserted",
+          "rendered": "Flunkey - King Louie 's monkey servant and is voiced Leo De Lyon (time: in the first film and by Jim Cummings in The Jungle Book 2)"
+        },
+        {
+          "rank": 6,
+          "sdh_score": 0.6553,
+          "modality": "asserted",
+          "rendered": "Flaps is voiced Chad Stuart (time: in the first film and by Jeff Bennett) (time: in The Jungle Book 2)"
+        },
+        {
+          "rank": 7,
+          "sdh_score": 0.6484,
+          "modality": "asserted",
+          "rendered": "King Louie - The orangutan who leads the Bandar - log . leads the Bandar - log"
+        },
+        {
+          "rank": 8,
+          "sdh_score": 0.4279,
+          "modality": "asserted",
+          "rendered": "Ranjan ( is The Jungle Book 2 )"
+        },
+        {
+          "rank": 9,
+          "sdh_score": 0.5889,
+          "modality": "asserted",
+          "rendered": "Ziggy is voiced Digby Wolfe (time: in the first film and by Jess Harnell in The Jungle Book 2)"
+        },
+        {
+          "rank": 10,
+          "sdh_score": 0.5112,
+          "modality": "asserted",
+          "rendered": "The vultures ' friend who loves teasing Shere Kahn as seen in The Jungle Book 2 . loves teasing Shere Kahn as seen in The Jungle Book 2"
+        }
+      ]
+    },
+    {
+      "sample_id": "576f27f031d84546b7b44d87561052b8",
+      "query": "2 . what are the reasons states impose protectionists policies on other countries",
+      "gold_answer": "shield the producers , businesses , and workers of the import - competing sector in the country from foreign competitors",
+      "alternative_answers": [
+        "shield the producers , businesses , and workers of the import - competing sector in the country from foreign competitors"
+      ],
+      "outcome_type": "CONTAINMENT_WIN",
+      "classification": "6. ranking change without meaningful semantic effect",
+      "secondary_classification": "7. other (LLM position sensitivity)",
+      "mechanistic_explanation": "Identical set of 8 propositions packed in both conditions. SDH permuted proposition order (moving target proposition towards the end). Due to LLM position sensitivity/recency bias, LLM answered correctly under Full SDH but had refused under pure similarity.",
+      "metrics": {
+        "pure_sim": {
+          "exact_match": false,
+          "containment": false,
+          "rouge_l": 0.2,
+          "bert_score": 0.4982,
+          "minilm_cosine": 0.3048,
+          "context_words": 147,
+          "facts_packed": 8
+        },
+        "no_modality_sdh": {
+          "exact_match": false,
+          "containment": true,
+          "rouge_l": 0.7805,
+          "bert_score": 0.7889,
+          "minilm_cosine": 0.7008,
+          "context_words": 147,
+          "facts_packed": 8
+        },
+        "full_sdh": {
+          "exact_match": false,
+          "containment": true,
+          "rouge_l": 0.7805,
+          "bert_score": 0.7889,
+          "minilm_cosine": 0.7008,
+          "context_words": 147,
+          "facts_packed": 8
+        }
+      },
+      "generated_answers": {
+        "pure_sim": "The facts provided do not contain enough information to answer the question \"What are the reasons states impose protectionist policies on other countries?\"",
+        "no_modality_sdh": "States impose protectionist policies on other countries to shield producers, businesses, and workers of the import-competing sector in the country from foreign competitors.",
+        "full_sdh": "States impose protectionist policies on other countries to shield producers, businesses, and workers of the import-competing sector in the country from foreign competitors."
+      },
+      "pure_sim_packed_facts": [
+        {
+          "rank": 1,
+          "sdh_score": 0.5315,
+          "modality": "asserted",
+          "rendered": "the country implementing protectionist policies"
+        },
+        {
+          "rank": 2,
+          "sdh_score": 0.3658,
+          "modality": "attributed",
+          "rendered": "protectionist policies shield the producers , businesses , and workers of the import - competing sector in the country (time: from foreign competitors) [attributed to Proponents]"
+        },
+        {
+          "rank": 3,
+          "sdh_score": 0.4317,
+          "modality": "attributed",
+          "rendered": "Proponents claim that protectionist policies shield the producers , businesses , and workers of the import - competing sector in the country from foreign competitors [attributed to Proponents]"
+        },
+        {
+          "rank": 4,
+          "sdh_score": 0.3976,
+          "modality": "attributed",
+          "rendered": "protectionist policies shield businesses , and workers of the import - competing sector in the country (time: from foreign competitors)"
+        },
+        {
+          "rank": 5,
+          "sdh_score": 0.4538,
+          "modality": "asserted",
+          "rendered": "Protectionism is the economic policy of restricting imports from other countries through methods such as tariffs on imported goods , import quotas , and a variety of other government regulations"
+        },
+        {
+          "rank": 6,
+          "sdh_score": 0.4855,
+          "modality": "asserted",
+          "rendered": "the countries protected  (context: against)"
+        },
+        {
+          "rank": 7,
+          "sdh_score": 0.5341,
+          "modality": "asserted",
+          "rendered": "protectionist policies reduce trade (manner: However) (manner: also)"
+        },
+        {
+          "rank": 8,
+          "sdh_score": 0.6612,
+          "modality": "asserted",
+          "rendered": "protectionist policies affect consumers (manner: adversely) (time: in general)"
+        }
+      ],
+      "full_sdh_packed_facts": [
+        {
+          "rank": 1,
+          "sdh_score": 0.5315,
+          "modality": "asserted",
+          "rendered": "the country implementing protectionist policies"
+        },
+        {
+          "rank": 2,
+          "sdh_score": 0.6612,
+          "modality": "asserted",
+          "rendered": "protectionist policies affect consumers (manner: adversely) (time: in general)"
+        },
+        {
+          "rank": 3,
+          "sdh_score": 0.5341,
+          "modality": "asserted",
+          "rendered": "protectionist policies reduce trade (manner: However) (manner: also)"
+        },
+        {
+          "rank": 4,
+          "sdh_score": 0.4855,
+          "modality": "asserted",
+          "rendered": "the countries protected  (context: against)"
+        },
+        {
+          "rank": 5,
+          "sdh_score": 0.4538,
+          "modality": "asserted",
+          "rendered": "Protectionism is the economic policy of restricting imports from other countries through methods such as tariffs on imported goods , import quotas , and a variety of other government regulations"
+        },
+        {
+          "rank": 6,
+          "sdh_score": 0.4317,
+          "modality": "attributed",
+          "rendered": "Proponents claim that protectionist policies shield the producers , businesses , and workers of the import - competing sector in the country from foreign competitors [attributed to Proponents]"
+        },
+        {
+          "rank": 7,
+          "sdh_score": 0.3976,
+          "modality": "attributed",
+          "rendered": "protectionist policies shield businesses , and workers of the import - competing sector in the country (time: from foreign competitors)"
+        },
+        {
+          "rank": 8,
+          "sdh_score": 0.3658,
+          "modality": "attributed",
+          "rendered": "protectionist policies shield the producers , businesses , and workers of the import - competing sector in the country (time: from foreign competitors) [attributed to Proponents]"
+        }
+      ]
+    },
+    {
+      "sample_id": "5d44f24dfd0044ee9b6465b363b94cf3",
+      "query": "when does jenny humphrey come back to gossip girl",
+      "gold_answer": "the final episode of the series",
+      "alternative_answers": [
+        "the final episode of the series"
+      ],
+      "outcome_type": "CONTAINMENT_WIN",
+      "classification": "6. ranking change without meaningful semantic effect",
+      "secondary_classification": "7. other (LLM position sensitivity)",
+      "mechanistic_explanation": "Identical set of 7 propositions packed in both conditions. SDH demoted minor biographical proposition (\"Jenny brother is Dan Humphrey\"), shifting relative order of final episode vs five-year time jump facts. LLM selected the gold answer.",
+      "metrics": {
+        "pure_sim": {
+          "exact_match": false,
+          "containment": false,
+          "rouge_l": 0.0645,
+          "bert_score": 0.4519,
+          "minilm_cosine": 0.2271,
+          "context_words": 129,
+          "facts_packed": 7
+        },
+        "no_modality_sdh": {
+          "exact_match": false,
+          "containment": true,
+          "rouge_l": 0.6,
+          "bert_score": 0.6537,
+          "minilm_cosine": 0.4719,
+          "context_words": 129,
+          "facts_packed": 7
+        },
+        "full_sdh": {
+          "exact_match": false,
+          "containment": true,
+          "rouge_l": 0.6,
+          "bert_score": 0.6537,
+          "minilm_cosine": 0.4719,
+          "context_words": 129,
+          "facts_packed": 7
+        }
+      },
+      "generated_answers": {
+        "pure_sim": "Jenny Humphrey comes back to Gossip Girl in the five-year time jump for her brother Dan Humphrey's wedding to Serena van der Woodsen.",
+        "no_modality_sdh": "Jenny Humphrey comes back to Gossip Girl in the final episode of the series.",
+        "full_sdh": "Jenny Humphrey comes back to Gossip Girl in the final episode of the series."
+      },
+      "pure_sim_packed_facts": [
+        {
+          "rank": 1,
+          "sdh_score": 0.5862,
+          "modality": "asserted",
+          "rendered": "it is revealed that Jenny knew that Jenny's brother , Dan Humphrey , was the mysterious blogger behind Gossip Girl (time: In the final episode of the series)"
+        },
+        {
+          "rank": 2,
+          "sdh_score": 0.3406,
+          "modality": "asserted",
+          "rendered": "Jenny's brother is Dan Humphrey"
+        },
+        {
+          "rank": 3,
+          "sdh_score": 0.4192,
+          "modality": "asserted",
+          "rendered": "Jenny knew "
+        },
+        {
+          "rank": 4,
+          "sdh_score": 0.7106,
+          "modality": "asserted",
+          "rendered": "Jenny works a designer for Blair 's fashion empire (cause: as a designer for Blair 's fashion empire) (context: implying that they have gotten over their past animosity)"
+        },
+        {
+          "rank": 5,
+          "sdh_score": 0.7283,
+          "modality": "asserted",
+          "rendered": "Jenny returns the Upper East Side (context: appearing in the five - year time jump for Jenny's brother 's wedding to Serena van der Woodsen) (location: to the Upper East Side) (recipient: the Upper East Side)"
+        },
+        {
+          "rank": 6,
+          "sdh_score": 0.5954,
+          "modality": "asserted",
+          "rendered": "they create J for Waldorf '' (manner: Together)"
+        },
+        {
+          "rank": 7,
+          "sdh_score": 0.6251,
+          "modality": "asserted",
+          "rendered": "they create their own clothing line (manner: Together)"
+        }
+      ],
+      "full_sdh_packed_facts": [
+        {
+          "rank": 1,
+          "sdh_score": 0.5862,
+          "modality": "asserted",
+          "rendered": "it is revealed that Jenny knew that Jenny's brother , Dan Humphrey , was the mysterious blogger behind Gossip Girl (time: In the final episode of the series)"
+        },
+        {
+          "rank": 2,
+          "sdh_score": 0.7106,
+          "modality": "asserted",
+          "rendered": "Jenny works a designer for Blair 's fashion empire (cause: as a designer for Blair 's fashion empire) (context: implying that they have gotten over their past animosity)"
+        },
+        {
+          "rank": 3,
+          "sdh_score": 0.7283,
+          "modality": "asserted",
+          "rendered": "Jenny returns the Upper East Side (context: appearing in the five - year time jump for Jenny's brother 's wedding to Serena van der Woodsen) (location: to the Upper East Side) (recipient: the Upper East Side)"
+        },
+        {
+          "rank": 4,
+          "sdh_score": 0.4192,
+          "modality": "asserted",
+          "rendered": "Jenny knew "
+        },
+        {
+          "rank": 5,
+          "sdh_score": 0.3406,
+          "modality": "asserted",
+          "rendered": "Jenny's brother is Dan Humphrey"
+        },
+        {
+          "rank": 6,
+          "sdh_score": 0.5954,
+          "modality": "asserted",
+          "rendered": "they create J for Waldorf '' (manner: Together)"
+        },
+        {
+          "rank": 7,
+          "sdh_score": 0.6251,
+          "modality": "asserted",
+          "rendered": "they create their own clothing line (manner: Together)"
+        }
+      ]
+    },
+    {
+      "sample_id": "7d933e87295e45ebbe19a6b2b19b26aa",
+      "query": "when did the us not go to the olympics",
+      "gold_answer": "1980",
+      "alternative_answers": [
+        "1980"
+      ],
+      "outcome_type": "CONTAINMENT_WIN",
+      "classification": "7. other",
+      "secondary_classification": "Modality filtering confound (NOT SDH ranking)",
+      "mechanistic_explanation": "Under pure similarity, top proposition was a hypothetical statement about the 1984 boycott (\"would boycott 1984\"), causing LLM to answer 1984. Full Pr\u00e9cis filtered this hypothetical fact via epistemic filtering, leading to 1980. SDH without modality (svoa_no_modality) still answered 1984. The win was caused by modality filtering, not SDH.",
+      "metrics": {
+        "pure_sim": {
+          "exact_match": false,
+          "containment": false,
+          "rouge_l": 0.0,
+          "bert_score": 0.3742,
+          "minilm_cosine": 0.1957,
+          "context_words": 87,
+          "facts_packed": 4
+        },
+        "no_modality_sdh": {
+          "exact_match": false,
+          "containment": false,
+          "rouge_l": 0.0,
+          "bert_score": 0.4501,
+          "minilm_cosine": 0.2085,
+          "context_words": 87,
+          "facts_packed": 4
+        },
+        "full_sdh": {
+          "exact_match": false,
+          "containment": true,
+          "rouge_l": 0.1667,
+          "bert_score": 0.4826,
+          "minilm_cosine": 0.3221,
+          "context_words": 61,
+          "facts_packed": 3
+        }
+      },
+      "generated_answers": {
+        "pure_sim": "The United States did not go to the 1984 Summer Olympics in Los Angeles.",
+        "no_modality_sdh": "The United States did not go to the Olympics in 1984.",
+        "full_sdh": "The United States did not go to the Olympics in 1980."
+      },
+      "pure_sim_packed_facts": [
+        {
+          "rank": 1,
+          "sdh_score": 0.6905,
+          "modality": "hypothetical",
+          "rendered": "The Soviet Union , which hosted the 1980 Summer Olympics , and would boycott the 1984 Summer Olympics in Los Angeles (manner: later) [hypothetical]"
+        },
+        {
+          "rank": 2,
+          "sdh_score": 0.4358,
+          "modality": "asserted",
+          "rendered": "The 1980 Summer Olympics boycott was one part of a number of actions initiated by the United States to protest the Soviet invasion of Afghanistan"
+        },
+        {
+          "rank": 3,
+          "sdh_score": 0.7444,
+          "modality": "asserted",
+          "rendered": "The Soviet Union , which hosted the 1980 Summer Olympics , and hosted the 1980 Summer Olympics"
+        },
+        {
+          "rank": 4,
+          "sdh_score": 0.6095,
+          "modality": "asserted",
+          "rendered": "the United States initiated actions (context: to protest the Soviet invasion of Afghanistan)"
+        }
+      ],
+      "full_sdh_packed_facts": [
+        {
+          "rank": 1,
+          "sdh_score": 0.7444,
+          "modality": "asserted",
+          "rendered": "The Soviet Union , which hosted the 1980 Summer Olympics , and hosted the 1980 Summer Olympics"
+        },
+        {
+          "rank": 2,
+          "sdh_score": 0.4358,
+          "modality": "asserted",
+          "rendered": "The 1980 Summer Olympics boycott was one part of a number of actions initiated by the United States to protest the Soviet invasion of Afghanistan"
+        },
+        {
+          "rank": 3,
+          "sdh_score": 0.6095,
+          "modality": "asserted",
+          "rendered": "the United States initiated actions (context: to protest the Soviet invasion of Afghanistan)"
+        }
+      ]
+    },
+    {
+      "sample_id": "a16d99b6e458424ab600aabd2094959d",
+      "query": "when did the us not go to the olympics",
+      "gold_answer": "1980",
+      "alternative_answers": [
+        "1980"
+      ],
+      "outcome_type": "CONTAINMENT_WIN",
+      "classification": "7. other",
+      "secondary_classification": "Modality filtering confound (NOT SDH ranking)",
+      "mechanistic_explanation": "Duplicate instance of 7d933e87295e45ebbe19a6b2b19b26aa (\"when did the us not go to the olympics\"). Modality filtering removed distractor hypothetical proposition about 1984 boycott. svoa_no_modality also failed.",
+      "metrics": {
+        "pure_sim": {
+          "exact_match": false,
+          "containment": false,
+          "rouge_l": 0.0,
+          "bert_score": 0.3742,
+          "minilm_cosine": 0.1957,
+          "context_words": 87,
+          "facts_packed": 4
+        },
+        "no_modality_sdh": {
+          "exact_match": false,
+          "containment": false,
+          "rouge_l": 0.0,
+          "bert_score": 0.4501,
+          "minilm_cosine": 0.2085,
+          "context_words": 87,
+          "facts_packed": 4
+        },
+        "full_sdh": {
+          "exact_match": false,
+          "containment": true,
+          "rouge_l": 0.1667,
+          "bert_score": 0.4826,
+          "minilm_cosine": 0.3221,
+          "context_words": 61,
+          "facts_packed": 3
+        }
+      },
+      "generated_answers": {
+        "pure_sim": "The United States did not go to the 1984 Summer Olympics in Los Angeles.",
+        "no_modality_sdh": "The United States did not go to the Olympics in 1984.",
+        "full_sdh": "The United States did not go to the Olympics in 1980."
+      },
+      "pure_sim_packed_facts": [
+        {
+          "rank": 1,
+          "sdh_score": 0.6905,
+          "modality": "hypothetical",
+          "rendered": "The Soviet Union , which hosted the 1980 Summer Olympics , and would boycott the 1984 Summer Olympics in Los Angeles (manner: later) [hypothetical]"
+        },
+        {
+          "rank": 2,
+          "sdh_score": 0.4358,
+          "modality": "asserted",
+          "rendered": "The 1980 Summer Olympics boycott was one part of a number of actions initiated by the United States to protest the Soviet invasion of Afghanistan"
+        },
+        {
+          "rank": 3,
+          "sdh_score": 0.7444,
+          "modality": "asserted",
+          "rendered": "The Soviet Union , which hosted the 1980 Summer Olympics , and hosted the 1980 Summer Olympics"
+        },
+        {
+          "rank": 4,
+          "sdh_score": 0.6095,
+          "modality": "asserted",
+          "rendered": "the United States initiated actions (context: to protest the Soviet invasion of Afghanistan)"
+        }
+      ],
+      "full_sdh_packed_facts": [
+        {
+          "rank": 1,
+          "sdh_score": 0.7444,
+          "modality": "asserted",
+          "rendered": "The Soviet Union , which hosted the 1980 Summer Olympics , and hosted the 1980 Summer Olympics"
+        },
+        {
+          "rank": 2,
+          "sdh_score": 0.4358,
+          "modality": "asserted",
+          "rendered": "The 1980 Summer Olympics boycott was one part of a number of actions initiated by the United States to protest the Soviet invasion of Afghanistan"
+        },
+        {
+          "rank": 3,
+          "sdh_score": 0.6095,
+          "modality": "asserted",
+          "rendered": "the United States initiated actions (context: to protest the Soviet invasion of Afghanistan)"
+        }
+      ]
+    },
+    {
+      "sample_id": "170339dda9e04b29b0d4b83ad067ce2a",
+      "query": "when did the us not go to the olympics",
+      "gold_answer": "1980",
+      "alternative_answers": [
+        "1980"
+      ],
+      "outcome_type": "CONTAINMENT_WIN",
+      "classification": "7. other",
+      "secondary_classification": "Modality filtering confound (NOT SDH ranking)",
+      "mechanistic_explanation": "Duplicate instance of 7d933e87295e45ebbe19a6b2b19b26aa (\"when did the us not go to the olympics\"). Modality filtering removed distractor hypothetical proposition about 1984 boycott. svoa_no_modality also failed.",
+      "metrics": {
+        "pure_sim": {
+          "exact_match": false,
+          "containment": false,
+          "rouge_l": 0.0,
+          "bert_score": 0.3742,
+          "minilm_cosine": 0.1957,
+          "context_words": 87,
+          "facts_packed": 4
+        },
+        "no_modality_sdh": {
+          "exact_match": false,
+          "containment": false,
+          "rouge_l": 0.0,
+          "bert_score": 0.4501,
+          "minilm_cosine": 0.2085,
+          "context_words": 87,
+          "facts_packed": 4
+        },
+        "full_sdh": {
+          "exact_match": false,
+          "containment": true,
+          "rouge_l": 0.1667,
+          "bert_score": 0.4826,
+          "minilm_cosine": 0.3221,
+          "context_words": 61,
+          "facts_packed": 3
+        }
+      },
+      "generated_answers": {
+        "pure_sim": "The United States did not go to the 1984 Summer Olympics in Los Angeles.",
+        "no_modality_sdh": "The United States did not go to the Olympics in 1984.",
+        "full_sdh": "The United States did not go to the Olympics in 1980."
+      },
+      "pure_sim_packed_facts": [
+        {
+          "rank": 1,
+          "sdh_score": 0.6905,
+          "modality": "hypothetical",
+          "rendered": "The Soviet Union , which hosted the 1980 Summer Olympics , and would boycott the 1984 Summer Olympics in Los Angeles (manner: later) [hypothetical]"
+        },
+        {
+          "rank": 2,
+          "sdh_score": 0.4358,
+          "modality": "asserted",
+          "rendered": "The 1980 Summer Olympics boycott was one part of a number of actions initiated by the United States to protest the Soviet invasion of Afghanistan"
+        },
+        {
+          "rank": 3,
+          "sdh_score": 0.7444,
+          "modality": "asserted",
+          "rendered": "The Soviet Union , which hosted the 1980 Summer Olympics , and hosted the 1980 Summer Olympics"
+        },
+        {
+          "rank": 4,
+          "sdh_score": 0.6095,
+          "modality": "asserted",
+          "rendered": "the United States initiated actions (context: to protest the Soviet invasion of Afghanistan)"
+        }
+      ],
+      "full_sdh_packed_facts": [
+        {
+          "rank": 1,
+          "sdh_score": 0.7444,
+          "modality": "asserted",
+          "rendered": "The Soviet Union , which hosted the 1980 Summer Olympics , and hosted the 1980 Summer Olympics"
+        },
+        {
+          "rank": 2,
+          "sdh_score": 0.4358,
+          "modality": "asserted",
+          "rendered": "The 1980 Summer Olympics boycott was one part of a number of actions initiated by the United States to protest the Soviet invasion of Afghanistan"
+        },
+        {
+          "rank": 3,
+          "sdh_score": 0.6095,
+          "modality": "asserted",
+          "rendered": "the United States initiated actions (context: to protest the Soviet invasion of Afghanistan)"
+        }
+      ]
+    },
+    {
+      "sample_id": "73da3909379843eda5e67eafb38b3d87",
+      "query": "who plays max voice in a goofy movie",
+      "gold_answer": "Jason Marsden",
+      "alternative_answers": [
+        "Jason Marsden"
+      ],
+      "outcome_type": "CONTAINMENT_LOSS",
+      "classification": "5. suppresses useful evidence",
+      "secondary_classification": "Distractor inflation via adjunct density",
+      "mechanistic_explanation": "Pure similarity placed target fact (\"Jason Marsden plays Max Goof\") at Fact 1. Full SDH favored distractor character facts with high adjunct scores (SDH 0.62-0.77), demoting the true answer to Fact 4. LLM attended to top distractor characters and hallucinated \"Jim Cummings as Pete\".",
+      "metrics": {
+        "pure_sim": {
+          "exact_match": false,
+          "containment": true,
+          "rouge_l": 0.3333,
+          "bert_score": 0.6168,
+          "minilm_cosine": 0.5888,
+          "context_words": 956,
+          "facts_packed": 50
+        },
+        "no_modality_sdh": {
+          "exact_match": false,
+          "containment": false,
+          "rouge_l": 0.0,
+          "bert_score": 0.5925,
+          "minilm_cosine": 0.2981,
+          "context_words": 956,
+          "facts_packed": 50
+        },
+        "full_sdh": {
+          "exact_match": false,
+          "containment": false,
+          "rouge_l": 0.0,
+          "bert_score": 0.4869,
+          "minilm_cosine": 0.2422,
+          "context_words": 956,
+          "facts_packed": 50
+        }
+      },
+      "generated_answers": {
+        "pure_sim": "Jason Marsden plays Max's voice in a Goofy movie.",
+        "no_modality_sdh": "Jim Cummings",
+        "full_sdh": "Jim Cummings as Pete"
+      },
+      "pure_sim_packed_facts": [
+        {
+          "rank": 1,
+          "sdh_score": 0.4561,
+          "modality": "asserted",
+          "rendered": "Jason Marsden plays Maximillan `` Max '' Goof , Goofy 's insecure teenage son"
+        },
+        {
+          "rank": 2,
+          "sdh_score": 0.2253,
+          "modality": "asserted",
+          "rendered": "who Goofy is Max 's father who works as a photographer at a Kmart and Max"
+        },
+        {
+          "rank": 3,
+          "sdh_score": 0.3562,
+          "modality": "asserted",
+          "rendered": "Bill Farmer as Goofy is Max 's father who works as a photographer at a Kmart"
+        },
+        {
+          "rank": 4,
+          "sdh_score": 0.5044,
+          "modality": "asserted",
+          "rendered": "Bill Farmer plays Goofy"
+        },
+        {
+          "rank": 5,
+          "sdh_score": 0.6292,
+          "modality": "asserted",
+          "rendered": "who Farmer Goofy (cause: as Goofy)"
+        },
+        {
+          "rank": 6,
+          "sdh_score": 0.4235,
+          "modality": "asserted",
+          "rendered": "Kevin Lima as Lester the Possum     Florence Stanley as a Waitress     Jo Anne Worley plays Miss Maples     Wayne Allwine as Mickey Mouse , who is seen hitchhiking alongside Donald Duck during Max and Goofy 's road trip"
+        },
+        {
+          "rank": 7,
+          "sdh_score": 0.4258,
+          "modality": "asserted",
+          "rendered": "Miss Maples     Wayne Allwine plays Mickey Mouse , who is seen hitchhiking alongside Donald Duck during Max and Goofy 's road trip"
+        },
+        {
+          "rank": 8,
+          "sdh_score": 0.3817,
+          "modality": "asserted",
+          "rendered": "Maximillan `` Max '' Goof is Goofy 's insecure teenage son"
+        },
+        {
+          "rank": 9,
+          "sdh_score": 0.6575,
+          "modality": "asserted",
+          "rendered": "Mickey Mouse , who is seen hitchhiking alongside Donald Duck during Max and Goofy 's road trip is seen hitchhiking alongside Donald Duck during Max and Goofy 's road trip"
+        },
+        {
+          "rank": 10,
+          "sdh_score": 0.4086,
+          "modality": "asserted",
+          "rendered": "Jim Cummings as Pete is Goofy 's coworker"
+        }
+      ],
+      "full_sdh_packed_facts": [
+        {
+          "rank": 1,
+          "sdh_score": 0.6292,
+          "modality": "asserted",
+          "rendered": "who Farmer Goofy (cause: as Goofy)"
+        },
+        {
+          "rank": 2,
+          "sdh_score": 0.6575,
+          "modality": "asserted",
+          "rendered": "Mickey Mouse , who is seen hitchhiking alongside Donald Duck during Max and Goofy 's road trip is seen hitchhiking alongside Donald Duck during Max and Goofy 's road trip"
+        },
+        {
+          "rank": 3,
+          "sdh_score": 0.7722,
+          "modality": "asserted",
+          "rendered": "who Lima Lester the Possum     Florence Stanley (cause: as Lester the Possum     Florence Stanley) (cause: as a Waitress     Jo Anne Worley) (cause: as Miss Maples     Wayne Allwine as Mickey Mouse , who is seen hitchhiking alongside Donald Duck during Max and Goofy 's road trip)"
+        },
+        {
+          "rank": 4,
+          "sdh_score": 0.4561,
+          "modality": "asserted",
+          "rendered": "Jason Marsden plays Maximillan `` Max '' Goof , Goofy 's insecure teenage son"
+        },
+        {
+          "rank": 5,
+          "sdh_score": 0.5044,
+          "modality": "asserted",
+          "rendered": "Bill Farmer plays Goofy"
+        },
+        {
+          "rank": 6,
+          "sdh_score": 0.6432,
+          "modality": "asserted",
+          "rendered": "Max Campbell the singing voice of Powerline , a famous rock star celebrity who Max looks up to (cause: as the singing voice of Powerline , a famous rock star celebrity who Max looks up to)"
+        },
+        {
+          "rank": 7,
+          "sdh_score": 0.4235,
+          "modality": "asserted",
+          "rendered": "Kevin Lima as Lester the Possum     Florence Stanley as a Waitress     Jo Anne Worley plays Miss Maples     Wayne Allwine as Mickey Mouse , who is seen hitchhiking alongside Donald Duck during Max and Goofy 's road trip"
+        },
+        {
+          "rank": 8,
+          "sdh_score": 0.4258,
+          "modality": "asserted",
+          "rendered": "Miss Maples     Wayne Allwine plays Mickey Mouse , who is seen hitchhiking alongside Donald Duck during Max and Goofy 's road trip"
+        },
+        {
+          "rank": 9,
+          "sdh_score": 0.6726,
+          "modality": "asserted",
+          "rendered": "Jim Cummings as Pete happen he and Max's road trip (location: upon) (time: during he and Max's road trip)"
+        },
+        {
+          "rank": 10,
+          "sdh_score": 0.3817,
+          "modality": "asserted",
+          "rendered": "Maximillan `` Max '' Goof is Goofy 's insecure teenage son"
+        }
+      ]
+    },
+    {
+      "sample_id": "838c0c7effe141998d46862a4f70d393",
+      "query": "who plays max voice in a goofy movie",
+      "gold_answer": "Jason Marsden",
+      "alternative_answers": [
+        "Jason Marsden"
+      ],
+      "outcome_type": "CONTAINMENT_LOSS",
+      "classification": "5. suppresses useful evidence",
+      "secondary_classification": "Distractor inflation via adjunct density",
+      "mechanistic_explanation": "Duplicate instance of 73da3909379843eda5e67eafb38b3d87 (\"who plays max voice in a goofy movie\"). Distractor character propositions with high adjunct density were promoted over the true voice actor fact, suppressing evidence.",
+      "metrics": {
+        "pure_sim": {
+          "exact_match": false,
+          "containment": true,
+          "rouge_l": 0.3333,
+          "bert_score": 0.6168,
+          "minilm_cosine": 0.5888,
+          "context_words": 956,
+          "facts_packed": 50
+        },
+        "no_modality_sdh": {
+          "exact_match": false,
+          "containment": false,
+          "rouge_l": 0.0,
+          "bert_score": 0.4869,
+          "minilm_cosine": 0.2422,
+          "context_words": 956,
+          "facts_packed": 50
+        },
+        "full_sdh": {
+          "exact_match": false,
+          "containment": false,
+          "rouge_l": 0.0,
+          "bert_score": 0.4869,
+          "minilm_cosine": 0.2422,
+          "context_words": 956,
+          "facts_packed": 50
+        }
+      },
+      "generated_answers": {
+        "pure_sim": "Jason Marsden plays Max's voice in a Goofy movie.",
+        "no_modality_sdh": "Jim Cummings as Pete",
+        "full_sdh": "Jim Cummings as Pete"
+      },
+      "pure_sim_packed_facts": [
+        {
+          "rank": 1,
+          "sdh_score": 0.4561,
+          "modality": "asserted",
+          "rendered": "Jason Marsden plays Maximillan `` Max '' Goof , Goofy 's insecure teenage son"
+        },
+        {
+          "rank": 2,
+          "sdh_score": 0.2253,
+          "modality": "asserted",
+          "rendered": "who Goofy is Max 's father who works as a photographer at a Kmart and Max"
+        },
+        {
+          "rank": 3,
+          "sdh_score": 0.3562,
+          "modality": "asserted",
+          "rendered": "Bill Farmer as Goofy is Max 's father who works as a photographer at a Kmart"
+        },
+        {
+          "rank": 4,
+          "sdh_score": 0.5044,
+          "modality": "asserted",
+          "rendered": "Bill Farmer plays Goofy"
+        },
+        {
+          "rank": 5,
+          "sdh_score": 0.6292,
+          "modality": "asserted",
+          "rendered": "who Farmer Goofy (cause: as Goofy)"
+        },
+        {
+          "rank": 6,
+          "sdh_score": 0.4235,
+          "modality": "asserted",
+          "rendered": "Kevin Lima as Lester the Possum     Florence Stanley as a Waitress     Jo Anne Worley plays Miss Maples     Wayne Allwine as Mickey Mouse , who is seen hitchhiking alongside Donald Duck during Max and Goofy 's road trip"
+        },
+        {
+          "rank": 7,
+          "sdh_score": 0.4258,
+          "modality": "asserted",
+          "rendered": "Miss Maples     Wayne Allwine plays Mickey Mouse , who is seen hitchhiking alongside Donald Duck during Max and Goofy 's road trip"
+        },
+        {
+          "rank": 8,
+          "sdh_score": 0.3817,
+          "modality": "asserted",
+          "rendered": "Maximillan `` Max '' Goof is Goofy 's insecure teenage son"
+        },
+        {
+          "rank": 9,
+          "sdh_score": 0.6575,
+          "modality": "asserted",
+          "rendered": "Mickey Mouse , who is seen hitchhiking alongside Donald Duck during Max and Goofy 's road trip is seen hitchhiking alongside Donald Duck during Max and Goofy 's road trip"
+        },
+        {
+          "rank": 10,
+          "sdh_score": 0.4086,
+          "modality": "asserted",
+          "rendered": "Jim Cummings as Pete is Goofy 's coworker"
+        }
+      ],
+      "full_sdh_packed_facts": [
+        {
+          "rank": 1,
+          "sdh_score": 0.6292,
+          "modality": "asserted",
+          "rendered": "who Farmer Goofy (cause: as Goofy)"
+        },
+        {
+          "rank": 2,
+          "sdh_score": 0.6575,
+          "modality": "asserted",
+          "rendered": "Mickey Mouse , who is seen hitchhiking alongside Donald Duck during Max and Goofy 's road trip is seen hitchhiking alongside Donald Duck during Max and Goofy 's road trip"
+        },
+        {
+          "rank": 3,
+          "sdh_score": 0.7722,
+          "modality": "asserted",
+          "rendered": "who Lima Lester the Possum     Florence Stanley (cause: as Lester the Possum     Florence Stanley) (cause: as a Waitress     Jo Anne Worley) (cause: as Miss Maples     Wayne Allwine as Mickey Mouse , who is seen hitchhiking alongside Donald Duck during Max and Goofy 's road trip)"
+        },
+        {
+          "rank": 4,
+          "sdh_score": 0.4561,
+          "modality": "asserted",
+          "rendered": "Jason Marsden plays Maximillan `` Max '' Goof , Goofy 's insecure teenage son"
+        },
+        {
+          "rank": 5,
+          "sdh_score": 0.5044,
+          "modality": "asserted",
+          "rendered": "Bill Farmer plays Goofy"
+        },
+        {
+          "rank": 6,
+          "sdh_score": 0.6432,
+          "modality": "asserted",
+          "rendered": "Max Campbell the singing voice of Powerline , a famous rock star celebrity who Max looks up to (cause: as the singing voice of Powerline , a famous rock star celebrity who Max looks up to)"
+        },
+        {
+          "rank": 7,
+          "sdh_score": 0.4235,
+          "modality": "asserted",
+          "rendered": "Kevin Lima as Lester the Possum     Florence Stanley as a Waitress     Jo Anne Worley plays Miss Maples     Wayne Allwine as Mickey Mouse , who is seen hitchhiking alongside Donald Duck during Max and Goofy 's road trip"
+        },
+        {
+          "rank": 8,
+          "sdh_score": 0.4258,
+          "modality": "asserted",
+          "rendered": "Miss Maples     Wayne Allwine plays Mickey Mouse , who is seen hitchhiking alongside Donald Duck during Max and Goofy 's road trip"
+        },
+        {
+          "rank": 9,
+          "sdh_score": 0.6726,
+          "modality": "asserted",
+          "rendered": "Jim Cummings as Pete happen he and Max's road trip (location: upon) (time: during he and Max's road trip)"
+        },
+        {
+          "rank": 10,
+          "sdh_score": 0.3817,
+          "modality": "asserted",
+          "rendered": "Maximillan `` Max '' Goof is Goofy 's insecure teenage son"
+        }
+      ]
+    },
+    {
+      "sample_id": "68116973781448139e3aa1db05ff6a00",
+      "query": "latest season on keeping up with the kardashians",
+      "gold_answer": "14",
+      "alternative_answers": [
+        "14"
+      ],
+      "outcome_type": "CONTAINMENT_LOSS",
+      "classification": "5. suppresses useful evidence",
+      "secondary_classification": "Chronological demotion via verb/adjunct weighting",
+      "mechanistic_explanation": "Target fact mentioning Season 14 was ranked highly under pure similarity. Full SDH boosted older season facts (Season 11, Season 12) due to higher adjunct and verb scores, pushing Season 14 down. LLM answered Season 11 instead of 14.",
+      "metrics": {
+        "pure_sim": {
+          "exact_match": false,
+          "containment": true,
+          "rouge_l": 0.0667,
+          "bert_score": 0.354,
+          "minilm_cosine": 0.1385,
+          "context_words": 425,
+          "facts_packed": 13
+        },
+        "no_modality_sdh": {
+          "exact_match": false,
+          "containment": false,
+          "rouge_l": 0.0,
+          "bert_score": 0.3095,
+          "minilm_cosine": 0.1698,
+          "context_words": 425,
+          "facts_packed": 13
+        },
+        "full_sdh": {
+          "exact_match": false,
+          "containment": false,
+          "rouge_l": 0.0,
+          "bert_score": 0.3325,
+          "minilm_cosine": 0.1422,
+          "context_words": 425,
+          "facts_packed": 13
+        }
+      },
+      "generated_answers": {
+        "pure_sim": "The latest season of Keeping Up with the Kardashians that is mentioned in the facts provided is Season 14, which aired from November 20, 2016, to March 12, 2017.",
+        "no_modality_sdh": "The latest season of Keeping Up with the Kardashians that aired on October 11, 2015.",
+        "full_sdh": "The latest season of Keeping Up with the Kardashians that aired was Season 11, which premiered on March 15, 2015."
+      },
+      "pure_sim_packed_facts": [
+        {
+          "rank": 1,
+          "sdh_score": 0.6582,
+          "modality": "asserted",
+          "rendered": "Last aired  (time: October) (time: December)"
+        },
+        {
+          "rank": 2,
+          "sdh_score": 0.5782,
+          "modality": "asserted",
+          "rendered": "Season     Episodes aired aired  (manner: First)"
+        },
+        {
+          "rank": 3,
+          "sdh_score": 0.411,
+          "modality": "asserted",
+          "rendered": "December 1 , 2013 ( 2013 - 12 - 01 )             9     20     January 19 , 2014 ( 2014 - 01 - 19 ) is September 1 , 2014 ( 2014 - 09 - 01"
+        },
+        {
+          "rank": 4,
+          "sdh_score": 0.4532,
+          "modality": "asserted",
+          "rendered": "10     17     March 15 , 2015 ( 2015 - 03 - 15 ) is October 11 , 2015 ( 2015 - 10 - 11"
+        },
+        {
+          "rank": 5,
+          "sdh_score": 0.325,
+          "modality": "asserted",
+          "rendered": "December 1 , 2013 ( 2013 - 12 - 01 )             9     20     January 19 , 2014 ( 2014 - 01 - 19 )     September 1 , 2014 ( 2014 - 09 - 01 )             10     17     March 15 , 2015 ( 2015 - 03 - 15 )     October 11 , 2015 ( 2015 - 10 - 11 )             11 is 13     November 15 , 2015 ( 2015 - 11 - 15 )"
+        },
+        {
+          "rank": 6,
+          "sdh_score": 0.5469,
+          "modality": "asserted",
+          "rendered": "December 2 , 2007 ( 2007 - 12 - 02 ) is 11     March 9 , 2008 ( 2008 - 03 - 09"
+        },
+        {
+          "rank": 7,
+          "sdh_score": 0.4073,
+          "modality": "asserted",
+          "rendered": "December 1 , 2013 ( 2013 - 12 - 01 )             9 is 20     January 19 , 2014"
+        },
+        {
+          "rank": 8,
+          "sdh_score": 0.3624,
+          "modality": "asserted",
+          "rendered": "December 1 , 2013 ( 2013 - 12 - 01 )             9     20     January 19 , 2014 ( 2014 - 01 - 19 )     September 1 , 2014 ( 2014 - 09 - 01 ) is 10     17     March 15 , 2015 ( 2015 - 03 - 15 )     October 11 , 2015 ( 2015 - 10 - 11"
+        },
+        {
+          "rank": 9,
+          "sdh_score": 0.2847,
+          "modality": "asserted",
+          "rendered": "December 1 , 2013 ( 2013 - 12 - 01 )             9     20     January 19 , 2014 ( 2014 - 01 - 19 )     September 1 , 2014 ( 2014 - 09 - 01 )             10     17     March 15 , 2015 ( 2015 - 03 - 15 )     October 11 , 2015 ( 2015 - 10 - 11 )             11     13     November 15 , 2015 ( 2015 - 11 - 15 ) is February 21 , 2016"
+        },
+        {
+          "rank": 10,
+          "sdh_score": 0.441,
+          "modality": "asserted",
+          "rendered": "December 20 , 2010 ( 2010 - 12 - 20 )             6 is 16     June 12 , 2011"
+        }
+      ],
+      "full_sdh_packed_facts": [
+        {
+          "rank": 1,
+          "sdh_score": 0.6582,
+          "modality": "asserted",
+          "rendered": "Last aired  (time: October) (time: December)"
+        },
+        {
+          "rank": 2,
+          "sdh_score": 0.5782,
+          "modality": "asserted",
+          "rendered": "Season     Episodes aired aired  (manner: First)"
+        },
+        {
+          "rank": 3,
+          "sdh_score": 0.5469,
+          "modality": "asserted",
+          "rendered": "December 2 , 2007 ( 2007 - 12 - 02 ) is 11     March 9 , 2008 ( 2008 - 03 - 09"
+        },
+        {
+          "rank": 4,
+          "sdh_score": 0.4532,
+          "modality": "asserted",
+          "rendered": "10     17     March 15 , 2015 ( 2015 - 03 - 15 ) is October 11 , 2015 ( 2015 - 10 - 11"
+        },
+        {
+          "rank": 5,
+          "sdh_score": 0.5415,
+          "modality": "asserted",
+          "rendered": "February 21 , 2010 ( 2010 - 02 - 21 )             5 is 12     August 22 , 2010 ( 2010 - 08 - 22"
+        },
+        {
+          "rank": 6,
+          "sdh_score": 0.411,
+          "modality": "asserted",
+          "rendered": "December 1 , 2013 ( 2013 - 12 - 01 )             9     20     January 19 , 2014 ( 2014 - 01 - 19 ) is September 1 , 2014 ( 2014 - 09 - 01"
+        },
+        {
+          "rank": 7,
+          "sdh_score": 0.4073,
+          "modality": "asserted",
+          "rendered": "December 1 , 2013 ( 2013 - 12 - 01 )             9 is 20     January 19 , 2014"
+        },
+        {
+          "rank": 8,
+          "sdh_score": 0.4729,
+          "modality": "asserted",
+          "rendered": "November 20 , 2016 ( 2016 - 11 - 20 )             13 is 14     March 12 , 2017"
+        },
+        {
+          "rank": 9,
+          "sdh_score": 0.441,
+          "modality": "asserted",
+          "rendered": "December 20 , 2010 ( 2010 - 12 - 20 )             6 is 16     June 12 , 2011"
+        },
+        {
+          "rank": 10,
+          "sdh_score": 0.4372,
+          "modality": "asserted",
+          "rendered": "June 11 , 2017 ( 2017 - 06 - 11 )             14     22 is October 1 , 2017"
+        }
+      ]
+    }
+  ]
+}

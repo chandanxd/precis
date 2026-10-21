@@ -1,0 +1,253 @@
+{
+  "metadata": {
+    "analysis_name": "SDH Ranking and Fact-Set Sensitivity Analysis",
+    "target_hypothesis": "H_SDH_04",
+    "hypothesis_statement": "Each SDH component contributes measurably and independently to proposition-ranking effectiveness.",
+    "date": "2026-10-09",
+    "primary_benchmark": "Natural Questions MRQA Development Split (N=200, Seed 42)",
+    "codebase_state": "Read-Only Analysis; backend/src/precis/ 100% Frozen",
+    "llm_inference_invoked": false,
+    "random_seed": 42
+  },
+  "data_availability_audit": {
+    "verified_fields_present_in_traces": [
+      "sample_id (200/200)",
+      "source_document_id (200/200)",
+      "candidate_fact_text (899 retrieved facts, 2101 packed facts)",
+      "composite_sdh_score (logged for audited samples; mean=0.494)",
+      "candidate_rank (1..K discrete packing order)",
+      "relevant_fact_candidates (329 answer-bearing retrieved facts flagged)"
+    ],
+    "verified_fields_missing_from_disk_caches": [
+      "per_fact_E_values (not serialized in Fact schema)",
+      "per_fact_I_values (not serialized in Fact schema)",
+      "per_fact_U_values (not serialized in Fact schema)",
+      "per_fact_A_values (not serialized in Fact schema)",
+      "query_similarity_exact_floats (implicit in ChromaDB retrieval; not saved)",
+      "exhaustive_candidate_relevance_labels (no graded or unretrieved candidate gold annotations)"
+    ],
+    "true_component_permutation_importance": "NOT IDENTIFIABLE",
+    "ranking_and_fact_set_sensitivity_analysis": "EXECUTED (Empirically characterizes full-SDH vs pure-similarity traces, fact-set stability, ordering effects, and mathematical properties under fixed weights 0.25)"
+  },
+  "mathematical_properties_of_components": {
+    "note": "Equal partial derivatives (0.25) reflect equal local coefficient sensitivity under uniform weights, NOT empirical feature importance. Theoretical dynamic ranges describe potential score boundaries, not practical ranking influence.",
+    "components": {
+      "E": {
+        "name": "Entity Relatedness / Salience",
+        "symbol": "E(s,o)",
+        "formula": "affine_calibrate(cos(e_s, e_o)) * pronoun_penalty",
+        "theoretical_dynamic_range": [
+          0.0,
+          1.0
+        ],
+        "partial_derivative_dSDH_dX": 0.25,
+        "max_score_swing": 0.25,
+        "production_weight": 0.25,
+        "empirical_importance_status": "NOT IDENTIFIABLE",
+        "qualitative_notes": "Measures subject-object embedding cosine similarity with generic pronoun penalty. Factual answers often pair disparate entities with naturally low cosine similarity. Redundant with bi-encoder query-fact embeddings."
+      },
+      "I": {
+        "name": "Verb Informativeness",
+        "symbol": "I(v)",
+        "formula": "Tiered copular penalty (0.20-0.32) + reporting verbs (0.50) + Zipf rank scaling (0.58-0.98)",
+        "theoretical_dynamic_range": [
+          0.1,
+          0.98
+        ],
+        "partial_derivative_dSDH_dX": 0.25,
+        "max_score_swing": 0.22,
+        "production_weight": 0.25,
+        "empirical_importance_status": "NOT IDENTIFIABLE",
+        "qualitative_notes": "Penalizes light/copular verbs and rewards specific lexical head verbs. Qualitatively observed to demote unparsed table headers and copular fragments in edge cases."
+      },
+      "U": {
+        "name": "Uniqueness / Novelty",
+        "symbol": "U(t,G)",
+        "formula": "Soft-threshold redundancy penalty: <=0.60 -> 1.0, >=0.92 -> <=0.15; cold start = 1.0",
+        "theoretical_dynamic_range": [
+          0.0,
+          1.0
+        ],
+        "partial_derivative_dSDH_dX": 0.25,
+        "max_score_swing": 0.25,
+        "production_weight": 0.25,
+        "empirical_importance_status": "NOT IDENTIFIABLE",
+        "qualitative_notes": "Sequential and order-dependent within document batch. Cold start is 1.0; candidate facts in single-document benchmarks rarely exceed 0.88 similarity threshold. Largely inactive on single passages."
+      },
+      "A": {
+        "name": "Adjunct Density / Context Richness",
+        "symbol": "A(t)",
+        "formula": "Base 0.20 + 0.80 * min(1.0, sum(w_type) / 3.0)",
+        "theoretical_dynamic_range": [
+          0.2,
+          1.0
+        ],
+        "partial_derivative_dSDH_dX": 0.25,
+        "max_score_swing": 0.2,
+        "production_weight": 0.25,
+        "empirical_importance_status": "NOT IDENTIFIABLE",
+        "qualitative_notes": "Accumulates weighted circumstantial modifiers (cause: 1.2, time: 1.0, loc: 0.9, manner: 0.8). Qualitatively observed to promote rich context in some queries, but inflates complex distractor background facts in others."
+      }
+    }
+  },
+  "full_sdh_vs_pure_similarity_traces": {
+    "evaluation_scope": "Natural Questions MRQA Development Split (N=200)",
+    "identical_answers": 141,
+    "identical_answers_pct": 70.5,
+    "differing_answers": 59,
+    "differing_answers_pct": 29.5,
+    "differing_answers_identical_fact_sets": 47,
+    "differing_answers_identical_fact_sets_pct": 79.66,
+    "differing_answers_altered_fact_sets": 12,
+    "differing_answers_altered_fact_sets_pct": 20.34,
+    "altered_sets_caused_by_modality_filtering": 11,
+    "altered_sets_caused_by_modality_filtering_pct": 91.67,
+    "altered_sets_caused_by_sdh_budget": 1,
+    "altered_sets_caused_by_sdh_budget_pct": 8.33,
+    "top_k_fact_membership_retention": 188,
+    "top_k_fact_membership_retention_pct": 94.0,
+    "primary_mechanism": "Internal proposition ordering within prompt context (affecting LLM position sensitivity), rather than candidate proposition membership."
+  },
+  "historical_drop_one_ablation_confound": {
+    "status": "Methodologically Confounded; Retained Only as Methodological Limitation",
+    "description": "Historical drop-one ablations set one weight to 0.0 and renormalized surviving weights to sum to 1.0, inflating surviving weights from 0.25 to 0.333... (+33.3% relative increase). This violated ceteris paribus and precludes isolating independent component contributions.",
+    "paired_v1_results_N200": {
+      "ablation_full": {
+        "em": 0.15,
+        "rouge_l": 0.3524,
+        "bert_score": 0.5795,
+        "weights": [
+          0.25,
+          0.25,
+          0.25,
+          0.25
+        ]
+      },
+      "ablation_drop_E": {
+        "em": 0.16,
+        "rouge_l": 0.3558,
+        "bert_score": 0.5801,
+        "delta_em": 0.01,
+        "delta_rouge_l": 0.0034,
+        "delta_bert_score": 0.0007,
+        "surviving_weights": 0.3333,
+        "inflation_pct": 33.33
+      },
+      "ablation_drop_I": {
+        "em": 0.14,
+        "rouge_l": 0.3419,
+        "bert_score": 0.5727,
+        "delta_em": -0.01,
+        "delta_rouge_l": -0.0105,
+        "delta_bert_score": -0.0068,
+        "surviving_weights": 0.3333,
+        "inflation_pct": 33.33
+      },
+      "ablation_drop_U": {
+        "em": 0.14,
+        "rouge_l": 0.3421,
+        "bert_score": 0.5703,
+        "delta_em": -0.01,
+        "delta_rouge_l": -0.0103,
+        "delta_bert_score": -0.0092,
+        "surviving_weights": 0.3333,
+        "inflation_pct": 33.33
+      },
+      "ablation_drop_A": {
+        "em": 0.16,
+        "rouge_l": 0.3463,
+        "bert_score": 0.5769,
+        "delta_em": 0.01,
+        "delta_rouge_l": -0.0061,
+        "delta_bert_score": -0.0026,
+        "surviving_weights": 0.3333,
+        "inflation_pct": 33.33
+      }
+    }
+  },
+  "downstream_qa_results_summary": {
+    "exact_match": {
+      "pure_sim": 0.18,
+      "full_sdh": 0.19,
+      "delta": 0.01,
+      "p_mcnemar": 0.5,
+      "verdict": "Not Significant"
+    },
+    "containment": {
+      "pure_sim": 0.675,
+      "full_sdh": 0.705,
+      "delta": 0.03,
+      "p_mcnemar": 0.146,
+      "verdict": "Not Significant"
+    },
+    "rouge_l": {
+      "pure_sim": 0.4109,
+      "full_sdh": 0.4155,
+      "delta": 0.0045,
+      "p_wilcoxon": 0.4568,
+      "verdict": "Not Significant"
+    },
+    "bert_score": {
+      "pure_sim": 0.6173,
+      "full_sdh": 0.6195,
+      "delta": 0.0022,
+      "p_wilcoxon": 0.133,
+      "verdict": "Not Significant"
+    }
+  },
+  "research_questions_corrected": {
+    "q1_component_importance_estimable": {
+      "question": "Does existing evidence permit component-level SDH importance to be estimated?",
+      "answer": "No. The required per-fact component values (E, I, U, A) and candidate relevance labels are not serialized in existing disk caches."
+    },
+    "q2_component_ranking": {
+      "question": "Which SDH component is strongest or weakest?",
+      "answer": "No component-level ranking can be established from the available data. Theoretical dynamic ranges and equal partial derivatives (0.25) do not constitute empirical importance."
+    },
+    "q3_membership_change": {
+      "question": "Does the implemented full SDH pipeline materially change top-K fact membership relative to pure similarity?",
+      "answer": "No. In 94.0% of benchmark queries (188/200), top-K fact membership is identical. Fact membership is altered in only 6.0% of queries (12/200), and 91.7% of those alterations (11/12) are driven by epistemic modality filtering rather than SDH scoring."
+    },
+    "q4_selection_vs_ordering": {
+      "question": "Does Full SDH mostly change ordering rather than membership?",
+      "answer": "Yes. 79.7% (47/59) of answer-divergent queries pack 100% identical sets of propositions, differing only in internal prompt ordering."
+    },
+    "q5_consistency": {
+      "question": "Are ranking effects consistent across questions?",
+      "answer": "No. Qualitative inspection shows bidirectional and non-uniform output shifts across different sentence types and syntax structures."
+    },
+    "q6_historical_ablation_weakness": {
+      "question": "Does this analysis repair the methodological weakness of the old ablation?",
+      "answer": "Yes. It formally documents that the historical component-drop ablation was confounded by a +33.3% surviving-weight inflation artifact and cannot support claims about independent component utility."
+    },
+    "q7_retain_four_terms": {
+      "question": "Does evidence justify retaining the four-term SDH formulation in the paper as a validated objective?",
+      "answer": "No, not as an empirically validated optimization objective. Downstream QA gains over pure similarity are statistically indistinguishable from zero (p >= 0.13). SDH should be presented as an exploratory heuristic filtering prior."
+    },
+    "q8_unnecessary_components": {
+      "question": "Does any component appear unnecessary?",
+      "answer": "Component-level necessity cannot be empirically quantified from available data. Structurally, E(s,o) is largely redundant with bi-encoder query-fact embeddings, and U(t,G) is inactive for single-document benchmarks."
+    },
+    "q9_future_ablation_justified": {
+      "question": "Is a future clean component ablation justified?",
+      "answer": "No. Because composite full SDH provides no statistically significant QA benefit over pure similarity, fine-grained component ablation is low-yield."
+    },
+    "q10_hybrid_priority": {
+      "question": "Does this change the priority of the hybrid experiment?",
+      "answer": "No. The hybrid diagnostic remains the highest-priority research milestone because SVOA extraction loss (29 pure deficits, 14.5% of the benchmark) is the dominant system bottleneck."
+    }
+  },
+  "hypothesis_verdict": {
+    "hypothesis_id": "H_SDH_04",
+    "verdict": "NOT IDENTIFIABLE",
+    "reason": "The required per-component values and relevance labels needed for valid permutation-based importance analysis are absent from existing frozen caches.",
+    "descriptive_statement": "Existing benchmark traces show that full SDH can alter proposition ordering, but the relative independent contribution of E, I, U, and A cannot be determined from the serialized evidence."
+  },
+  "final_summary": {
+    "A_analysis_possible": "Ranking and fact-set sensitivity analysis comparing full SDH to pure similarity on 200 benchmark questions, fact-set membership stability, prompt order sensitivity, and mathematical property characterization.",
+    "B_not_identifiable": "True component-level permutation importance for E, I, U, and A.",
+    "C_valid_findings_retained": "141/200 identical answers; 59 differing answers; 47/59 (79.7%) differing answers have identical fact sets (ordering only); 12/59 altered sets (11 modality, 1 SDH budget); 94.0% top-K set retention; zero statistically significant downstream QA gain (p >= 0.13); historical drop-one ablation confounded by +33.3% weight inflation.",
+    "D_another_sdh_experiment_justified": false,
+    "E_hybrid_priority_changed": false
+  }
+}

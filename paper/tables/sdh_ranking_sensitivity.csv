@@ -1,0 +1,6 @@
+Component_or_Condition,Symbol,Active_Weight,Partial_Derivative_dSDH_dX,Theoretical_Range_Min,Theoretical_Range_Max,Max_Score_Swing,Empirical_Importance_Status,Historical_Ablation_Weight,Hist_Surviving_Weight_Inflation_Pct,Historical_Delta_EM,Historical_Delta_ROUGE,Methodological_Status
+Entity Relatedness,"E(s,o)",0.25,0.25,0.0,1.0,0.25,NOT IDENTIFIABLE,0.0,33.33,+0.0100,+0.0034,Theoretical property only; component values not logged
+Verb Informativeness,I(v),0.25,0.25,0.1,0.98,0.22,NOT IDENTIFIABLE,0.0,33.33,-0.0100,-0.0105,Theoretical property only; component values not logged
+Uniqueness,"U(t,G)",0.25,0.25,0.0,1.0,0.25,NOT IDENTIFIABLE,0.0,33.33,-0.0100,-0.0103,Theoretical property only; component values not logged
+Adjunct Density,A(t),0.25,0.25,0.2,1.0,0.2,NOT IDENTIFIABLE,0.0,33.33,+0.0100,-0.0061,Theoretical property only; component values not logged
+Full SDH vs Pure Sim,SDH(t) vs Cos,1.0,N/A,0.0,1.0,N/A,System Traces Analyzed,N/A,N/A,+0.0100,+0.0045,79.7% ordering differences; 94% top-K set retention; p>=0.13 QA

@@ -1,0 +1,32 @@
+% Figure 2: query-time flow (symbols aligned with Eqs. (3) and (4) of the text). Drawn at print size: labels are
+% 8 pt on 9.5 pt, set explicitly (jucs2e makes \footnotesize 9 pt); about 170 pt wide, so it fits one EL
+% column and one half of the J.UCS figure pair at 100%.
+\begin{tikzpicture}[
+  font=\fontsize{8}{9.5}\selectfont, >={Stealth[length=1.8mm]}, node distance=3.2mm and 3mm,
+  box/.style={draw, thick, rounded corners=2pt, align=center, inner sep=2pt, fill=black!6, text width=#1,
+    execute at begin node={\hyphenpenalty=10000\exhyphenpenalty=10000}},
+  box/.default=68pt,
+  sbox/.style={box=#1, fill=black!16}, sbox/.default=68pt,
+  ar/.style={->, thick},
+  gar/.style={->, thick, black!50},
+  lab/.style={font=\fontsize{8}{9.5}\selectfont\itshape, inner sep=1pt}]
+\node[box=154pt] (emb) {Question $q$ (split on . ? !): embed; retrieve top-$k$ SVOA facts ($k=100$) and up to 10 structural items};
+\node[box, fill=black!2, below=4.5mm of emb.south west, anchor=north west] (facts)
+  {Facts: drop hypothetical, rank by SDH\,$\times$\,sim$(t,q)$, greedy pack under $B$};
+\node[sbox, below=4.5mm of emb.south east, anchor=north east] (struct)
+  {Structure: keep relevant, eligible items; rank by $\sigma(e,q)$; pack the top 3 first (a list may be truncated)};
+\node[box, fill=white, below=of struct] (any) {Anything\\ packed?};
+\node[box] (fonly) at (facts |- any) {Fact-only context (Eq.~(3) packing)};
+\node[sbox, below=4.5mm of any] (supp)
+  {Suppress same-doc\-ument facts and facts the structure covers; fill the rest of $B$};
+\node[box=154pt, below=4.5mm of supp.south -| emb.south, anchor=north] (out)
+  {Enforce hard ceiling $B$ $\rightarrow$ render $\rightarrow$\\ grounded prompt $\rightarrow$ local LLM};
+\draw[ar] (emb.south -| facts.north) -- (facts.north);
+\draw[ar] (emb.south -| struct.north) -- (struct.north);
+\draw[ar] (struct) -- (any);
+\draw[ar] (any) -- node[lab, right=2pt] {yes} (supp);
+\draw[gar] (any) -- node[lab, above] {no} (fonly);
+\draw[gar] (facts) -- (fonly);
+\draw[gar] (fonly.south) -- (out.north -| fonly.south);
+\draw[ar] (supp.south) -- (out.north -| supp.south);
+\end{tikzpicture}

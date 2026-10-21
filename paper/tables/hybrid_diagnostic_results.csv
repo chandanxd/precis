@@ -1,0 +1,11 @@
+Experiment,Cohort,Total_Cases,Primary_Metric,Primary_Rate,Secondary_Metric,Secondary_Rate,Mean_Context_Estimated_Tokens,Budget_Constraint_Notes
+V3_REBASELINE,DISCORDANT_40,40,Containment_Single_Gold,10/40 (25.0%),Containment_Multi_Alias,11/40 (27.5%),518.0,Baseline_Reference (estimated tokens)
+EXP_A_ORACLE,DEFICIT_29,29,Oracle_Repair_Rate,16/29 (55.2%),Unrecovered_Rate,13/29 (44.8%),586.1,Ceiling <= 2048 (estimated tokens)
+EXP_B_STRESS,VERIFIED_WINS_10,10,Verified_Win_Retention,7/10 (70.0%),Verified_Win_Regression,3/10 (30.0%),456.0,10/10 Compliant (<= Baseline)
+EXP_B_STRESS,SYNCH_BASELINE_WINS_10,10,Synch_Baseline_Retention,7/10 (70.0%),Synch_Baseline_Regression,3/10 (30.0%),456.0,10/10 Compliant (<= Baseline)
+EXP_B_STRESS,LEGACY_COHORT_11,11,Retained_Verified_Wins,7/11 (63.6%),Legacy_Selection_Artifact,1/11 (9.1%),456.0,"11 records: 7 retained wins, 3 regressed wins, 1 artifact (c4691863)"
+EXP_C_RETRIEVED,DEFICIT_29,29,Successful_Recoveries,4/29 (13.8%),Top_Ranked_Retrieval_Misses,14/29 (48.3%),489.2,"Decomposition: 4 recov, 14 miss, 3 budget fallback, 8 gen fail"
+EXP_C_RETRIEVED,DEFICIT_29_BUDGET,3,Context_Admission_Failure,3/29 (10.3%),Retrieved_Span_Had_Gold,3/3 (100.0%),15.3,"Budget fallback: span > base budget (23,23,0 tok), facts alone admitted"
+EXP_C_RETRIEVED,DEFICIT_29_ADMITTED,8,Retrieved_Gen_Failure,8/29 (27.6%),Span_Admitted_To_Prompt,8/8 (100.0%),997.5,"Generator received span + facts within budget but failed"
+EXP_C_RETRIEVED,VERIFIED_WINS_10,10,Verified_Win_Retention,7/10 (70.0%),Verified_Win_Regression,3/10 (30.0%),456.0,10/10 Compliant (<= Baseline)
+EXP_C_RETRIEVED,LEGACY_COHORT_11,11,Retained_Verified_Wins,7/11 (63.6%),Legacy_Selection_Artifact,1/11 (9.1%),456.0,"11 records: 7 retained wins, 3 regressed wins, 1 artifact (c4691863)"

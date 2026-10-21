@@ -5,8 +5,10 @@
  * Supported constructs (as required by the spec):
  *   - ATX headings: # h1 through ###### h6
  *   - Paragraphs
- *   - Ordered lists  (1. item)
- *   - Unordered lists (- / * / + item)
+ *   - Ordered lists  (1. item, 1) item)
+ *   - Unordered lists (- / * / + / • item), indented or not
+ *   - Single line breaks inside a paragraph (chat style)
+ *   - Lists a model wrote on one line ("Moves: - Pawns: … - Rooks: …")
  *   - Fenced code blocks (```lang … ```)
  *   - Block quotes (> text)
  *   - Horizontal rules (---, ***, ___)
@@ -122,8 +124,38 @@ type BlockNode =
   | { type: "ol"; items: string[] }
   | { type: "p"; inline: string };
 
+const UL_MARKER = /^\s*[-*+•]\s+/;
+const OL_MARKER = /^\s*\d+[.)]\s+/;
+// " - Label:" where the label is short and capitalised, e.g. " - **Rooks:**".
+const INLINE_ITEM = /(?:^|\s)-\s+(?=\*{0,2}[A-Z][^:\n]{0,40}:)/g;
+
+/**
+ * Small models sometimes write a list on one line ("Pieces: - Pawns: … - Rooks: …").
+ * When a line holds two or more such " - Label:" items, put each on its own line.
+ */
+function splitInlineList(line: string): string[] {
+  if (UL_MARKER.test(line) && !/\s-\s/.test(line.replace(UL_MARKER, ""))) return [line];
+  const starts = [...line.matchAll(INLINE_ITEM)].map(
+    (m) => m.index! + (m[0].startsWith("-") ? 0 : 1),
+  );
+  if (starts.length < 2) return [line];
+  const out: string[] = [];
+  const intro = line.slice(0, starts[0]).trim();
+  if (intro) out.push(intro);
+  starts.forEach((start, k) => out.push(line.slice(start, starts[k + 1] ?? line.length).trim()));
+  return out;
+}
+
 function parseBlocks(markdown: string): BlockNode[] {
-  const lines = markdown.split("\n");
+  let inFence = false;
+  const lines = markdown
+    .replace(/\r\n?/g, "\n")
+    .split("\n")
+    .flatMap((l) => {
+      if (/^```/.test(l)) inFence = !inFence;
+      // Code is left exactly as written.
+      return inFence || /^```/.test(l) ? [l] : splitInlineList(l);
+    });
   const blocks: BlockNode[] = [];
   let i = 0;
 
@@ -171,25 +203,24 @@ function parseBlocks(markdown: string): BlockNode[] {
       continue;
     }
 
-    // Unordered list
-    if (/^[-*+]\s/.test(line)) {
+    // Lists. Nested items are flattened; indented lines without a marker
+    // continue the previous item.
+    const listType = UL_MARKER.test(line) ? "ul" : OL_MARKER.test(line) ? "ol" : null;
+    if (listType) {
+      const marker = listType === "ul" ? UL_MARKER : OL_MARKER;
       const items: string[] = [];
-      while (i < lines.length && /^[-*+]\s/.test(lines[i])) {
-        items.push(lines[i].replace(/^[-*+]\s/, ""));
+      while (i < lines.length) {
+        const next = lines[i];
+        if (marker.test(next)) {
+          items.push(next.replace(marker, ""));
+        } else if (/^\s{2,}\S/.test(next) && !UL_MARKER.test(next) && !OL_MARKER.test(next)) {
+          items[items.length - 1] += ` ${next.trim()}`;
+        } else {
+          break;
+        }
         i++;
       }
-      blocks.push({ type: "ul", items });
-      continue;
-    }
-
-    // Ordered list
-    if (/^\d+\.\s/.test(line)) {
-      const items: string[] = [];
-      while (i < lines.length && /^\d+\.\s/.test(lines[i])) {
-        items.push(lines[i].replace(/^\d+\.\s/, ""));
-        i++;
-      }
-      blocks.push({ type: "ol", items });
+      blocks.push({ type: listType, items });
       continue;
     }
 
@@ -206,8 +237,8 @@ function parseBlocks(markdown: string): BlockNode[] {
       !/^\s*$/.test(lines[i]) &&
       !/^#{1,6}\s/.test(lines[i]) &&
       !/^```/.test(lines[i]) &&
-      !/^[-*+]\s/.test(lines[i]) &&
-      !/^\d+\.\s/.test(lines[i]) &&
+      !UL_MARKER.test(lines[i]) &&
+      !OL_MARKER.test(lines[i]) &&
       !/^>\s?/.test(lines[i]) &&
       !/^(\*{3,}|-{3,}|_{3,})\s*$/.test(lines[i])
     ) {
@@ -215,7 +246,8 @@ function parseBlocks(markdown: string): BlockNode[] {
       i++;
     }
     if (paraLines.length > 0) {
-      blocks.push({ type: "p", inline: paraLines.join(" ") });
+      // Keep single line breaks: chat answers use them for separate lines.
+      blocks.push({ type: "p", inline: paraLines.join("\n") });
     }
   }
   return blocks;
@@ -313,7 +345,12 @@ function renderBlock(block: BlockNode, idx: number): React.ReactNode {
     case "p":
       return (
         <p key={key} className="mb-[0.75em] last:mb-0 leading-[1.7] text-[var(--tx)]">
-          {renderInline(parseInline(block.inline), key)}
+          {block.inline.split("\n").map((textLine, li) => (
+            <React.Fragment key={li}>
+              {li > 0 && <br />}
+              {renderInline(parseInline(textLine), `${key}-${li}`)}
+            </React.Fragment>
+          ))}
         </p>
       );
 

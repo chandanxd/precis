@@ -1,0 +1,14 @@
+**/node_modules
+**/.git
+**/venv
+**/__pycache__
+**/.pytest_cache
+**/.output
+**/dist
+backend/chroma_data
+backend/build
+backend/data
+backend/benchmarks
+experiments
+docs
+*.docx

@@ -7,6 +7,14 @@ from typing import Any
 from pydantic import BaseModel, Field
 
 
+class TokenRequest(BaseModel):
+    client_id: str | None = Field(
+        None,
+        max_length=64,
+        description="Random per-browser ID (client-<32 hex>) that keeps data stable across reloads",
+    )
+
+
 class TokenResponse(BaseModel):
     access_token: str = Field(..., description="JWT bearer access token")
     token_type: str = Field("bearer", description="Token type")
@@ -14,7 +22,11 @@ class TokenResponse(BaseModel):
 
 
 class IngestRequest(BaseModel):
-    text: str = Field(..., description="Document text to ingest")
+    text: str = Field(
+        ...,
+        max_length=200_000,
+        description="Document text to ingest",
+    )
     document_name: str = Field(
         ...,
         max_length=255,
@@ -30,7 +42,16 @@ class IngestResponse(BaseModel):
 
 
 class QueryRequest(BaseModel):
-    question: str = Field(..., description="Natural language question to answer")
+    question: str = Field(
+        ...,
+        max_length=4_000,
+        description="Natural language question to answer",
+    )
+    session_id: str | None = Field(
+        None,
+        max_length=128,
+        description="Optional session ID for conversational context tracking",
+    )
 
 
 class QueryResponse(BaseModel):
@@ -43,6 +64,9 @@ class QueryResponse(BaseModel):
     latency_ms: int
     model: str = ""
     inference_tokens: int = 0
+    session_id: str | None = None
+    # "conversation", "general" (model's own knowledge) or "document".
+    answer_source: str = "document"
 
 
 class HardwareResponse(BaseModel):
@@ -72,3 +96,8 @@ class DocumentInfo(BaseModel):
 
 class DocumentListResponse(BaseModel):
     documents: list[DocumentInfo]
+
+
+class FactListResponse(BaseModel):
+    facts: list[dict[str, Any]]
+    total: int

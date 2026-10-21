@@ -186,3 +186,64 @@ class TestRateLimiter:
             return_value=1061.0,
         ):
             assert limiter.is_allowed("client1") is True
+
+
+class TestSanitizerHardening:
+    def test_many_open_brackets_is_fast(self):
+        import time
+
+        start = time.perf_counter()
+        sanitize_document("<" * 50_000)
+        assert time.perf_counter() - start < 1.0
+
+    def test_oversized_raw_input_rejected_before_regex(self):
+        with pytest.raises(ValueError):
+            sanitize_document("<" * 250_000)
+
+    def test_production_requires_secret(self, monkeypatch):
+        from precis.api.security import _resolve_secret
+
+        monkeypatch.delenv("PRECIS_SECRET", raising=False)
+        monkeypatch.setenv("PRECIS_ENV", "production")
+        with pytest.raises(RuntimeError):
+            _resolve_secret()
+        monkeypatch.setenv("PRECIS_SECRET", "x" * 32)
+        assert _resolve_secret() == "x" * 32
+
+    def test_mint_key_gate(self, monkeypatch):
+        from precis.api.security import verify_mint_key
+
+        monkeypatch.delenv("PRECIS_TOKEN_MINT_KEY", raising=False)
+        assert verify_mint_key(None)
+        monkeypatch.setenv("PRECIS_TOKEN_MINT_KEY", "k")
+        assert not verify_mint_key(None)
+        assert not verify_mint_key("bad")
+        assert verify_mint_key("k")
+
+
+class TestLayoutSanitizer:
+    def test_preserves_markup_and_newlines(self):
+        from precis.api.security import sanitize_document_layout
+
+        raw = "<ul>\n<li>one</li>\n<li>two</li>\n</ul>"
+        assert sanitize_document_layout(raw) == raw
+
+    def test_strips_active_content_and_handlers(self):
+        from precis.api.security import sanitize_document_layout
+
+        raw = '<p onclick="x()">hi</p><script>alert(1)</script><STYLE>b{}</STYLE>ok'
+        out = sanitize_document_layout(raw)
+        assert "script" not in out.lower()
+        assert "alert" not in out
+        assert "onclick" not in out
+        assert "style" not in out.lower()
+        assert "hi" in out and out.endswith("ok")
+
+    def test_many_unclosed_script_tags_is_fast(self):
+        import time
+
+        from precis.api.security import sanitize_document_layout
+
+        start = time.perf_counter()
+        sanitize_document_layout("<script>" * 20_000)
+        assert time.perf_counter() - start < 1.0

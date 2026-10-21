@@ -167,7 +167,7 @@ class TestRestPipelineFlow:
     ):
         mock_inf.return_value = InferenceResult(
             answer="The European Council approved the climate bill.",
-            model="llama3:8b",
+            model="qwen3.5:4b",
             latency_ms=120,
             tokens_generated=8,
         )
@@ -238,6 +238,30 @@ class TestRestPipelineFlow:
         assert query_data["avg_sdh_score"] >= 0.0
         assert query_data["latency_ms"] >= 0
 
+        # Test GET /api/facts endpoint before deletion
+        facts_resp = client.get(
+            "/api/facts",
+            headers={**auth_headers},
+        )
+        assert facts_resp.status_code == 200
+        facts_data = facts_resp.json()
+        assert "facts" in facts_data
+        assert facts_data["total"] > 0
+        first_fact = facts_data["facts"][0]
+        assert "subject" in first_fact
+        assert "verb" in first_fact
+        assert "object" in first_fact
+        assert "modality" in first_fact
+        assert "sdh_score" in first_fact
+
+        # Test GET /api/facts with source_doc filter
+        filtered_facts_resp = client.get(
+            "/api/facts?source_doc=climate.txt",
+            headers={**auth_headers},
+        )
+        assert filtered_facts_resp.status_code == 200
+        assert filtered_facts_resp.json()["total"] > 0
+
         # 4. Delete document
         del_resp = client.delete(
             "/api/documents/climate.txt",
@@ -264,6 +288,14 @@ class TestRestPipelineFlow:
         assert clear_resp.status_code == 200
         assert clear_resp.json()["status"] == "cleared"
 
+        # Verify facts empty after clear
+        empty_facts_resp = client.get(
+            "/api/facts",
+            headers={**auth_headers},
+        )
+        assert empty_facts_resp.status_code == 200
+        assert empty_facts_resp.json()["total"] == 0
+
     @patch("precis.pipeline.orchestrator.generate_answer")
     def test_query_response_metrics(
         self,
@@ -273,7 +305,7 @@ class TestRestPipelineFlow:
     ):
         mock_inf.return_value = InferenceResult(
             answer="The European Council approved the climate bill.",
-            model="llama3:8b",
+            model="qwen3.5:4b",
             latency_ms=120,
             tokens_generated=8,
         )
@@ -322,6 +354,10 @@ class TestRestPipelineFlow:
 
         assert isinstance(data["facts_used"], list)
         assert len(data["facts_used"]) > 0
+        assert "model" in data
+        assert data["model"] == "qwen3.5:4b"
+        assert "inference_tokens" in data
+        assert data["inference_tokens"] == 8
 
     @patch("precis.pipeline.orchestrator.generate_answer")
     def test_query_without_ingested_documents(
@@ -333,7 +369,7 @@ class TestRestPipelineFlow:
         response = client.post(
             "/api/query",
             headers={**auth_headers},
-            json={"question": "What is the capital of France?"},
+            json={"question": "According to the document, what is the capital of France?"},
         )
 
         assert response.status_code == 400
@@ -410,7 +446,7 @@ class TestWebSocketStream:
             ws.send_json(
                 {
                     "type": "query",
-                    "question": "Where is Paris?",
+                    "question": "According to the report, what is revenue?",
                 }
             )
 
@@ -427,7 +463,7 @@ class TestWebSocketStream:
                 ws.send_json(
                     {
                         "type": "query",
-                        "question": "Where is Paris?",
+                        "question": "According to the report, what is revenue?",
                     }
                 )
                 resp = ws.receive_json()
@@ -437,3 +473,30 @@ class TestWebSocketStream:
                     rate_limited = True
                     break
             assert rate_limited
+
+
+class TestWebSocketRobustness:
+    def _connect(self, client):
+        token = client.post("/api/auth/token").json()["access_token"]
+        return client.websocket_connect(f"/ws?token={token}")
+
+    def test_malformed_frames_do_not_kill_socket(self, client):
+        with self._connect(client) as ws:
+            ws.send_text("not json")
+            assert ws.receive_json()["type"] == "error"
+            ws.send_text("[1, 2]")
+            assert ws.receive_json()["type"] == "error"
+            ws.send_json({"type": "query", "question": 123})
+            assert ws.receive_json()["type"] == "error"
+            ws.send_json({"type": "ingest", "text": ["x"]})
+            assert ws.receive_json()["type"] == "error"
+            ws.send_json({"type": "ping"})
+            assert ws.receive_json()["type"] == "pong"
+
+    def test_disconnect_removes_socket_from_manager(self, client):
+        import main
+
+        with self._connect(client) as ws:
+            ws.send_json({"type": "ping"})
+            ws.receive_json()
+        assert not main.ws_manager.active

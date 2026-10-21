@@ -2,6 +2,7 @@
 JWT authentication, input sanitization, prompt injection detection, and rate limiting.
 """
 
+import hmac
 import html
 import os
 import re
@@ -17,12 +18,39 @@ from fastapi.responses import JSONResponse
 from fastapi.security import HTTPBearer
 from starlette.middleware.base import BaseHTTPMiddleware
 
-# Development fallback; production deployments must provide PRECIS_SECRET.
-SECRET_KEY = os.getenv("PRECIS_SECRET", "precis-local-dev-secret-change-in-prod")
+_DEV_SECRET = "precis-local-dev-secret-change-in-prod"
+
+
+def _resolve_secret() -> str:
+    """Return the JWT signing secret; production must set PRECIS_SECRET."""
+    secret = os.getenv("PRECIS_SECRET", "").strip()
+    if secret:
+        return secret
+    if os.getenv("PRECIS_ENV", "dev").strip().lower() in ("prod", "production"):
+        raise RuntimeError(
+            "PRECIS_SECRET must be set when PRECIS_ENV=production."
+        )
+    return _DEV_SECRET
+
+
+SECRET_KEY = _resolve_secret()
 ALGORITHM = "HS256"
 TOKEN_EXPIRY_HOURS = 24
 
 security_scheme = HTTPBearer(auto_error=False)
+
+# Subject used for tokens that carry no client identity (and for legacy data).
+DEFAULT_USER = "local_user"
+
+# Browsers keep a random client ID and send it when requesting a token, so the
+# same browser gets the same subject (and therefore the same documents and chat
+# context) after reloads and token expiry.
+_CLIENT_ID_RE = re.compile(r"^client-[0-9a-f]{32}$")
+
+
+def is_client_id(value: object) -> bool:
+    """True for a well-formed per-browser client ID."""
+    return isinstance(value, str) and bool(_CLIENT_ID_RE.match(value))
 
 # Maximum input lengths
 MAX_DOCUMENT_LENGTH = 100_000  # 100K characters
@@ -34,11 +62,22 @@ _INJECTION_PATTERNS = [
     r"disregard\s+(all\s+)?above",
     r"you\s+are\s+now\s+a",
     r"new\s+instructions?\s*:",
-    r"system\s*:\s*",
+    r"system\s*:\s*(you|ignore|disregard|forget|act|from\s+now|new\s+instructions?|override)\b",
     r"<\s*script",
 ]
 
 _injection_regex = re.compile("|".join(_INJECTION_PATTERNS), re.IGNORECASE)
+
+
+def verify_mint_key(provided: str | None) -> bool:
+    """Check the optional token-minting key (PRECIS_TOKEN_MINT_KEY).
+
+    When the variable is unset, minting is open (local development default).
+    """
+    required = os.getenv("PRECIS_TOKEN_MINT_KEY", "")
+    if not required:
+        return True
+    return hmac.compare_digest(provided or "", required)
 
 
 def generate_token(subject: str = "local_user") -> str:
@@ -79,7 +118,7 @@ class JWTMiddleware(BaseHTTPMiddleware):
         path = request.url.path
 
         # Allow public routes and WebSocket
-        if path in self.PUBLIC_ROUTES or path.startswith("/ws"):
+        if path in self.PUBLIC_ROUTES or path == "/ws":
             return await call_next(request)
 
         # Allow OPTIONS (CORS preflight)
@@ -96,12 +135,14 @@ class JWTMiddleware(BaseHTTPMiddleware):
 
         token = auth_header.split(" ", 1)[1]
         try:
-            validate_token(token)
+            payload = validate_token(token)
         except HTTPException as exc:
             return JSONResponse(
                 status_code=exc.status_code,
                 content={"detail": exc.detail},
             )
+
+        request.state.user_sub = payload.get("sub") or DEFAULT_USER
 
         return await call_next(request)
 
@@ -116,8 +157,15 @@ def sanitize_text(text: str, max_length: int) -> str:
     """
     if not text:
         return ""
-    # Strip HTML tags
-    text = re.sub(r"<[^>]+>", "", text)
+    # Bound the work done by the regexes below before running them. Allow
+    # headroom over max_length for markup that stripping will remove.
+    if len(text) > max_length * 2:
+        raise ValueError(
+            f"Input exceeds the maximum length of {max_length} characters."
+        )
+    # Strip HTML tags and comments only, so text like "a < b > c" survives.
+    # [^<>] keeps matching linear on inputs with many '<'.
+    text = re.sub(r"</?[A-Za-z!][^<>]*>", "", text)
     # Unescape HTML entities
     text = html.unescape(text)
     # Normalize whitespace
@@ -126,6 +174,59 @@ def sanitize_text(text: str, max_length: int) -> str:
     if len(text) > max_length:
         raise ValueError(
             f"Input exceeds the maximum length of {max_length} characters."
+        )
+    return text
+
+
+_ACTIVE_CONTENT_TAGS = ("script", "style", "iframe", "object", "embed")
+
+
+def _strip_active_content(text: str) -> str:
+    """Remove <script>/<style>/<iframe>/<object>/<embed> blocks in linear time.
+
+    An unclosed block is dropped to the end of the input, as a browser would.
+    """
+    for tag in _ACTIVE_CONTENT_TAGS:
+        lower = text.lower()
+        out: list[str] = []
+        pos = 0
+        while True:
+            start = lower.find("<" + tag, pos)
+            if start < 0:
+                out.append(text[pos:])
+                break
+            out.append(text[pos:start])
+            end = lower.find("</" + tag, start)
+            if end < 0:
+                break
+            close = lower.find(">", end)
+            if close < 0:
+                break
+            pos = close + 1
+        text = "".join(out)
+    return text
+
+
+def sanitize_document_layout(text: str) -> str:
+    """Sanitize raw document text for structural (list/table) extraction.
+
+    Unlike sanitize_document this keeps markup and line structure, because the
+    structural extractor parses it. Active content (script/style/iframe/object/
+    embed), inline event handlers and control characters are removed, and the
+    length limit is enforced.
+    """
+    if not text:
+        return ""
+    if len(text) > MAX_DOCUMENT_LENGTH * 2:
+        raise ValueError(
+            f"Input exceeds the maximum length of {MAX_DOCUMENT_LENGTH * 2} characters."
+        )
+    text = _strip_active_content(text)
+    text = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]", "", text)
+    text = re.sub(r"(?i)\son[a-z]+\s*=\s*(\"[^\"]*\"|'[^']*'|[^\s>]+)", "", text)
+    if len(text) > MAX_DOCUMENT_LENGTH * 2:
+        raise ValueError(
+            f"Input exceeds the maximum length of {MAX_DOCUMENT_LENGTH * 2} characters."
         )
     return text
 

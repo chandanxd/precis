@@ -576,7 +576,7 @@ def el_tex():
 \begin{document}
 \title{""" + TITLE + r"""}
 \author{""" + authors + r"""%
-\thanks{Manuscript received October 2026. """ + EL_FUNDING + r"""}%
+\thanks{Manuscript received October 22, 2026. """ + EL_FUNDING + r"""}%
 \thanks{""" + EL_AUTHOR_NOTE + r"""}}
 \maketitle
 \pagestyle{empty}

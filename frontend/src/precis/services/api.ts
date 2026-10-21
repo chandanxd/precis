@@ -4,6 +4,7 @@ import type {
   Fact,
   FactStoreStats,
   HardwareProfile,
+  Message,
   PipelineEvent,
   QueryResponse,
 } from "../types/api";
@@ -336,6 +337,43 @@ export async function fetchAllFacts(
   }
 }
 
+/** One earlier turn of the conversation, sent with a query for follow-up context. */
+export interface ChatTurn {
+  role: "user" | "assistant";
+  content: string;
+  /** True when the assistant answered from the documents. */
+  grounded?: boolean;
+}
+
+/**
+ * The last completed question/answer pairs of a conversation, oldest first.
+ * Failed answers and questions left without an answer (stopped) are skipped,
+ * since the backend never answered them.
+ */
+export function buildChatHistory(messages: Message[], maxTurns = 6): ChatTurn[] {
+  const turns: ChatTurn[] = [];
+  for (let i = 0; i + 1 < messages.length; i++) {
+    const question = messages[i];
+    const answer = messages[i + 1];
+    // The prefix catches error messages saved before `failed` existed.
+    const failed = answer.failed || answer.content.startsWith("Pipeline query failed:");
+    if (question.role !== "user" || answer.role !== "ai" || failed) continue;
+    const response = answer.query_response;
+    turns.push(
+      { role: "user", content: question.content },
+      {
+        role: "assistant",
+        content: response?.answer || answer.content,
+        grounded:
+          response?.answer_source === "document" ||
+          (response?.answer_source === undefined && (response?.facts_used?.length ?? 0) > 0),
+      },
+    );
+    i++;
+  }
+  return turns.slice(-maxTurns);
+}
+
 /**
  * Run Query via WebSocket with progressive token & stage streaming.
  * Reports an error if the backend is unreachable or the connection drops
@@ -350,6 +388,7 @@ export function streamQueryPipeline(
     onError: (err: string) => void;
   },
   sessionId?: string,
+  history?: ChatTurn[],
 ): () => void {
   const CONNECT_TIMEOUT_MS = 10_000;
 
@@ -433,6 +472,9 @@ export function streamQueryPipeline(
                   question,
                   session_id: sessionId || undefined,
                   options: getQueryOptions(),
+                  // The conversation as shown, so cleared or regenerated turns never
+                  // linger in the backend's follow-up context.
+                  history,
                 }),
               );
               return;

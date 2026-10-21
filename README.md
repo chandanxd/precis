@@ -42,7 +42,7 @@ backend/                 Python package `precis` (FastAPI service, pipeline, eva
   src/precis/api/        request models, JWT auth, sanitisation, rate limiting
   src/precis/evaluation/ benchmark harness and the chunked baseline
   scripts/               MRQA conversion and failure-analysis tools
-  tests/                 522 tests in 17 modules
+  tests/                 529 tests in 17 modules
 frontend/                web interface (upload, ask, inspect the packed context and pipeline trace)
 docker/, docker-compose.yml   containerised backend, frontend and nginx proxy
 docs/architecture.md     system architecture and data flow
@@ -64,7 +64,7 @@ cd backend
 python3 -m venv venv
 venv/bin/pip install -e ".[api,eval,dev,coref-fast]"
 venv/bin/python -m spacy download en_core_web_lg
-venv/bin/python -m pytest -q          # 522 tests
+venv/bin/python -m pytest -q          # 529 tests
 
 # models used in the paper
 ollama pull qwen2.5-coder:7b

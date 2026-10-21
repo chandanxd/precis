@@ -13,6 +13,8 @@ services:
       - PRECIS_DATA_DIR=/app/chroma_data
       - PRECIS_CORS_ORIGINS=${PRECIS_CORS_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
       - PRECIS_OLLAMA_BASE_URL=http://host.docker.internal:11434
+      # Report an unreachable Ollama as an error instead of serving canned mock answers
+      - PRECIS_STRICT_OLLAMA=1
     extra_hosts:
       - "host.docker.internal:host-gateway"
     healthcheck:

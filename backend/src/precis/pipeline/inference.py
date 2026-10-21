@@ -456,9 +456,10 @@ def _stream_ollama(
         # releasing the HTTP connection to Ollama.
         resp.close()
 
+    # The held-back tail is already in full_answer (raw tokens); only the
+    # stream still needs it.
     flushed = think_filter.flush()
     if flushed:
-        full_answer.append(flushed)
         yield flushed
 
     cleaned_answer = strip_thinking_tags("".join(full_answer))

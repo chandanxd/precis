@@ -86,6 +86,8 @@ export interface Message {
   timestamp: string;
   pipeline_events: PipelineEvent[];
   query_response: QueryResponse;
+  /** Set on the error message shown when a query fails. */
+  failed?: boolean;
 }
 
 export interface Document {

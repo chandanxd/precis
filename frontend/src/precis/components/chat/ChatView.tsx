@@ -1,7 +1,7 @@
 // @ts-nocheck — ported code written for a less strict TS config
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import type { Message, PipelineEvent, QueryResponse, Fact, Conversation } from "../../types/api";
-import { streamQueryPipeline } from "../../services/api";
+import { buildChatHistory, streamQueryPipeline } from "../../services/api";
 import {
   loadConversations,
   saveConversations,
@@ -248,7 +248,8 @@ export const ChatView = () => {
         },
       };
 
-      const updatedWithUser = [...(baseMessages ?? messages), userMsg];
+      const priorMessages = baseMessages ?? messages;
+      const updatedWithUser = [...priorMessages, userMsg];
       setMessages(updatedWithUser);
       saveMessages(activeConvId, updatedWithUser);
       setInputValue("");
@@ -321,6 +322,7 @@ export const ChatView = () => {
               role: "ai",
               content: `Pipeline query failed: ${err}`,
               timestamp: new Date().toISOString(),
+              failed: true,
               pipeline_events: pipelineEventsRef.current,
               query_response: {
                 answer: `Pipeline query failed: ${err}`,
@@ -344,6 +346,7 @@ export const ChatView = () => {
           },
         },
         activeConvId,
+        buildChatHistory(priorMessages),
       );
 
       abortStreamRef.current = abortFn;

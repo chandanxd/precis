@@ -57,12 +57,16 @@ MAX_DOCUMENT_LENGTH = 100_000  # 100K characters
 MAX_QUERY_LENGTH = 2_000  # 2K characters
 
 # Prompt injection patterns (basic detection)
+# Word boundaries and the required qualifiers keep ordinary prose ("you are now
+# able to", "patients who ignore instructions", "the system: you can...") from
+# rejecting a whole document.
 _INJECTION_PATTERNS = [
-    r"(ignore|disregard)\s+(all\s+)?(previous|above)?\s*instructions?",
-    r"disregard\s+(all\s+)?above",
-    r"you\s+are\s+now\s+a",
-    r"new\s+instructions?\s*:",
-    r"system\s*:\s*(you|ignore|disregard|forget|act|from\s+now|new\s+instructions?|override)\b",
+    r"\b(ignore|disregard)\s+(all\s+|any\s+)?(the\s+|your\s+|my\s+)?(previous|prior|above|earlier|preceding)\s+instructions?\b",
+    r"\b(ignore|disregard)\s+all\s+instructions?\b",
+    r"\bdisregard\s+(all\s+|everything\s+)?(the\s+)?above\b(?!-)",
+    r"\byou\s+are\s+now\s+an?\b",
+    r"\bnew\s+instructions?\s*:",
+    r"(?:^|[.!?]\s+)system\s*:\s*(you|ignore|disregard|forget|act|from\s+now|new\s+instructions?|override)\b",
     r"<\s*script",
 ]
 

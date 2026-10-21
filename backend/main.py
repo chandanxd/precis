@@ -46,7 +46,7 @@ from precis.api.security import (
 )
 from precis.graph.store import FactStore
 from precis.pipeline.hardware import HardwareProfile, profile_hardware
-from precis.pipeline.history import session_manager
+from precis.pipeline.history import ChatMessage, session_manager
 from precis.pipeline.inference import (
     OllamaConnectionError,
     OllamaInferenceError,
@@ -162,6 +162,40 @@ def _parse_query_options(raw: Any) -> dict[str, Any]:
             out["exclude_modalities"] = _MODALITIES - enabled or None
 
     return out
+
+
+_CLIENT_HISTORY_TURNS = 6
+_CLIENT_HISTORY_CHARS = 4000
+
+
+def _parse_client_history(raw: Any) -> list[ChatMessage] | None:
+    """Validate the conversation turns a client sends with a query.
+
+    The browser's copy of a conversation is the one the user sees, so it wins
+    over the server's in-memory session (which a restart, the session TTL,
+    "clear" or "regenerate" leave out of step). Returns None when the client
+    sent no history, so the server's session is used instead.
+    """
+    if not isinstance(raw, list):
+        return None
+    turns: list[ChatMessage] = []
+    for item in raw[-_CLIENT_HISTORY_TURNS:]:
+        if not isinstance(item, dict):
+            continue
+        role, content = item.get("role"), item.get("content")
+        if role not in ("user", "assistant") or not isinstance(content, str):
+            continue
+        content = content.strip()[:_CLIENT_HISTORY_CHARS]
+        if content:
+            turns.append(
+                ChatMessage(
+                    role=role,
+                    content=content,
+                    timestamp=0.0,
+                    grounded=role == "assistant" and item.get("grounded") is True,
+                )
+            )
+    return turns
 
 
 def _has_documents(active_store: FactStore) -> bool:
@@ -470,7 +504,7 @@ async def query(req: QueryRequest, request: Request) -> QueryResponse:
                     for fact in pack.packed_facts[:3]
                 )
                 answer = (
-                    "Based on the extracted facts: "
+                    "(Local Ollama service offline mock mode) Based on the extracted facts: "
                     f"{facts_summary or 'No relevant facts found'}."
                 )
                 packed_facts = pack.packed_facts
@@ -795,7 +829,9 @@ async def _handle_ws_query(
     effective_model = options.get("model", active_hardware.recommended_model)
     effective_ceiling = options.get("token_ceiling", active_hardware.token_ceiling)
     session_key = _session_key(user_sub, session_id)
-    history = session_manager.get_history(session_key) if session_key else []
+    history = _parse_client_history(data.get("history"))
+    if history is None:
+        history = session_manager.get_history(session_key) if session_key else []
     route = await asyncio.to_thread(
         route_chat_query,
         clean_question,
@@ -927,7 +963,8 @@ async def _handle_ws_query(
                 fallback_msg = "Hello! I am Précis. (Local Ollama offline mock mode)"
             else:
                 fallback_msg = (
-                    f"Extracted facts for query: {render_context(assembled_facts_used[:2])}"
+                    "(Local Ollama offline mock mode) Extracted facts for query: "
+                    f"{render_context(assembled_facts_used[:2])}"
                 )
 
             for word in fallback_msg.split(" "):

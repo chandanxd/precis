@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { streamQueryPipeline } from "./api";
+import { buildChatHistory, streamQueryPipeline } from "./api";
 import { CLIENT_ID_KEY } from "./api";
+import type { Message } from "../types/api";
 
 class FakeWebSocket {
   static CONNECTING = 0;
@@ -140,6 +141,20 @@ describe("streamQueryPipeline", () => {
     expect(query.token).toBeUndefined();
   });
 
+  it("sends the conversation history with the query", async () => {
+    const cb = makeCallbacks();
+    const history = [
+      { role: "user" as const, content: "Q1" },
+      { role: "assistant" as const, content: "A1", grounded: true },
+    ];
+    streamQueryPipeline("and then?", cb, "sess", history);
+    await flush();
+    const ws = FakeWebSocket.last!;
+    ws.open();
+    ws.emit({ type: "auth_ok" });
+    expect(JSON.parse(ws.sent[1]!).history).toEqual(history);
+  });
+
   it("refreshes the token after the backend rejects it", async () => {
     vi.resetModules();
     const fresh = await import("./api");
@@ -176,5 +191,65 @@ describe("streamQueryPipeline", () => {
     expect(localStorage.getItem(key)).toBe(first);
     const body = JSON.parse(vi.mocked(fetch).mock.calls.at(-1)![1]!.body as string);
     expect(body.client_id).toBe(first);
+  });
+});
+
+describe("buildChatHistory", () => {
+  const msg = (role: "user" | "ai", content: string, extra: Record<string, unknown> = {}) =>
+    ({
+      id: content,
+      role,
+      content,
+      timestamp: "",
+      pipeline_events: [],
+      query_response: {
+        answer: content,
+        facts_used: [],
+        tokens_used: 0,
+        naive_rag_tokens: 0,
+        compression_rate: 0,
+        avg_sdh_score: 0,
+        latency_ms: 0,
+      },
+      ...extra,
+    }) as Message;
+
+  it("keeps answered pairs and marks document answers as grounded", () => {
+    const doc = msg("ai", "A1");
+    doc.query_response.answer_source = "document";
+    expect(buildChatHistory([msg("user", "Q1"), doc, msg("user", "Q2"), msg("ai", "A2")])).toEqual([
+      { role: "user", content: "Q1" },
+      { role: "assistant", content: "A1", grounded: true },
+      { role: "user", content: "Q2" },
+      { role: "assistant", content: "A2", grounded: false },
+    ]);
+  });
+
+  it("skips failed answers, stopped questions and old error messages", () => {
+    const history = buildChatHistory([
+      msg("user", "stopped"),
+      msg("user", "Q1"),
+      msg("ai", "boom", { failed: true }),
+      msg("user", "Q2"),
+      msg("ai", "Pipeline query failed: old"),
+      msg("user", "Q3"),
+      msg("ai", "A3"),
+    ]);
+    expect(history.map((t) => t.content)).toEqual(["Q3", "A3"]);
+  });
+
+  it("keeps only the most recent turns", () => {
+    const many = Array.from({ length: 10 }, (_, i) => [
+      msg("user", `Q${i}`),
+      msg("ai", `A${i}`),
+    ]).flat();
+    expect(buildChatHistory(many).map((t) => t.content)).toEqual([
+      "Q7",
+      "A7",
+      "Q8",
+      "A8",
+      "Q9",
+      "A9",
+    ]);
   });
 });

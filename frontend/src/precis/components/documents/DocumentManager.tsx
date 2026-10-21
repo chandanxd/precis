@@ -114,15 +114,16 @@ export const DocumentManager = () => {
           stage_name: "Coreference resolution",
           status: "complete",
           detail: "Entities linked",
-          count: Math.round(docText.split(" ").length * 0.15),
+          // The backend does not report a coreference count; show none rather than an estimate.
+          count: 0,
           error: null,
         },
         {
           stage: 2,
           stage_name: "SVOA extraction",
           status: "complete",
-          detail: `${result.facts_stored} facts extracted & modality tagged`,
-          count: result.facts_stored,
+          detail: `${result.facts_extracted ?? result.facts_stored} facts extracted & modality tagged`,
+          count: result.facts_extracted ?? result.facts_stored,
           error: null,
         },
         {

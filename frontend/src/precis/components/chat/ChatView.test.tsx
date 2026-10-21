@@ -14,6 +14,7 @@ type Callbacks = {
 const streams: { question: string; callbacks: Callbacks; abort: ReturnType<typeof vi.fn> }[] = [];
 
 vi.mock("../../services/api", () => ({
+  buildChatHistory: () => [],
   // Like the real streamQueryPipeline, callbacks stop firing once aborted.
   streamQueryPipeline: (question: string, callbacks: Callbacks) => {
     let cancelled = false;

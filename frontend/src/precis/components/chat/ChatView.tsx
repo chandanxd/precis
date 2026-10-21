@@ -11,6 +11,7 @@ import {
   deleteConversation,
   renameConversation,
   getActiveConversationId,
+  newConversationId,
   setActiveConversationId,
   getSidebarCollapsed,
   setSidebarCollapsed,
@@ -34,9 +35,10 @@ export const ChatView = () => {
   const [activeConvId, setActiveConvId] = useState<string>(
     () => routeConvId || getActiveConversationId(),
   );
-  const [messages, setMessages] = useState<Message[]>(() =>
-    loadMessages(routeConvId || getActiveConversationId()),
-  );
+  const [messages, setMessages] = useState<Message[]>(() => loadMessages(activeConvId));
+  // A new session is a draft until its first message is sent: it has an ID but is
+  // not stored or listed yet.
+  const isDraft = !conversations.some((c) => c.id === activeConvId);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(() =>
     getSidebarCollapsed(),
   );
@@ -155,19 +157,20 @@ export const ChatView = () => {
     }
   }
 
-  // Unknown conversation ID in the URL: fall back to the active conversation.
+  // Unknown conversation ID in the URL: fall back to the active conversation
+  // (a draft has no URL of its own).
   useEffect(() => {
     if (routeConvId && !conversations.some((c) => c.id === routeConvId)) {
-      navigate(`/chat/${activeConvId}`, { replace: true });
+      navigate(isDraft ? "/chat" : `/chat/${activeConvId}`, { replace: true });
     }
-  }, [routeConvId, conversations, activeConvId, navigate]);
+  }, [routeConvId, conversations, activeConvId, isDraft, navigate]);
 
   // Normalize URL when at /chat without ID
   useEffect(() => {
-    if (!routeConvId && activeConvId) {
+    if (!routeConvId && activeConvId && !isDraft) {
       navigate(`/chat/${activeConvId}`, { replace: true });
     }
-  }, [routeConvId, activeConvId, navigate]);
+  }, [routeConvId, activeConvId, isDraft, navigate]);
 
   // Conversation Management
   const handleSelectConversation = useCallback(
@@ -188,12 +191,28 @@ export const ChatView = () => {
     [navigate],
   );
 
+  const focusComposer = useCallback(() => {
+    requestAnimationFrame(() => textareaRef.current?.focus());
+  }, []);
+
+  // Opens an empty draft; the conversation is created when its first message is sent.
   const handleCreateConversation = useCallback(() => {
-    const newConv = createConversation("New Query Session");
-    const allConvs = loadConversations();
-    setConversations(allConvs);
-    handleSelectConversation(newConv.id);
-  }, [handleSelectConversation]);
+    if (isDraft && messages.length === 0) {
+      focusComposer();
+      return;
+    }
+    abortStreamRef.current?.();
+    abortStreamRef.current = null;
+    setActiveConvId(newConversationId());
+    setMessages([]);
+    setSelectedMsgId("");
+    setSelectedFact(null);
+    setStreamingText("");
+    setIsStreaming(false);
+    setCurrentPipelineEvents([]);
+    navigate("/chat");
+    focusComposer();
+  }, [isDraft, messages.length, navigate, focusComposer]);
 
   const handleDeleteConversation = useCallback(
     (id: string) => {
@@ -248,6 +267,20 @@ export const ChatView = () => {
         },
       };
 
+      // Name the session after its first query: create a draft, or rename a
+      // session that still has the default title.
+      const words = queryText.split(" ").slice(0, 5).join(" ");
+      const newTitle = words.length > 30 ? `${words.slice(0, 30)}...` : words;
+      const currentConv = conversations.find((c) => c.id === activeConvId);
+      if (!currentConv) {
+        createConversation(newTitle, "", activeConvId);
+        setConversations(loadConversations());
+        navigate(`/chat/${activeConvId}`, { replace: true });
+      } else if (currentConv.title === "New Query Session") {
+        renameConversation(activeConvId, newTitle);
+        setConversations(loadConversations());
+      }
+
       const priorMessages = baseMessages ?? messages;
       const updatedWithUser = [...priorMessages, userMsg];
       setMessages(updatedWithUser);
@@ -257,15 +290,6 @@ export const ChatView = () => {
       pipelineEventsRef.current = [];
       setCurrentPipelineEvents([]);
       setStreamingText("");
-
-      // Auto-rename session if it is default title and first query
-      const currentConv = conversations.find((c) => c.id === activeConvId);
-      if (currentConv && currentConv.title === "New Query Session") {
-        const words = queryText.split(" ").slice(0, 5).join(" ");
-        const newTitle = words.length > 30 ? `${words.slice(0, 30)}...` : words;
-        renameConversation(activeConvId, newTitle);
-        setConversations(loadConversations());
-      }
 
       const abortFn = streamQueryPipeline(
         queryText,
@@ -351,8 +375,23 @@ export const ChatView = () => {
 
       abortStreamRef.current = abortFn;
     },
-    [inputValue, isStreaming, messages, activeConvId, conversations, handleSelectMessage],
+    [inputValue, isStreaming, messages, activeConvId, conversations, handleSelectMessage, navigate],
   );
+
+  // Put the cursor back in the chat bar when an answer finishes (or fails or is
+  // stopped), unless the user has moved on to typing somewhere else.
+  const wasStreamingRef = useRef(false);
+  useEffect(() => {
+    if (wasStreamingRef.current && !isStreaming) {
+      const el = document.activeElement as HTMLElement | null;
+      const typingElsewhere =
+        !!el &&
+        el !== textareaRef.current &&
+        (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.isContentEditable);
+      if (!typingElsewhere) textareaRef.current?.focus();
+    }
+    wasStreamingRef.current = isStreaming;
+  }, [isStreaming]);
 
   const handleStop = () => {
     if (abortStreamRef.current) {
@@ -367,7 +406,7 @@ export const ChatView = () => {
 
   const handleClearMessages = () => {
     setMessages([]);
-    saveMessages(activeConvId, []);
+    if (!isDraft) saveMessages(activeConvId, []);
     setSelectedMsgId("");
     setSelectedFact(null);
   };

@@ -8,9 +8,14 @@ const MESSAGES_PREFIX = "precis_messages_";
 const ACTIVE_CONV_KEY = "precis_active_conv_id";
 const SIDEBAR_COLLAPSED_KEY = "precis_sidebar_collapsed";
 
+/** A fresh conversation ID. Nothing is stored until the conversation is created. */
+export function newConversationId(): string {
+  return `conv-${crypto.randomUUID()}`;
+}
+
 /**
  * Initializes and retrieves conversation list from localStorage.
- * Seeds with mockConversations if localStorage is empty.
+ * Seeds with mockConversations if localStorage is empty (demo mode only).
  */
 export function loadConversations(): Conversation[] {
   try {
@@ -32,17 +37,8 @@ export function loadConversations(): Conversation[] {
     return mockConversations;
   }
 
-  // Real mode: start with a single empty conversation
-  const blank: Conversation = {
-    id: `conv-${crypto.randomUUID()}`,
-    title: "New Query Session",
-    document: "",
-    created_at: new Date().toISOString(),
-    message_count: 0,
-  };
-  saveConversations([blank]);
-  saveMessages(blank.id, []);
-  return [blank];
+  // Real mode: no conversations until the first message is sent.
+  return [];
 }
 
 /**
@@ -95,9 +91,13 @@ export function saveMessages(convId: string, messages: Message[]): void {
 /**
  * Creates a brand new conversation thread.
  */
-export function createConversation(title = "New Query Session", document = ""): Conversation {
+export function createConversation(
+  title = "New Query Session",
+  document = "",
+  id: string = newConversationId(),
+): Conversation {
   const conversations = loadConversations();
-  const newId = `conv-${crypto.randomUUID()}`;
+  const newId = id;
   const newConv: Conversation = {
     id: newId,
     title,
@@ -147,7 +147,8 @@ export function renameConversation(id: string, newTitle: string): Conversation |
 }
 
 /**
- * Gets currently active conversation ID from storage.
+ * Gets currently active conversation ID from storage. With no conversations yet
+ * this is a fresh, unsaved ID: the conversation is created on its first message.
  */
 export function getActiveConversationId(): string {
   try {
@@ -156,8 +157,8 @@ export function getActiveConversationId(): string {
   } catch {
     // ignore
   }
-  const convs = loadConversations();
-  const first = convs[0]?.id || "conv-001";
+  const first = loadConversations()[0]?.id;
+  if (!first) return newConversationId();
   setActiveConversationId(first);
   return first;
 }

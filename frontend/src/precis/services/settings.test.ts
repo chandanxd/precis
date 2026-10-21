@@ -6,7 +6,7 @@ import {
   resetToDemoBaseline,
   saveSettings,
 } from "./settings";
-import { loadConversations, saveMessages } from "./storage";
+import { createConversation, loadConversations, saveMessages } from "./storage";
 
 describe("getQueryOptions", () => {
   it("sends nothing when settings are untouched", () => {
@@ -44,8 +44,8 @@ describe("loadSettings", () => {
 
 describe("resetToDemoBaseline", () => {
   it("clears stored sessions but keeps the client id", () => {
-    const [conv] = loadConversations();
-    saveMessages(conv!.id, [{ id: "m" } as never]);
+    const conv = createConversation("Old");
+    saveMessages(conv.id, [{ id: "m" } as never]);
     localStorage.setItem("precis_client_id", "client-" + "a".repeat(32));
     saveSettings({ ...DEFAULT_SETTINGS, temperature: 1.5 });
 
@@ -53,8 +53,6 @@ describe("resetToDemoBaseline", () => {
 
     expect(localStorage.getItem("precis_client_id")).toBe("client-" + "a".repeat(32));
     expect(loadSettings().temperature).toBe(DEFAULT_SETTINGS.temperature);
-    const after = loadConversations();
-    expect(after).toHaveLength(1);
-    expect(after[0]!.id).not.toBe(conv!.id);
+    expect(loadConversations()).toEqual([]);
   });
 });

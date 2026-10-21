@@ -235,11 +235,8 @@ export function resetToDemoBaseline(): void {
       saveConversations(mockConversations);
       saveMessages("conv-001", mockMessages);
       setActiveConversationId("conv-001");
-    } else {
-      // loadConversations() creates a fresh empty conversation when none exist
-      const [first] = loadConversations();
-      if (first) setActiveConversationId(first.id);
     }
+    // Otherwise no conversations remain; the next message starts a new one.
   } catch {
     // ignore
   }

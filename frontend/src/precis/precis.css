@@ -75,7 +75,6 @@
   --tx-2: #3f3f48;
   --tx-3: #6a6a74;
   --tx-4: #6e6e77;
-  --inv-tx: #ffffff;
   --code-bg: rgba(244, 244, 246, 0.9);
   --tag-tx: #4b4b54;
   --tag-bg: rgba(10, 10, 10, 0.06);
@@ -590,7 +589,8 @@ main select:focus {
 main button {
   transition: all 0.2s cubic-bezier(0.2, 1.2, 0.3, 1);
 }
-main button:hover:not(:disabled) {
+/* Buttons with their own hover text colour (e.g. the inverse New Session button) keep it. */
+main button:hover:not(:disabled):not([class*="hover:text-"]) {
   color: var(--tx);
 }
 
@@ -876,7 +876,7 @@ pre {
 :root[data-theme="light"] .precis-wordmark {
   filter: brightness(0.7);
 }
-:root[data-theme="light"] main button:hover:not(:disabled) {
+:root[data-theme="light"] main button:hover:not(:disabled):not([class*="hover:text-"]) {
   color: var(--tx);
 }
 :root[data-theme="light"] .text-\[var\(--tag-tx\)\],

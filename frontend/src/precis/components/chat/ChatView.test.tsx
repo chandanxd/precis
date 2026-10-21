@@ -62,8 +62,11 @@ const stage = (n: 4 | 5): PipelineEvent => ({
   error: null,
 });
 
-function renderChat() {
+let lastNavigate: ReturnType<typeof vi.fn> = vi.fn();
+
+function renderChat(): void {
   const navigate = vi.fn();
+  lastNavigate = navigate;
   render(
     <RouterContext.Provider
       value={{ path: "/chat", activeTab: "chat", navigate, navigateToTab: vi.fn() }}
@@ -86,9 +89,9 @@ describe("ChatView streaming", () => {
 
   it("saves the answer and its pipeline events into the conversation", () => {
     renderChat();
-    const [conv] = loadConversations();
     ask("What happened?");
     expect(streams).toHaveLength(1);
+    const [conv] = loadConversations();
 
     act(() => {
       streams[0]!.callbacks.onStage(stage(4));
@@ -103,28 +106,72 @@ describe("ChatView streaming", () => {
   });
 
   it("aborts the stream when switching conversation and never writes into the other one", () => {
-    const [first] = loadConversations();
+    const first = createConversation("First chat");
     const second = createConversation("Other chat");
     renderChat();
     // createConversation made `second` the active one; ask there.
     ask("question for second");
     expect(streams).toHaveLength(1);
 
-    fireEvent.click(screen.getByText(first!.title));
+    fireEvent.click(screen.getByText(first.title));
     expect(streams[0]!.abort).toHaveBeenCalled();
 
     // A late answer from the aborted stream must not land anywhere.
     act(() => streams[0]!.callbacks.onDone(response("late answer")));
-    expect(loadMessages(first!.id).map((m) => m.content)).not.toContain("late answer");
+    expect(loadMessages(first.id).map((m) => m.content)).not.toContain("late answer");
     expect(loadMessages(second.id).map((m) => m.content)).not.toContain("late answer");
   });
 
   it("records an error message when the stream fails", () => {
     renderChat();
-    const [conv] = loadConversations();
     ask("q");
+    const [conv] = loadConversations();
     act(() => streams[0]!.callbacks.onError("backend down"));
     const saved = loadMessages(conv!.id);
     expect(saved.at(-1)!.content).toContain("backend down");
+  });
+});
+
+describe("ChatView sessions and focus", () => {
+  beforeEach(() => {
+    streams.length = 0;
+  });
+
+  it("does not store a new session until its first message is sent", () => {
+    createConversation("Existing");
+    renderChat();
+    fireEvent.click(screen.getByText("New Session"));
+    expect(loadConversations().map((c) => c.title)).toEqual(["Existing"]);
+
+    // A second click on the empty draft does not stack up more drafts.
+    fireEvent.click(screen.getByText("New Session"));
+    ask("Revenue in 2021");
+    const convs = loadConversations();
+    expect(convs.map((c) => c.title)).toEqual(["Revenue in 2021", "Existing"]);
+    expect(loadMessages(convs[0]!.id).map((m) => m.content)).toEqual(["Revenue in 2021"]);
+    expect(lastNavigate).toHaveBeenCalledWith(`/chat/${convs[0]!.id}`, { replace: true });
+  });
+
+  it("starts without any stored session on first run", () => {
+    renderChat();
+    expect(loadConversations()).toEqual([]);
+  });
+
+  it("puts the cursor back in the chat bar when the answer arrives", () => {
+    renderChat();
+    ask("What happened?");
+    const box = screen.getByRole("textbox");
+    box.blur();
+    act(() => streams[0]!.callbacks.onDone(response("It rose.")));
+    expect(document.activeElement).toBe(box);
+  });
+
+  it("puts the cursor back in the chat bar after a failed answer", () => {
+    renderChat();
+    ask("q");
+    const box = screen.getByRole("textbox");
+    box.blur();
+    act(() => streams[0]!.callbacks.onError("backend down"));
+    expect(document.activeElement).toBe(box);
   });
 });

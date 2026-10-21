@@ -673,3 +673,266 @@ class TestAdversarialSVOA:
         assert facts[0].modality == "asserted"
         assert facts[0].attributed_to is None
         assert facts[0].negated is False
+
+
+class TestEnhancedSVOAExtraction:
+    def test_simple_copular(self):
+        facts = extract_facts("Alice is a scientist.")
+        assert len(facts) == 1
+        fact = facts[0]
+        assert fact.subject == "Alice"
+        assert fact.verb == "is"
+        assert fact.object == "a scientist"
+        assert fact.modality == "asserted"
+        assert not fact.negated
+
+    def test_past_copular(self):
+        facts = extract_facts("Alice was the director.")
+        assert len(facts) == 1
+        fact = facts[0]
+        assert fact.subject == "Alice"
+        assert fact.verb == "was"
+        assert fact.object == "the director"
+        assert fact.modality == "asserted"
+        assert not fact.negated
+
+    def test_copular_with_descriptive_complement(self):
+        facts = extract_facts("The city is the capital of France.")
+        assert len(facts) == 1
+        fact = facts[0]
+        assert fact.subject == "The city"
+        assert fact.verb == "is"
+        assert fact.object == "the capital of France"
+        assert fact.modality == "asserted"
+
+    def test_appositive(self):
+        text = "Patrick Brown, leader of the Ontario PC Party, announced the decision."
+        facts = extract_facts(text)
+        appos_fact = next(
+            (f for f in facts if f.subject == "Patrick Brown" and f.verb == "is"),
+            None,
+        )
+        assert appos_fact is not None
+        assert "leader of the Ontario PC Party" in appos_fact.object
+        assert appos_fact.modality == "asserted"
+
+        matrix_fact = next(
+            (f for f in facts if f.verb == "announced"),
+            None,
+        )
+        assert matrix_fact is not None
+        assert matrix_fact.subject == "Patrick Brown"
+        assert matrix_fact.object == "the decision"
+
+    def test_appositive_with_determiner(self):
+        text = "John Smith, the founder of the company, resigned."
+        facts = extract_facts(text)
+        appos_fact = next(
+            (f for f in facts if f.subject == "John Smith" and f.verb == "is"),
+            None,
+        )
+        assert appos_fact is not None
+        assert "founder of the company" in appos_fact.object
+        assert appos_fact.modality == "asserted"
+
+        matrix_fact = next(
+            (f for f in facts if f.verb == "resigned"),
+            None,
+        )
+        assert matrix_fact is not None
+        assert matrix_fact.subject == "John Smith"
+
+    def test_list_item_role(self):
+        facts = extract_facts("Jason Marsden as Max Goof")
+        assert len(facts) == 1
+        fact = facts[0]
+        assert fact.subject == "Jason Marsden"
+        assert fact.verb == "plays"
+        assert fact.object == "Max Goof"
+        assert fact.modality == "asserted"
+
+    def test_html_like_list_item(self):
+        facts = extract_facts("<Li> Jason Marsden as Max Goof </Li>")
+        assert len(facts) == 1
+        fact = facts[0]
+        assert fact.subject == "Jason Marsden"
+        assert fact.verb == "plays"
+        assert fact.object == "Max Goof"
+        assert fact.modality == "asserted"
+
+    def test_html_like_paragraph(self):
+        facts = extract_facts("<P> Patrick Brown is the leader of the Ontario PC Party. </P>")
+        assert len(facts) >= 1
+        fact = facts[0]
+        assert fact.subject == "Patrick Brown"
+        assert fact.verb == "is"
+        assert "leader of the Ontario PC Party" in fact.object
+        assert fact.modality == "asserted"
+
+    def test_negative_ambiguous_as_constructions(self):
+        for sent, expected_verb in [
+            ("He worked as a clerk.", "worked"),
+            ("She described him as talented.", "described"),
+            ("He ran as fast as possible.", "ran"),
+        ]:
+            facts = extract_facts(sent)
+            assert len(facts) >= 1
+            assert not any(f.verb in {"plays", "serves as"} for f in facts)
+            assert any(f.verb == expected_verb for f in facts)
+
+        for frag in [
+            "Such as apples and oranges.",
+            "As soon as possible.",
+            "As of 2020.",
+        ]:
+            facts = extract_facts(frag)
+            assert not any(f.verb in {"plays", "serves as"} for f in facts)
+
+    def test_existing_svoa_behavior_preserved(self):
+        facts = extract_facts("The company acquired the startup in 2021.")
+        assert len(facts) == 1
+        assert facts[0].subject == "The company"
+        assert facts[0].verb == "acquired"
+        assert facts[0].object == "the startup"
+        assert "in 2021" in facts[0].adjuncts.get("time", [])
+
+
+class TestPassiveCoordination:
+    """Test passive coordination agent resolution and preservation."""
+
+    def test_shared_passive_agent_coordination(self):
+        text = "The theme was written and composed by Argentine composer Lalo Schifrin."
+        facts = extract_facts(text)
+        assert len(facts) >= 2
+        objs = [f.object for f in facts]
+        assert any("Lalo Schifrin" in o for o in objs)
+        written_facts = [f for f in facts if "written" in f.verb]
+        composed_facts = [f for f in facts if "composed" in f.verb]
+        assert len(written_facts) >= 1
+        assert "Lalo Schifrin" in written_facts[0].object
+        assert len(composed_facts) >= 1
+        assert "Lalo Schifrin" in composed_facts[0].object
+
+    def test_distinct_passive_agents_coordination(self):
+        text = "The film was directed by Ridley Scott and produced by Jerry Bruckheimer."
+        facts = extract_facts(text)
+        assert len(facts) >= 2
+        directed = [f for f in facts if "directed" in f.verb]
+        produced = [f for f in facts if "produced" in f.verb]
+        assert len(directed) >= 1
+        assert "Ridley Scott" in directed[0].object
+        assert len(produced) >= 1
+        assert "Jerry Bruckheimer" in produced[0].object
+
+    def test_shared_passive_agent_in_relative_clause(self):
+        text = "The theme which was written and composed by Lalo Schifrin won an award."
+        facts = extract_facts(text)
+        assert any("Lalo Schifrin" in f.subject or "Lalo Schifrin" in f.object for f in facts)
+
+    def test_passive_coordination_negative_active(self):
+        text = "The team reviewed and approved the document."
+        facts = extract_facts(text)
+        # Should NOT treat "the document" as an agent of reviewed
+        reviewed = [f for f in facts if "reviewed" in f.verb]
+        assert len(reviewed) >= 1
+        assert reviewed[0].object == ""
+
+    def test_passive_coordination_negative_unrelated_prep(self):
+        text = "John cooked and ate with Mary."
+        facts = extract_facts(text)
+        assert len(facts) >= 1
+        for f in facts:
+            assert "Mary" not in f.object
+
+
+class TestStage2ExtractionEnhancements:
+    """Regression and adversarial tests for Stage 2 SVOA extraction fixes."""
+
+    def test_introductory_pp_subject_misattachment_positive(self):
+        text = (
+            "On January 17 , 1899 , under orders from President William McKinley , "
+            "Commander Edward D. Taussig of USS Bennington landed on Wake and formally "
+            "took possession of the island for the United States ."
+        )
+        facts = extract_facts(text)
+        assert len(facts) >= 2
+        landed_facts = [f for f in facts if "landed" in f.verb]
+        assert len(landed_facts) >= 1
+        assert "Taussig" in landed_facts[0].subject
+        assert "On January 17 , 1899" in landed_facts[0].adjuncts.get("time", [])
+
+        took_facts = [f for f in facts if "took" in f.verb]
+        assert len(took_facts) >= 1
+        assert "Taussig" in took_facts[0].subject
+        assert "possession" in took_facts[0].object
+
+    def test_introductory_pp_subject_misattachment_negative_coordination(self):
+        # When explicit 'and' is present inside the PP, Taussig must NOT be treated as subject
+        text = "Under orders from President McKinley and General Taussig , the troops retreated ."
+        facts = extract_facts(text)
+        assert len(facts) >= 1
+        retreated = [f for f in facts if "retreated" in f.verb]
+        assert len(retreated) >= 1
+        assert "the troops" in retreated[0].subject
+        assert "Taussig" not in retreated[0].subject
+
+    def test_introductory_pp_subject_misattachment_negative_overt_subject(self):
+        # When an overt subject already exists, fallback must not interfere
+        text = "Under orders from President McKinley , the general ordered a retreat ."
+        facts = extract_facts(text)
+        assert len(facts) >= 1
+        assert facts[0].subject == "the general"
+
+    def test_coordinated_clausal_complements_positive(self):
+        text = "The manager met the client and claimed that the contract was signed."
+        facts = extract_facts(text)
+        signed_facts = [f for f in facts if "signed" in f.verb]
+        assert len(signed_facts) >= 1
+        assert "the contract" in signed_facts[0].subject
+        assert signed_facts[0].modality == "attributed"
+        assert signed_facts[0].attributed_to == "The manager"
+
+    def test_coordinated_clausal_complements_xcomp(self):
+        text = "They returned home and agreed to finish the project."
+        facts = extract_facts(text)
+        project_facts = [f for f in facts if "finish" in f.verb or "project" in f.object]
+        assert len(project_facts) >= 1
+
+    def test_coordinated_clausal_complements_negative_no_complement(self):
+        text = "The manager met the client and signed the contract."
+        facts = extract_facts(text)
+        # No extra embedded proposition should be hallucinated
+        assert len(facts) == 2
+        verbs = {f.verb for f in facts}
+        assert verbs == {"met", "signed"}
+
+    def test_multiple_direct_objects_positive(self):
+        text = (
+            "Most dairy or beef farms traditionally had at least one , "
+            "if not several , bulls for purposes of herd maintenance ."
+        )
+        facts = extract_facts(text)
+        assert len(facts) >= 2
+        objs = [f.object for f in facts]
+        assert any("bulls for purposes of herd maintenance" in o for o in objs)
+
+    def test_multiple_direct_objects_negative_ditransitive(self):
+        text = "The company gave Alice a promotion."
+        facts = extract_facts(text)
+        # Should not duplicate a second proposition for the recipient
+        assert len(facts) == 1
+        assert facts[0].subject == "The company"
+        assert facts[0].object == "a promotion"
+        assert facts[0].adjuncts.get("recipient") == ["Alice"]
+
+    def test_restrictive_appositive_preserved_in_subject(self):
+        text = "The name Comanche is from the Ute language."
+        facts = extract_facts(text)
+        assert len(facts) >= 1
+        assert "Comanche" in facts[0].subject
+
+    def test_non_restrictive_appositive_trimmed_from_subject(self):
+        text = "Patrick Brown, leader of the Ontario PC Party, announced the decision."
+        facts = extract_facts(text)
+        announced = [f for f in facts if f.verb == "announced"][0]
+        assert announced.subject == "Patrick Brown"

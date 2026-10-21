@@ -155,7 +155,11 @@ def naive_rag_answer(
     model_name: str = DEFAULT_MODEL,
     top_k: int = DEFAULT_TOP_K,
     base_url: str = OLLAMA_DEFAULT_BASE_URL,
-) -> tuple[str, int]:
+    temperature: float = 0.0,
+    top_p: float = 0.9,
+    max_tokens: int = 512,
+    mock_inference: bool = False,
+) -> tuple[str, int, int]:
     """
     Execute the Naive RAG baseline:
 
@@ -167,11 +171,18 @@ def naive_rag_answer(
         model_name: Ollama model identifier.
         top_k: Maximum number of chunks to retrieve.
         base_url: Ollama server URL.
+        temperature: Sampling temperature (default 0.0 for deterministic
+            evaluation).
+        top_p: Nucleus sampling probability.
+        max_tokens: Maximum tokens to generate.
+        mock_inference: If True, uses deterministic context extraction
+            without Ollama.
 
     Returns:
         A tuple containing:
         - generated answer
         - retrieved context word count
+        - generated token count
     """
     top_chunks, context_words = naive_rag_retrieve(
         document=document,
@@ -179,7 +190,18 @@ def naive_rag_answer(
         top_k=top_k,
     )
 
-    context = "\n\n".join(top_chunks) if top_chunks else "(No context retrieved)"
+    context = (
+        "\n\n".join(top_chunks) if top_chunks else "(No context retrieved)"
+    )
+
+    if mock_inference:
+        first_chunk = top_chunks[0] if top_chunks else ""
+        mock_ans = (
+            first_chunk[:100].strip()
+            if first_chunk
+            else "No context retrieved."
+        )
+        return mock_ans, context_words, 0
 
     result = generate_answer(
         query=query,
@@ -187,6 +209,9 @@ def naive_rag_answer(
         model=model_name,
         stream=False,
         base_url=base_url,
+        temperature=temperature,
+        top_p=top_p,
+        max_tokens=max_tokens,
     )
 
-    return result.answer, context_words
+    return result.answer, context_words, result.tokens_generated

@@ -334,13 +334,14 @@ class TestNaiveRAG:
 
         doc = "Alexander Fleming discovered penicillin."
 
-        answer, context_words = naive_rag_answer(
+        answer, context_words, tokens_generated = naive_rag_answer(
             doc,
             "Who discovered penicillin?",
         )
 
         assert answer == "Alexander Fleming."
         assert context_words > 0
+        assert tokens_generated == 3
 
         mock_generate.assert_called_once()
 
@@ -679,7 +680,7 @@ class TestHarness:
 
         assert results["svoa_no_modality"].avg_em == 1.0
 
-        assert results["naive_rag"].avg_generated_tokens == 0
+        assert results["naive_rag"].avg_generated_tokens == 4
 
         assert results["naive_rag"].avg_context_words > 0
 

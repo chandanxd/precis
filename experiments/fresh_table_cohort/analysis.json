@@ -1,0 +1,286 @@
+{
+ "n": 200,
+ "manifest_header": {
+  "type": "header",
+  "seed": 42,
+  "n": 200,
+  "manifest_hash": "6399f5856c822f0fc2433bd5d75a306d8cce80c5f318d9443c648185dc503aeb",
+  "excluded_ids": 996,
+  "excluded_questions": 785,
+  "candidates": 1425,
+  "distinct_candidate_questions": 748,
+  "protocol_sha256": "1aeb9b7d907c040f0293f3b6a330843c162a1719ed31e76fb7b97e389e010f63"
+ },
+ "rates": {
+  "N_raw": {
+   "em": 94,
+   "cont": 124,
+   "empty_context": 0
+  },
+  "N_clean": {
+   "em": 88,
+   "cont": 115,
+   "empty_context": 0
+  },
+  "D": {
+   "em": 79,
+   "cont": 104,
+   "empty_context": 31
+  },
+  "F2": {
+   "em": 89,
+   "cont": 120,
+   "empty_context": 0
+  },
+  "G": {
+   "em": 96,
+   "cont": 127,
+   "empty_context": 0
+  }
+ },
+ "contrasts_G_vs": {
+  "primary_em": {
+   "D": {
+    "x_only": 20,
+    "y_only": 3,
+    "net_pp": 8.5,
+    "p": 0.00048828125,
+    "ci95_pp": [
+     4.0,
+     13.0
+    ],
+    "p_holm_m4": 0.001953125
+   },
+   "F2": {
+    "x_only": 13,
+    "y_only": 6,
+    "net_pp": 3.5,
+    "p": 0.1670684814453125,
+    "ci95_pp": [
+     -0.5,
+     8.0
+    ],
+    "p_holm_m4": 0.5012054443359375
+   },
+   "N_raw": {
+    "x_only": 11,
+    "y_only": 9,
+    "net_pp": 1.0,
+    "p": 0.8238029479980469,
+    "ci95_pp": [
+     -3.5000000000000004,
+     5.5
+    ],
+    "p_holm_m4": 0.8238029479980469
+   },
+   "N_clean": {
+    "x_only": 18,
+    "y_only": 10,
+    "net_pp": 4.0,
+    "p": 0.1849333420395851,
+    "ci95_pp": [
+     -1.0,
+     9.0
+    ],
+    "p_holm_m4": 0.5012054443359375
+   }
+  },
+  "secondary_containment": {
+   "D": {
+    "x_only": 26,
+    "y_only": 3,
+    "net_pp": 11.5,
+    "p": 1.5236437320709229e-05,
+    "ci95_pp": [
+     6.5,
+     16.5
+    ],
+    "p_holm_m4": 6.0945749282836914e-05
+   },
+   "F2": {
+    "x_only": 13,
+    "y_only": 6,
+    "net_pp": 3.5,
+    "p": 0.1670684814453125,
+    "ci95_pp": [
+     -0.5,
+     8.0
+    ],
+    "p_holm_m4": 0.334136962890625
+   },
+   "N_raw": {
+    "x_only": 12,
+    "y_only": 9,
+    "net_pp": 1.5,
+    "p": 0.6636238098144531,
+    "ci95_pp": [
+     -3.0,
+     6.0
+    ],
+    "p_holm_m4": 0.6636238098144531
+   },
+   "N_clean": {
+    "x_only": 21,
+    "y_only": 9,
+    "net_pp": 6.0,
+    "p": 0.04277394525706768,
+    "ci95_pp": [
+     1.0,
+     11.5
+    ],
+    "p_holm_m4": 0.12832183577120304
+   }
+  }
+ },
+ "exploratory_unadjusted": {
+  "D-N_raw:em": {
+   "x_only": 9,
+   "y_only": 24,
+   "net_pp": -7.5,
+   "p": 0.013530986849218607,
+   "ci95_pp": [
+    -13.0,
+    -2.0
+   ]
+  },
+  "D-N_raw:cont": {
+   "x_only": 9,
+   "y_only": 29,
+   "net_pp": -10.0,
+   "p": 0.0016580525261815637,
+   "ci95_pp": [
+    -16.0,
+    -4.0
+   ]
+  },
+  "D-N_clean:em": {
+   "x_only": 17,
+   "y_only": 26,
+   "net_pp": -4.5,
+   "p": 0.2220528201560228,
+   "ci95_pp": [
+    -10.5,
+    2.0
+   ]
+  },
+  "D-N_clean:cont": {
+   "x_only": 19,
+   "y_only": 30,
+   "net_pp": -5.5,
+   "p": 0.15240777196147803,
+   "ci95_pp": [
+    -12.0,
+    1.5
+   ]
+  },
+  "F2-D:em": {
+   "x_only": 22,
+   "y_only": 12,
+   "net_pp": 5.0,
+   "p": 0.12144948495551944,
+   "ci95_pp": [
+    -0.5,
+    10.5
+   ]
+  },
+  "F2-D:cont": {
+   "x_only": 28,
+   "y_only": 12,
+   "net_pp": 8.0,
+   "p": 0.01658900337497471,
+   "ci95_pp": [
+    2.0,
+    14.000000000000002
+   ]
+  }
+ },
+ "G_vs_F2_est_tokens": {
+  "mean_F2": 917.93,
+  "mean_G": 401.75,
+  "reduction_pct": 56.233046092839324,
+  "G_shorter": 192,
+  "G_longer": 0,
+  "wilcoxon_p": 2.9423225580488538e-33
+ },
+ "G_vs_F2_prompt_tokens": {
+  "mean_F2": 1453.345,
+  "mean_G": 788.39,
+  "reduction_pct": 45.75341711706443,
+  "G_shorter": 189,
+  "G_longer": 3,
+  "wilcoxon_p": 2.992812720556153e-32
+ },
+ "mean_est_tokens": {
+  "N_raw": 503.335,
+  "N_clean": 280.07,
+  "D": 350.915,
+  "F2": 917.93,
+  "G": 401.75
+ },
+ "mean_prompt_tokens": {
+  "N_raw": 1168.825,
+  "N_clean": 683.62,
+  "D": 700.955,
+  "F2": 1453.345,
+  "G": 788.39
+ },
+ "strata_sizes": {
+  "table_present": 168,
+  "list_only": 32
+ },
+ "by_stratum_em": {
+  "table_present": {
+   "N_raw": 76,
+   "N_clean": 71,
+   "D": 79,
+   "F2": 71,
+   "G": 78
+  },
+  "list_only": {
+   "N_raw": 18,
+   "N_clean": 17,
+   "D": 0,
+   "F2": 18,
+   "G": 18
+  }
+ },
+ "by_stratum_G_vs_D_em": {
+  "table_present": {
+   "x_only": 2,
+   "y_only": 3,
+   "net_pp": -0.5952380952380952,
+   "p": 1.0,
+   "ci95_pp": [
+    -3.571428571428571,
+    1.7857142857142856
+   ]
+  },
+  "list_only": {
+   "x_only": 18,
+   "y_only": 0,
+   "net_pp": 56.25,
+   "p": 7.62939453125e-06,
+   "ci95_pp": [
+    40.625,
+    71.875
+   ]
+  }
+ },
+ "answer_in_D_context_share": 0.845,
+ "doubled_negation_contexts": {
+  "N_raw": 0,
+  "N_clean": 0,
+  "D": 0,
+  "F2": 0,
+  "G": 0
+ },
+ "contexts_with_NOT": {
+  "N_raw": 0,
+  "N_clean": 0,
+  "D": 0,
+  "F2": 19,
+  "G": 1
+ },
+ "g_use_structural_share": 0.97,
+ "g_facts_packed_total": 63
+}

@@ -1,0 +1,262 @@
+{
+ "n_questions": 100,
+ "n_records": 800,
+ "cells": {
+  "qwen2.5-coder:7b|naive_rag": {
+   "EM_standard": 21,
+   "EM_concise": 44,
+   "containment_standard": 67,
+   "containment_concise": 50,
+   "concise_only_EM": 25,
+   "standard_only_EM": 2,
+   "p_one_sided": 2.823770046234131e-06
+  },
+  "qwen2.5-coder:7b|precis_full": {
+   "EM_standard": 18,
+   "EM_concise": 35,
+   "containment_standard": 52,
+   "containment_concise": 40,
+   "concise_only_EM": 20,
+   "standard_only_EM": 3,
+   "p_one_sided": 0.000244140625
+  },
+  "qwen3.5:4b|naive_rag": {
+   "EM_standard": 11,
+   "EM_concise": 49,
+   "containment_standard": 74,
+   "containment_concise": 64,
+   "concise_only_EM": 38,
+   "standard_only_EM": 0,
+   "p_one_sided": 3.637978807091713e-12
+  },
+  "qwen3.5:4b|precis_full": {
+   "EM_standard": 6,
+   "EM_concise": 43,
+   "containment_standard": 60,
+   "containment_concise": 52,
+   "concise_only_EM": 37,
+   "standard_only_EM": 0,
+   "p_one_sided": 7.275957614183426e-12
+  }
+ },
+ "retrieval_main_effect": {
+  "qwen2.5-coder:7b|standard|EM": {
+   "naive_only": 9,
+   "precis_only": 6,
+   "p_two_sided": 0.60723876953125
+  },
+  "qwen2.5-coder:7b|standard|containment": {
+   "naive_only": 22,
+   "precis_only": 7,
+   "p_two_sided": 0.008130058646202087
+  },
+  "qwen2.5-coder:7b|concise|EM": {
+   "naive_only": 13,
+   "precis_only": 4,
+   "p_two_sided": 0.049041748046875
+  },
+  "qwen2.5-coder:7b|concise|containment": {
+   "naive_only": 16,
+   "precis_only": 6,
+   "p_two_sided": 0.052478790283203125
+  },
+  "qwen3.5:4b|standard|EM": {
+   "naive_only": 8,
+   "precis_only": 3,
+   "p_two_sided": 0.2265625
+  },
+  "qwen3.5:4b|standard|containment": {
+   "naive_only": 18,
+   "precis_only": 4,
+   "p_two_sided": 0.004343509674072266
+  },
+  "qwen3.5:4b|concise|EM": {
+   "naive_only": 13,
+   "precis_only": 7,
+   "p_two_sided": 0.26317596435546875
+  },
+  "qwen3.5:4b|concise|containment": {
+   "naive_only": 17,
+   "precis_only": 5,
+   "p_two_sided": 0.01690053939819336
+  }
+ },
+ "audit_prompt_corrections": {
+  "n": 12,
+  "refusal_like_standard_output": 5,
+  "cases": [
+   {
+    "id": "27035f71",
+    "standard_output": "Peptidoglycan serves a structural role in the bacterial cell wall, providing structural strength and counterac",
+    "refusal_like": false
+   },
+   {
+    "id": "43ee2c93",
+    "standard_output": "Dan Stevens plays the Beast.",
+    "refusal_like": false
+   },
+   {
+    "id": "d6ca6717",
+    "standard_output": "President Gerald Ford.",
+    "refusal_like": false
+   },
+   {
+    "id": "b15c9393",
+    "standard_output": "Rukmini's son is Pradyumna.",
+    "refusal_like": false
+   },
+   {
+    "id": "83cbb1e2",
+    "standard_output": "The provided facts do not contain enough information to answer the question. While Fact 2 states that Ethel \"E",
+    "refusal_like": true
+   },
+   {
+    "id": "fba18e97",
+    "standard_output": "Clifford the Big Red Dog first aired on TV on September 4, 2000.",
+    "refusal_like": false
+   },
+   {
+    "id": "46b13e70",
+    "standard_output": "The provided facts do not contain enough information to answer the question. Fact 1 states that a loss of stee",
+    "refusal_like": true
+   },
+   {
+    "id": "97147d1f",
+    "standard_output": "The provided facts do not contain enough information to answer the question. Fact 1 states that \"Carpenter NOT",
+    "refusal_like": true
+   },
+   {
+    "id": "bd229593",
+    "standard_output": "The surname Cintr\u00f3n or Cintron is of Portuguese and Spanish-French origins.",
+    "refusal_like": false
+   },
+   {
+    "id": "3dc288ae",
+    "standard_output": "The provided facts do not contain enough information to answer the question about the meaning of the song \"Pie",
+    "refusal_like": true
+   },
+   {
+    "id": "de892fce",
+    "standard_output": "The defendants won in the Brown v. Board of Education case.",
+    "refusal_like": false
+   },
+   {
+    "id": "83c34a0a",
+    "standard_output": "The provided facts do not contain enough information to answer the question explicitly, as they define ranges ",
+    "refusal_like": true
+   }
+  ]
+ },
+ "audit_transition_counts": {
+  "Persistent-Error": 17,
+  "Prompt-Correction": 12,
+  "Persistent-Success": 1
+ },
+ "audit_sheet_has_label_fields": [
+  "_blinded_mapping",
+  "gold_answer",
+  "output_a",
+  "output_b",
+  "precis_evidence_context",
+  "question",
+  "review_id",
+  "sample_id",
+  "transition_status"
+ ],
+ "audit_sheet_output_source_counts_top": [
+  [
+   [
+    "qwen3.5:4b",
+    "precis_full",
+    "standard"
+   ],
+   30
+  ],
+  [
+   [
+    "qwen3.5:4b",
+    "precis_full",
+    "concise"
+   ],
+   30
+  ],
+  [
+   [
+    "qwen3.5:4b",
+    "naive_rag",
+    "concise"
+   ],
+   14
+  ],
+  [
+   [
+    "qwen2.5-coder:7b",
+    "naive_rag",
+    "concise"
+   ],
+   11
+  ],
+  [
+   [
+    "qwen2.5-coder:7b",
+    "precis_full",
+    "concise"
+   ],
+   11
+  ],
+  [
+   [
+    "qwen2.5-coder:7b",
+    "naive_rag",
+    "standard"
+   ],
+   4
+  ]
+ ],
+ "doubled_negation_sensitivity_bound": {
+  "qwen2.5-coder:7b|standard|EM": {
+   "affected_contexts": 4,
+   "precis_wrong_in_affected": 3
+  },
+  "qwen2.5-coder:7b|standard|containment": {
+   "affected_contexts": 4,
+   "precis_wrong_in_affected": 1
+  },
+  "qwen2.5-coder:7b|concise|EM": {
+   "affected_contexts": 4,
+   "precis_wrong_in_affected": 3
+  },
+  "qwen2.5-coder:7b|concise|containment": {
+   "affected_contexts": 4,
+   "precis_wrong_in_affected": 3
+  },
+  "qwen3.5:4b|standard|EM": {
+   "affected_contexts": 4,
+   "precis_wrong_in_affected": 4
+  },
+  "qwen3.5:4b|standard|containment": {
+   "affected_contexts": 4,
+   "precis_wrong_in_affected": 2
+  },
+  "qwen3.5:4b|concise|EM": {
+   "affected_contexts": 4,
+   "precis_wrong_in_affected": 3
+  },
+  "qwen3.5:4b|concise|containment": {
+   "affected_contexts": 4,
+   "precis_wrong_in_affected": 2
+  }
+ },
+ "negation_in_cached_precis_contexts": {
+  "contexts": 100,
+  "with_NOT": 15,
+  "with_doubled": 4,
+  "facts": 1061,
+  "examples": [
+   "Fact 15: A player who does not want to wait's Facebook friends NOT does not want to wait's Facebook friends",
+   "Fact 16: A player who does not want to wait NOT does not want to wait",
+   "Fact 4: The IOC NOT does n't require that the anthem be performed in either English or Greek",
+   "Fact 6: an old grudge against Joe 's wealthy and powerful brother's jailers that Nathan Burdette will not like"
+  ]
+ }
+}

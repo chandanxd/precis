@@ -1,0 +1,52 @@
+{
+  "experiment": "Experiment 4.5.1: Production Wiring and Integration Audit",
+  "timestamp": "2026-10-10T19:46:00+05:30",
+  "wiring_target": "backend/src/precis/pipeline/orchestrator.py",
+  "test_file": "backend/tests/test_production_wiring.py",
+  "test_summary": {
+    "test_production_wiring": {
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "tests": [
+        "test_disabled_mode_preserves_original_fact_based_behavior",
+        "test_enabled_mode_calls_structural_extraction_with_retained_lists",
+        "test_retained_list_items_improve_answer_evidence_for_list_answer",
+        "test_document_without_lists_produces_same_result_regardless_of_feature_flag",
+        "test_feature_flag_validation_prevents_invalid_configurations",
+        "test_hardware_token_ceiling_respected_across_full_production_path",
+        "test_streaming_pipeline_with_list_extraction_enabled",
+        "test_omitted_raw_document_gracefully_falls_back_to_facts",
+        "test_rest_api_query_endpoint_execution_path_and_list_extraction_status"
+      ]
+    },
+    "test_structural_integration": {
+      "total": 47,
+      "passed": 47,
+      "failed": 0
+    },
+    "test_inference": {
+      "total": 27,
+      "passed": 27,
+      "failed": 0
+    },
+    "full_backend_suite": {
+      "total": 397,
+      "passed": 397,
+      "failed": 0
+    },
+    "diagnostic_scripts": {
+      "total": 33,
+      "passed": 33,
+      "failed": 0
+    }
+  },
+  "invariants_verified": {
+    "default_flag_disabled": true,
+    "disabled_mode_preserves_facts": true,
+    "enabled_mode_extracts_lists": true,
+    "token_ceiling_enforced": true,
+    "invalid_flag_rejected": true,
+    "zero_unrelated_modifications": true
+  }
+}

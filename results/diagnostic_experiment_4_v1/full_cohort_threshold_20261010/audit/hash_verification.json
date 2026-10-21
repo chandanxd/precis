@@ -1,0 +1,90 @@
+{
+  "config_fingerprint": "81aacc9186b973dc90abe728d37ad5a7337c6c7de7b463a62e3f16135ebae5c7",
+  "model_identifier": "qwen2.5-coder:7b",
+  "hashes": {
+    "sample_manifest.jsonl": {
+      "path": "results/diagnostic_structural_decompilation_v3/sample_manifest.jsonl",
+      "actual_sha256": "011553c0725621b7dda73aad12254d100e6fc15f49a5f80f4524156eb4e25db7",
+      "recorded_sha256": "011553c0725621b7dda73aad12254d100e6fc15f49a5f80f4524156eb4e25db7",
+      "match": true,
+      "size_bytes": 87954
+    },
+    "eval_records_stage_c.jsonl": {
+      "path": "results/diagnostic_structural_decompilation_v3/eval_records_stage_c.jsonl",
+      "actual_sha256": "e10ea38f7cc7cfa9a98d494851de8c41c322b5f148dfff653077193917933687",
+      "recorded_sha256": "e10ea38f7cc7cfa9a98d494851de8c41c322b5f148dfff653077193917933687",
+      "match": true,
+      "size_bytes": 312090
+    },
+    "nq_dev.jsonl": {
+      "path": "backend/data/nq_subset/nq_dev.jsonl",
+      "actual_sha256": "14efc255a596433d6bf10dd853a1915474a5d3f6b47c593f77911ab4bb8eb491",
+      "recorded_sha256": "14efc255a596433d6bf10dd853a1915474a5d3f6b47c593f77911ab4bb8eb491",
+      "match": true,
+      "size_bytes": 13651266
+    },
+    "eval_records.jsonl": {
+      "path": "results/diagnostic_experiment_4_v1/full_cohort_threshold_20261010/eval_records.jsonl",
+      "actual_sha256": "d8a42cc906bf7fa4aebafff6868345c20a0667f971dea4f2309e3e199a3079f0",
+      "recorded_sha256": "d8a42cc906bf7fa4aebafff6868345c20a0667f971dea4f2309e3e199a3079f0",
+      "match": true,
+      "size_bytes": 942161
+    },
+    "aggregate_summary.json": {
+      "path": "results/diagnostic_experiment_4_v1/full_cohort_threshold_20261010/aggregate_summary.json",
+      "actual_sha256": "61106ab8d421b662ed9d95c672bee7efc119f8cf62eb08e12efaedb47b9df5d4",
+      "recorded_sha256": "61106ab8d421b662ed9d95c672bee7efc119f8cf62eb08e12efaedb47b9df5d4",
+      "match": true,
+      "size_bytes": 3665
+    },
+    "paired_comparisons.json": {
+      "path": "results/diagnostic_experiment_4_v1/full_cohort_threshold_20261010/paired_comparisons.json",
+      "actual_sha256": "0ec3cbff263560cc6e602ddeddceab1f317af638ec7c8fd1ac2ea49bf73c9851",
+      "recorded_sha256": "0ec3cbff263560cc6e602ddeddceab1f317af638ec7c8fd1ac2ea49bf73c9851",
+      "match": true,
+      "size_bytes": 7745
+    },
+    "regression_recovery_audit.jsonl": {
+      "path": "results/diagnostic_experiment_4_v1/full_cohort_threshold_20261010/regression_recovery_audit.jsonl",
+      "actual_sha256": "2820b856c1bfe49e0d90dc964eccd6f9b3d867f51bc335611459b466d83401cc",
+      "recorded_sha256": "2820b856c1bfe49e0d90dc964eccd6f9b3d867f51bc335611459b466d83401cc",
+      "match": true,
+      "size_bytes": 198003
+    },
+    "investigation_report.md": {
+      "path": "results/diagnostic_experiment_4_v1/full_cohort_threshold_20261010/investigation_report.md",
+      "actual_sha256": "46ea3e271ce1bdb98d3a5b6f4a9532413b76993c9402c2c5dbb8d626681d80b1",
+      "recorded_sha256": "46ea3e271ce1bdb98d3a5b6f4a9532413b76993c9402c2c5dbb8d626681d80b1",
+      "match": true,
+      "size_bytes": 19013
+    },
+    "preflight_report.md": {
+      "path": "results/diagnostic_experiment_4_v1/full_cohort_threshold_20261010/preflight_report.md",
+      "actual_sha256": "0c8f69a02ddf0d3ca8ff0e359b4d3f22bfab178778fdfb329b03e14381daf6e8",
+      "recorded_sha256": "0c8f69a02ddf0d3ca8ff0e359b4d3f22bfab178778fdfb329b03e14381daf6e8",
+      "match": true,
+      "size_bytes": 6785
+    },
+    "walkthrough.md": {
+      "path": "results/diagnostic_experiment_4_v1/full_cohort_threshold_20261010/walkthrough.md",
+      "actual_sha256": "1b863e8e751535f9bdd3d21609e9edcd909c9e51ba627ea83e1891f59c52e65b",
+      "recorded_sha256": "e2a4be6f38ef06e12e9b97779f67aee1dcba94560d21051fa8a452bf97df6db6",
+      "match": false,
+      "size_bytes": 4675
+    },
+    "runner_eval_experiment_4_2_threshold.py": {
+      "path": "scripts/eval_experiment_4_2_threshold.py",
+      "actual_sha256": "2ebabbcfb247721935366f69999fd798c9fcd6105cbf44e5967435a582fac606",
+      "recorded_sha256": null,
+      "match": null,
+      "size_bytes": 57711
+    },
+    "test_experiment_4_2_integrity.py": {
+      "path": "scripts/test_experiment_4_2_integrity.py",
+      "actual_sha256": "f01840d94d02de61c099c2e67f448ef7c18254ec1931e341f101df6afbf38487",
+      "recorded_sha256": null,
+      "match": null,
+      "size_bytes": 14485
+    }
+  }
+}

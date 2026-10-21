@@ -1,0 +1,949 @@
+{
+  "summary": {
+    "total_confirmatory_manifest_cases": 200,
+    "condition_d_successes": 99,
+    "condition_d_failures": 101,
+    "initial_omission_claims_gate_1": 34,
+    "exclusions_from_omission_claims": 3,
+    "exclusions_detail": {
+      "reclassified_prose_evidence": {
+        "case_id": "a5c30bbed3f545aebff1cb8523c915ce",
+        "category": "SURFACE_FORM_INCOMPLETE",
+        "reason": "Evidence present in clean prose, not omitted from context"
+      },
+      "dataset_annotator_errors": [
+        {
+          "case_id": "2b464be10ee24e03bdf8623631f4fc15",
+          "reason": "Gold answer (Ian Petrella) contradicts query (dad vs brother)"
+        },
+        {
+          "case_id": "f2438373b5ce4c94b790d98453472099",
+          "reason": "Gold answer (Amartya Sen) is not an accountant Nobel laureate (C.V. Raman was)"
+        }
+      ]
+    },
+    "verified_list_omission_target_cohort": 31,
+    "stage_2a_evidence_recovery_count": 31,
+    "stage_2b_generation_evaluated_count": 31,
+    "generation_cohort_discrepancy": 0,
+    "cohort_match_verified": true
+  },
+  "criteria_verification": {
+    "criterion_1_cond_d_failed_exact_match": {
+      "required": true,
+      "count_passing": 31,
+      "rate": 1.0
+    },
+    "criterion_2_verified_list_omission": {
+      "required": true,
+      "count_passing": 31,
+      "rate": 1.0
+    },
+    "criterion_3_source_supports_qa": {
+      "required": true,
+      "count_passing": 31,
+      "rate": 1.0,
+      "notes": "30 SUPPORTED, 1 AMBIGUOUS_OR_CONSTRAINED explicitly retained in Gate 1"
+    },
+    "criterion_4_absent_from_reference_packed_context": {
+      "required": true,
+      "count_passing": 31,
+      "rate": 1.0
+    },
+    "criterion_5_recovered_and_packed_by_candidate": {
+      "required": true,
+      "count_passing": 31,
+      "rate": 1.0
+    }
+  },
+  "approved_target_cohort": [
+    {
+      "case_id": "16caa32e50d342878340cacefe5a417a",
+      "question": "who is the leading african producer of wool",
+      "gold_answers": [
+        "South Africa"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_ORDERED",
+      "source_tag": "ol > li",
+      "exact_source_excerpt": "South Africa : 1 %",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": false,
+      "stage_2b_candidate_containment": false,
+      "stage_2b_candidate_prediction": "Insufficient information"
+    },
+    {
+      "case_id": "4a3eb5f5ce6a4a35a4c3f321c1272d67",
+      "question": "what is the area code for phoenix arizona",
+      "gold_answers": [
+        "602",
+        "480",
+        "623"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "602 - For telephone numbers in Phoenix city proper except for Ahwatukee and some western parts of the city .",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": true,
+      "stage_2b_candidate_containment": true,
+      "stage_2b_candidate_prediction": "602"
+    },
+    {
+      "case_id": "e6bfa9f3feec4291a24060e39f516a5b",
+      "question": "what is the second book in the alchemyst series",
+      "gold_answers": [
+        "The Magician"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "The Magician -- released on 5 June 2008 ( UK ) , 24 June 2008 ( US )",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": true,
+      "stage_2b_candidate_containment": true,
+      "stage_2b_candidate_prediction": "The Magician"
+    },
+    {
+      "case_id": "680012c3f0b849b6aefcf34d32f0f7c6",
+      "question": "who is the father of lucius in gladiator",
+      "gold_answers": [
+        "Lucius Verus"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "Spencer Treat Clark as Lucius Verus : The young son of Lucilla . He is named after his father Lucius Verus . He is also the grandson of Marcus Aurelius .",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": false,
+      "stage_2b_candidate_containment": false,
+      "stage_2b_candidate_prediction": "Lucilla"
+    },
+    {
+      "case_id": "363edbaa51694fedbd2a264c881f23a1",
+      "question": "what part of maryland is close to washington dc",
+      "gold_answers": [
+        "Calvert County",
+        "Charles County",
+        "Frederick County",
+        "Montgomery County",
+        "Prince George 's County"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "Calvert County",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": true,
+      "stage_2b_candidate_containment": true,
+      "stage_2b_candidate_prediction": "Frederick County"
+    },
+    {
+      "case_id": "64cd81b2b26843c38de66be525ff84b9",
+      "question": "star wars episode ii attack of the clones characters",
+      "gold_answers": [
+        "Obi - Wan Kenobi",
+        "Padm\u00e9 Amidala",
+        "Anakin Skywalker",
+        "Chancellor Palpatine / Darth Sidious",
+        "Mace Windu",
+        "Count Dooku / Darth Tyranus",
+        "C - 3PO",
+        "R2 - D2",
+        "Yoda"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "Ewan McGregor as Obi - Wan Kenobi : A Jedi Master and mentor of Anakin Skywalker .",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": false,
+      "stage_2b_candidate_containment": false,
+      "stage_2b_candidate_prediction": "Insufficient information"
+    },
+    {
+      "case_id": "abe22dfa12e74eb493a2f1870cdc3726",
+      "question": "the cast of a good day to die hard",
+      "gold_answers": [
+        "Bruce Willis",
+        "Jai Courtney",
+        "Sebastian Koch",
+        "Yuliya Snigir",
+        "Sergei Kolesnikov",
+        "Radivoje Bukvi\u0107",
+        "Mary Elizabeth Winstead"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "Bruce Willis as John McClane",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": false,
+      "stage_2b_candidate_containment": true,
+      "stage_2b_candidate_prediction": "Bruce Willis, Jai Courtney, Sebastian Koch, Yuliya Snigir, Sergei Kolesnikov, Radivoje Bukvi\u0107, Mary Elizabeth Winstead"
+    },
+    {
+      "case_id": "6cac0d1aa1654e80852b76ab2c19c4ec",
+      "question": "who sings the whiskey ai n 't workin anymore",
+      "gold_answers": [
+        "Travis Tritt",
+        "Marty Stuart",
+        "Tim Passmore",
+        "Dennis Locorriere"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "Dennis Locorriere -- background vocals",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": false,
+      "stage_2b_candidate_containment": false,
+      "stage_2b_candidate_prediction": "Insufficient information"
+    },
+    {
+      "case_id": "70f2237c7d8241d586bf26d2840e15c5",
+      "question": "what does it mean on tinder common connections",
+      "gold_answers": [
+        "Common Connections allows users to see whether they share a mutual Facebook friend with a match ( a first degree connection on Tinder ) or when a user and their match have two separate friends who happen to be friends with each other ( considered second degree on Tinder )"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "Common Connections allows users to see whether they share a mutual Facebook friend with a match ( a first degree connection on Tinder ) or when a user and their match have two separate friends who happen to be friends with each other ( considered sec",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": false,
+      "stage_2b_candidate_containment": false,
+      "stage_2b_candidate_prediction": "Mutual Facebook friend or second-degree connection"
+    },
+    {
+      "case_id": "0c0db792e51c4d358d44b8f9a403a3bd",
+      "question": "american horror story freak show girl kidnapped by clown",
+      "gold_answers": [
+        "Bonnie Lipton ( portrayed by Skyler Samuels )"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "Bonnie Lipton ( portrayed by Skyler Samuels ) is a young girl who is kidnapped by Twisty , after Twisty murders her boyfriend Troy . She attacks Twisty and attempts to escape with Corey , but is dragged back to him by Dandy . She escapes Twisty with ",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": false,
+      "stage_2b_candidate_containment": false,
+      "stage_2b_candidate_prediction": "Bonnie Lipton"
+    },
+    {
+      "case_id": "8fe0d283d48f40cdba0e1d8084316c79",
+      "question": "who played the detective in little boy blue",
+      "gold_answers": [
+        "Stephen Graham"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "Stephen Graham -- Detective Superintendent Dave Kelly",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": true,
+      "stage_2b_candidate_containment": true,
+      "stage_2b_candidate_prediction": "Stephen Graham"
+    },
+    {
+      "case_id": "bd673bbbf88e48ff8c31c633d1348df3",
+      "question": "when was the last time the womens hockey team won gold",
+      "gold_answers": [
+        "2018"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "2018 -- Won gold medal",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": true,
+      "stage_2b_candidate_containment": true,
+      "stage_2b_candidate_prediction": "2018"
+    },
+    {
+      "case_id": "895b5134173847ff8837c187a367cde0",
+      "question": "who has won the most superbowls as a player",
+      "gold_answers": [
+        "Bill Belichick",
+        "Neal Dahlen"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "Bill Belichick : two as defensive coordinator of the New York Giants and five as head coach of New England Patriots",
+      "semantic_answerability": "AMBIGUOUS_OR_CONSTRAINED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": false,
+      "stage_2b_candidate_containment": false,
+      "stage_2b_candidate_prediction": "Insufficient information"
+    },
+    {
+      "case_id": "5fe035e52e2f4f259bc5191e48cc9f4e",
+      "question": "who has the most rushing yards in a super bowl",
+      "gold_answers": [
+        "Timmy Smith"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "Timmy Smith -- Washington vs. Denver , XXII",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": false,
+      "stage_2b_candidate_containment": false,
+      "stage_2b_candidate_prediction": "Insufficient information"
+    },
+    {
+      "case_id": "f3bd270e6e394b4c8faef3f8ea8d5c92",
+      "question": "when did world war 2 end in the pacific",
+      "gold_answers": [
+        "September 2 , 1945"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "September 2 , 1945 -- Formal Japanese surrender ceremony aboard USS Missouri in Tokyo Bay ; U.S. President Harry S. Truman declares VJ Day .",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": true,
+      "stage_2b_candidate_containment": true,
+      "stage_2b_candidate_prediction": "September 2, 1945"
+    },
+    {
+      "case_id": "2d7ca2fd4dc84142b1e5c2ba3639db35",
+      "question": "what cities are in san joaquin county california",
+      "gold_answers": [
+        "Escalon",
+        "Lathrop",
+        "Lodi",
+        "Manteca",
+        "Ripon",
+        "Stockton",
+        "Tracy"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "Escalon",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": false,
+      "stage_2b_candidate_containment": false,
+      "stage_2b_candidate_prediction": "Insufficient information"
+    },
+    {
+      "case_id": "75bbbd97c66a4884ab6ffac096bef94e",
+      "question": "who played in last train from gun hill",
+      "gold_answers": [
+        "Kirk Douglas",
+        "Anthony Quinn",
+        "Carolyn Jones",
+        "Earl Holliman",
+        "Brian G. Hutton",
+        "Brad Dexter",
+        "Ziva Rodann",
+        "Val Avery",
+        "Bing Russell",
+        "Walter Sande"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "Kirk Douglas as Matt Morgan",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": false,
+      "stage_2b_candidate_containment": false,
+      "stage_2b_candidate_prediction": "Insufficient information"
+    },
+    {
+      "case_id": "ed97c4527e06421e85f20046625da4bc",
+      "question": "who was allowed to vote in scottish referendum",
+      "gold_answers": [
+        "British citizens who were resident in Scotland",
+        "citizens of other Commonwealth countries who were resident in Scotland",
+        "citizens of other European Union countries who were resident in Scotland",
+        "members of the House of Lords who were resident in Scotland",
+        "Service / Crown personnel serving in the UK or overseas in the British Armed Forces or with Her Majesty 's Government who were registered to vote in Scotland"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "British citizens who were resident in Scotland ;",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": false,
+      "stage_2b_candidate_containment": true,
+      "stage_2b_candidate_prediction": "British citizens who were resident in Scotland; citizens of other Commonwealth countries who were resident in Scotland; citizens of other European Union countries who were resident in Scotland; members of the House of Lords who were resident in Scotland; Service / Crown personnel serving in the UK or overseas in the British Armed Forces or with Her Majesty's Government who were registered to vote in Scotland."
+    },
+    {
+      "case_id": "9d4004bfbffc4378b4be99830b41e449",
+      "question": "who plays reggie the robot in justin 's house",
+      "gold_answers": [
+        "Ben Faulks"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "Ben Faulks -- Mr Bloom & Reginald T Robot",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": false,
+      "stage_2b_candidate_containment": false,
+      "stage_2b_candidate_prediction": "Reginald T Robot"
+    },
+    {
+      "case_id": "a96d5b005f1b427bb7fdb8b48d9274e3",
+      "question": "who was the ruler of england in 1616",
+      "gold_answers": [
+        "James I , King of England"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "England - James I , King of England ( 1603 -- 1625 )",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": false,
+      "stage_2b_candidate_containment": false,
+      "stage_2b_candidate_prediction": "James I"
+    },
+    {
+      "case_id": "521b6a03b8704833bc756935b19fd05c",
+      "question": "who played the little boy in polar express",
+      "gold_answers": [
+        "Dante Pastula"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "Dante Pastula as the Little Boy",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": true,
+      "stage_2b_candidate_containment": true,
+      "stage_2b_candidate_prediction": "Dante Pastula"
+    },
+    {
+      "case_id": "3d3088e34ece49d8b9850f44ff05c029",
+      "question": "who plays big momma in big mommas house",
+      "gold_answers": [
+        "Martin Lawrence",
+        "Ella Mitchell"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "Martin Lawrence as Agent Malcolm Turner / Big Momma",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": true,
+      "stage_2b_candidate_containment": true,
+      "stage_2b_candidate_prediction": "Martin Lawrence"
+    },
+    {
+      "case_id": "a0ee91b8934a4b2486b308ca45fd395d",
+      "question": "who is the father of lucius in gladiator",
+      "gold_answers": [
+        "Lucius Verus"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "Spencer Treat Clark as Lucius Verus : The young son of Lucilla . He is named after his father Lucius Verus . He is also the grandson of Marcus Aurelius .",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": false,
+      "stage_2b_candidate_containment": false,
+      "stage_2b_candidate_prediction": "Lucilla"
+    },
+    {
+      "case_id": "3e9bc967f19949daa8a627a2dd65ffd6",
+      "question": "cast of the have and have nots play",
+      "gold_answers": [
+        "Palmer Williams Jr. as Floyd",
+        "Patrice Lovely as Hattie",
+        "Tony Hightower as Frank",
+        "Alexis Jones as Diane",
+        "Maurice Lauchner as Lewis",
+        "Jeffery Lewis as Wallie",
+        "Kislyck Halsey as Rose"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "Palmer Williams Jr. as Floyd",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": false,
+      "stage_2b_candidate_containment": false,
+      "stage_2b_candidate_prediction": "Palmer Williams Jr., Patrice Lovely, Tony Hightower, Alexis Jones, Maurice Lauchner, Jeffery Lewis, Kislyck Halsey"
+    },
+    {
+      "case_id": "023650271daf4ad596af126bd186bf80",
+      "question": "what is the zebras name in peppa pig",
+      "gold_answers": [
+        "Zoe Zebra",
+        "Mummy Zebra a.k.a. Mrs Zebra",
+        "Daddy Zebra a.k.a. Mr. Zebra",
+        "Zuzu",
+        "Zaza"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "Zoe Zebra ( voiced by Sian Taylor in series 2 -- 4 and Isla Gudgeon in series 5 ) -- Zoe is one of Peppa 's friends . She wears a light purple dress . In the episode `` Teddy 's Day Out , '' it is revealed that she has a stuffed monkey which is named",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": true,
+      "stage_2b_candidate_containment": true,
+      "stage_2b_candidate_prediction": "Zoe Zebra"
+    },
+    {
+      "case_id": "2a25e7ad4ad4456e8a885a8e64420890",
+      "question": "all of the states in the northeast region",
+      "gold_answers": [
+        "Connecticut",
+        "Maine",
+        "Massachusetts",
+        "New Hampshire",
+        "Rhode Island",
+        "Vermont",
+        "New Jersey",
+        "New York",
+        "Pennsylvania"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "Division 1 : New England ( Connecticut , Maine , Massachusetts , New Hampshire , Rhode Island , and Vermont )",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": false,
+      "stage_2b_candidate_containment": true,
+      "stage_2b_candidate_prediction": "Connecticut, Maine, Massachusetts, New Hampshire, Rhode Island, Vermont, New Jersey, New York, Pennsylvania"
+    },
+    {
+      "case_id": "503e03162815452d9ed3cd299cc40eff",
+      "question": "which is the fastest train in india and what is its speed",
+      "gold_answers": [
+        "Mumbai Rajdhani Express",
+        "maximum speed 160 km / h",
+        "average speed 112 km / h"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "Fastest train in India : 12951 / 52 Mumbai Rajdhani Express considering average speed including halts 12049 / 50 : Agra Cantonment - H. Nizamuddin Gatimaan Express - maximum speed 160 km / h , average speed 112 km / h",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": false,
+      "stage_2b_candidate_containment": true,
+      "stage_2b_candidate_prediction": "12951 / 52 Mumbai Rajdhani Express\n140 km / h"
+    },
+    {
+      "case_id": "04070d67a81e4db486e31787ca7aa5bf",
+      "question": "uruguay is located along what body of water",
+      "gold_answers": [
+        "Bay of Montevideo"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "Bay of Montevideo",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": true,
+      "stage_2b_candidate_containment": true,
+      "stage_2b_candidate_prediction": "Bay of Montevideo"
+    },
+    {
+      "case_id": "3e87ec576a42427aadc55cd75936b41f",
+      "question": "what are the spices in chinese 5 spice powder",
+      "gold_answers": [
+        "Star anise",
+        "Cloves",
+        "Chinese cinnamon",
+        "Sichuan pepper",
+        "Fennel seeds"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "Star anise ( bajiao \u516b\u89d2 )",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": false,
+      "stage_2b_candidate_containment": true,
+      "stage_2b_candidate_prediction": "star anise, cloves, Chinese cinnamon, Sichuan pepper, fennel seeds"
+    },
+    {
+      "case_id": "c530f07f4ff040f5925b9a3599d9fb19",
+      "question": "who plays the queen in victoria and abdul",
+      "gold_answers": [
+        "Judi Dench"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "Judi Dench as Queen Victoria",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": true,
+      "stage_2b_candidate_containment": true,
+      "stage_2b_candidate_prediction": "Judi Dench"
+    },
+    {
+      "case_id": "c52fb4e74cf6498786a506d08c35dafe",
+      "question": "paul walkers cars in fast and furious list",
+      "gold_answers": [
+        "1995 Mitsubishi Eclipse",
+        "1995 Toyota Supra",
+        "1999 Ford F - 150 Lightning",
+        "1995 Dodge Stealth",
+        "2002 Mitsubishi Lancer OZ Rally"
+      ],
+      "revised_category": "EXTRACTION_OMISSION_LIST_UNORDERED",
+      "source_tag": "ul > li",
+      "exact_source_excerpt": "1995 Mitsubishi Eclipse - Shot at by Johnny Tran and later destroyed after ruptured nitrous tanks explode ; equipped with a 420A motor with an upgrade to a T3 turbo and front mount intercooler , standalone fuel management and nitrous . This was the c",
+      "semantic_answerability": "SUPPORTED",
+      "cond_d_exact_match": false,
+      "evidence_in_reference_packed_d": false,
+      "candidate_recovered_in_stage_2a": true,
+      "stage_2b_candidate_em": false,
+      "stage_2b_candidate_containment": false,
+      "stage_2b_candidate_prediction": "Insufficient information"
+    }
+  ],
+  "excluded_inventory_cases_by_category": {
+    "GENERATION_ATTENTION_INSUFFICIENT_INFO": {
+      "count": 14,
+      "sample_cases": [
+        {
+          "case_id": "a16cca39f27e4d78a64de2d8285bc4bf",
+          "question": "when will the next episode of my next guest needs no introduction",
+          "gold_answers": [
+            "May 31 , 2018"
+          ],
+          "rationale": "Model returned Insufficient information despite table present in context.",
+          "answerability": "SUPPORTED"
+        },
+        {
+          "case_id": "827c9209778c4b4e88d36b233aea11b7",
+          "question": "who won the super heavyweight gold medal at the 2000 olympics",
+          "gold_answers": [
+            "Audley Harrison"
+          ],
+          "rationale": "Model returned Insufficient information despite table present in context.",
+          "answerability": "SUPPORTED"
+        },
+        {
+          "case_id": "cb06266c8c7645beafd7868c6d6f16da",
+          "question": "who is the ceo of what 's up",
+          "gold_answers": [
+            "Jan Koum"
+          ],
+          "rationale": "Model returned Insufficient information despite table present in context.",
+          "answerability": "SUPPORTED"
+        }
+      ],
+      "total_case_ids": [
+        "a16cca39f27e4d78a64de2d8285bc4bf",
+        "827c9209778c4b4e88d36b233aea11b7",
+        "cb06266c8c7645beafd7868c6d6f16da",
+        "9a4e1937db3d4010806bd6bce7292763",
+        "234f4e8ec8ab434aaa8dae93bd2b5b9f",
+        "6442c9a4b52646fabcfb5cdadd149f8e",
+        "afb98df221d6408882306b62213f33bf",
+        "f2fc95c0a78047b684548149d9971575",
+        "acad8b5a2fee4a8d8f266a298e48449f",
+        "9c49f34f30f7478398f6f7bc617f651e",
+        "fba1b308d1b84d48b04813963e36f90a",
+        "a0ee4e60f4744650ad1f6818ddad04b3",
+        "b4053f740ebb40aabb8d379754423ad7",
+        "fd55f4dc4a43466da9a596385e3f622f"
+      ]
+    },
+    "GENERATION_DISTRACTOR_ROW": {
+      "count": 30,
+      "sample_cases": [
+        {
+          "case_id": "307f665b9378417ea1b5fb54b86c46b3",
+          "question": "what mlb teams did deion sanders play for",
+          "gold_answers": [
+            "New York Yankees ( 1989 -- 1990 )",
+            "Atlanta Braves ( 1991 -- 1994 )",
+            "Cincinnati Reds ( 1994 -- 1995 )",
+            "San Francisco Giants ( 1995 )",
+            "Cincinnati Reds ( 1997 , 2001 )"
+          ],
+          "rationale": "Model selected an incorrect row, wrong season, or wrong entity from table.",
+          "answerability": "SUPPORTED"
+        },
+        {
+          "case_id": "c51c5d605a55471784c02e47a9aa7f99",
+          "question": "when does scully come back in season 2",
+          "gold_answers": [
+            "One Breath"
+          ],
+          "rationale": "Model selected an incorrect row, wrong season, or wrong entity from table.",
+          "answerability": "SUPPORTED"
+        },
+        {
+          "case_id": "6a14cf06f9984e78bee24902902bf87f",
+          "question": "who is the highest selling r&b artist of all time",
+          "gold_answers": [
+            "Michael Jackson"
+          ],
+          "rationale": "Model selected an incorrect row, wrong season, or wrong entity from table.",
+          "answerability": "SUPPORTED"
+        }
+      ],
+      "total_case_ids": [
+        "307f665b9378417ea1b5fb54b86c46b3",
+        "c51c5d605a55471784c02e47a9aa7f99",
+        "6a14cf06f9984e78bee24902902bf87f",
+        "abfe6dd1dc4947ac98de74dbbd20876c",
+        "e34508a7e6fc4053b653599247f92e2c",
+        "7653aa24efda4986b8bae2a988d84734",
+        "8eb0db6a822d475687268ae0d629d234",
+        "7889492677d74e0abd105c8ae62121a4",
+        "ae89f4d5ba044940843751db7dd23f1f",
+        "b2c8d85ed1dc40f2bca88500700eaff7",
+        "66cef6bd868447be840a5417ee828423",
+        "50a8097fc59f4f12b12c6c8b7bd9d934",
+        "f487ee54565b4193bfc421764e7c69d3",
+        "41b6aaebafdf41388857cc02252ad0aa",
+        "fd9cfd15015b40b7b6ee290050a13703",
+        "e529e5ec29f3425a81745d19a344d621",
+        "0d26e7be35314b5ba13f883860d134aa",
+        "14164fafa5524ce29eedee86986f5dbd",
+        "b8e8338f4b84408eb20a3f6b04bb77e8",
+        "122e005cbafc4d7abbaa854110fa0871",
+        "b3993d4663ef4951837ccd79a2610a3a",
+        "90efffa392e3486fb84e7e434ce4922a",
+        "63e8d2745609445ca5a32a286d67fe2a",
+        "9c756e6266aa4fa5b894cd77d4abc27c",
+        "d944b68d1da945b5814947552a476725",
+        "0c25faa78ad448faa11bb2d186fb89e2",
+        "72e0a4802aff456d98acbc2cfecec689",
+        "5cccbf86ebd442ee932b681c03f49f69",
+        "97a33dd3f6714f3ab7a75bdc7ab6b1de",
+        "f483eb869e3f4a3c81cef2760d774ca3"
+      ]
+    },
+    "SURFACE_FORM_PARENTHETICAL_ADDITION": {
+      "count": 2,
+      "sample_cases": [
+        {
+          "case_id": "ebca623741224504a7a26aab133311e7",
+          "question": "what is the salary of us secretary of state",
+          "gold_answers": [
+            "$205,700 annually"
+          ],
+          "rationale": "Model included extra parenthetical explanatory text or unit.",
+          "answerability": "SUPPORTED"
+        },
+        {
+          "case_id": "0e9f9a5acf0c48fab41f7e8f608a4240",
+          "question": "what is the weight of a honda fit",
+          "gold_answers": [
+            "1,020 -- 1,080 kg"
+          ],
+          "rationale": "Model included extra parenthetical explanatory text or unit.",
+          "answerability": "SUPPORTED"
+        }
+      ],
+      "total_case_ids": [
+        "ebca623741224504a7a26aab133311e7",
+        "0e9f9a5acf0c48fab41f7e8f608a4240"
+      ]
+    },
+    "SURFACE_FORM_MULTI_ENTITY_OVERCOMPLETE": {
+      "count": 14,
+      "sample_cases": [
+        {
+          "case_id": "3e679b740b894b14a5e1fa5875773321",
+          "question": "what are the band members names of the rolling stones",
+          "gold_answers": [
+            "Mick Jagger",
+            "Keith Richards",
+            "Charlie Watts",
+            "Ronnie Wood"
+          ],
+          "rationale": "Model accurately listed all requested entities, but gold only listed a single entity.",
+          "answerability": "SUPPORTED"
+        },
+        {
+          "case_id": "fd249e52bf4b4c6fb14ae69cbb7c7994",
+          "question": "who wrote the song after you 've gone",
+          "gold_answers": [
+            "Turner Layton",
+            "Henry Creamer"
+          ],
+          "rationale": "Model accurately listed all requested entities, but gold only listed a single entity.",
+          "answerability": "SUPPORTED"
+        },
+        {
+          "case_id": "7fe461b45e754528966c9f5cc4db3cc1",
+          "question": "who starred in the movie romancing the stone",
+          "gold_answers": [
+            "Michael Douglas",
+            "Kathleen Turner",
+            "Danny DeVito",
+            "Alfonso Arau",
+            "Manuel Ojeda"
+          ],
+          "rationale": "Model accurately listed all requested entities, but gold only listed a single entity.",
+          "answerability": "SUPPORTED"
+        }
+      ],
+      "total_case_ids": [
+        "3e679b740b894b14a5e1fa5875773321",
+        "fd249e52bf4b4c6fb14ae69cbb7c7994",
+        "7fe461b45e754528966c9f5cc4db3cc1",
+        "ad45f28e0df44deabff03ed0a02714be",
+        "49aaa914ba7c4aa889d5b5a3075a0c69",
+        "8bc7499c10b44cdcb38eaf0162e4745e",
+        "191734347dc2435fb77c0141502ca047",
+        "4a55dbb561c84b5595473a6777656863",
+        "5be3f886f434447abbc8f1056461624b",
+        "a39b0b7661334e3b83f89cb2a6c39932",
+        "01ff1ca5809240058d7de1ff8eab4a59",
+        "f6c11f25369343f6aa7edbc2fe17df6a",
+        "33d15e179ebd4cc0813473789a5da39d",
+        "8018fb2cd1d446fd807b5f3b88488402"
+      ]
+    },
+    "SURFACE_FORM_UNIT_OR_CATEGORY": {
+      "count": 7,
+      "sample_cases": [
+        {
+          "case_id": "bb858504dc414038889d50cc48c43ead",
+          "question": "what type of bridge is the charles bridge",
+          "gold_answers": [
+            "Stone"
+          ],
+          "rationale": "Model output contains minor qualifier or unit mismatch.",
+          "answerability": "SUPPORTED"
+        },
+        {
+          "case_id": "5b60e2c23844402daf27304a7d932582",
+          "question": "what type of song is what a wonderful world",
+          "gold_answers": [
+            "Traditional pop",
+            "jazz"
+          ],
+          "rationale": "Model output contains minor qualifier or unit mismatch.",
+          "answerability": "SUPPORTED"
+        },
+        {
+          "case_id": "8aa95e435d3d44eb935864d81f777524",
+          "question": "how many scholarships do division 2 football teams get",
+          "gold_answers": [
+            "36.0"
+          ],
+          "rationale": "Model output contains minor qualifier or unit mismatch.",
+          "answerability": "SUPPORTED"
+        }
+      ],
+      "total_case_ids": [
+        "bb858504dc414038889d50cc48c43ead",
+        "5b60e2c23844402daf27304a7d932582",
+        "8aa95e435d3d44eb935864d81f777524",
+        "caaf698dac374424a4365ffa857d2888",
+        "1dee3d781b6e4104bf46df70525258a7",
+        "5604c0ee6dbe403caeaee16b95a2af61",
+        "c25b7c4a3a6c420793ca6f146b9ee510"
+      ]
+    },
+    "DATASET_ANNOTATOR_ERROR": {
+      "count": 2,
+      "sample_cases": [
+        {
+          "case_id": "2b464be1aa404b8485e37a6791c0d2d5",
+          "question": "who played the dad in a christmas story",
+          "gold_answers": [
+            "Ian Petrella"
+          ],
+          "rationale": "Source list contains gold substring, but does not support question (wrong character or laureate).",
+          "answerability": "ANNOTATOR_ERROR_UNSUPPORTED"
+        },
+        {
+          "case_id": "f24383739b994db88f0309514cbc5a21",
+          "question": "nobel laureate who began career as accountant in calcutta",
+          "gold_answers": [
+            "Amartya Sen"
+          ],
+          "rationale": "Source list contains gold substring, but does not support question (wrong character or laureate).",
+          "answerability": "ANNOTATOR_ERROR_UNSUPPORTED"
+        }
+      ],
+      "total_case_ids": [
+        "2b464be1aa404b8485e37a6791c0d2d5",
+        "f24383739b994db88f0309514cbc5a21"
+      ]
+    },
+    "SURFACE_FORM_INCOMPLETE": {
+      "count": 1,
+      "sample_cases": [
+        {
+          "case_id": "a5c30bbe447b4a2a8797b11c7ffbc48f",
+          "question": "who played pink in pink floyd the wall",
+          "gold_answers": [
+            "Bob Geldof as Pink",
+            "Kevin McKeon as Young Pink",
+            "David Bingham as Little Pink"
+          ],
+          "rationale": "Evidence was retained in clean prose; model answered Bob Geldof instead of Bob Geldof as Pink.",
+          "answerability": "SUPPORTED"
+        }
+      ],
+      "total_case_ids": [
+        "a5c30bbe447b4a2a8797b11c7ffbc48f"
+      ]
+    }
+  }
+}

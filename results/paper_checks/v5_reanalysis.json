@@ -1,0 +1,190 @@
+{
+ "abstention_vs_answerability_2x2": {
+  "qwen2.5-coder:7b|naive_rag|standard": {
+   "n": 100,
+   "abst": 2,
+   "abst_answer_in_ctx": 2,
+   "answer_in_ctx": 100
+  },
+  "qwen2.5-coder:7b|precis_full|standard": {
+   "n": 100,
+   "abst": 9,
+   "abst_answer_in_ctx": 6,
+   "answer_in_ctx": 79
+  },
+  "qwen2.5-coder:7b|naive_rag|concise": {
+   "n": 100,
+   "abst": 22,
+   "abst_answer_in_ctx": 22,
+   "answer_in_ctx": 100
+  },
+  "qwen2.5-coder:7b|precis_full|concise": {
+   "n": 100,
+   "abst": 34,
+   "abst_answer_in_ctx": 23,
+   "answer_in_ctx": 79
+  },
+  "qwen3.5:4b|naive_rag|standard": {
+   "n": 100,
+   "abst": 17,
+   "abst_answer_in_ctx": 17,
+   "answer_in_ctx": 100
+  },
+  "qwen3.5:4b|precis_full|standard": {
+   "n": 100,
+   "abst": 30,
+   "abst_answer_in_ctx": 21,
+   "answer_in_ctx": 79
+  },
+  "qwen3.5:4b|naive_rag|concise": {
+   "n": 100,
+   "abst": 9,
+   "abst_answer_in_ctx": 9,
+   "answer_in_ctx": 100
+  },
+  "qwen3.5:4b|precis_full|concise": {
+   "n": 100,
+   "abst": 14,
+   "abst_answer_in_ctx": 10,
+   "answer_in_ctx": 79
+  },
+  "qwen2.5-coder:7b|naive_rag|short_explicit": {
+   "n": 100,
+   "abst": 4,
+   "abst_answer_in_ctx": 4,
+   "answer_in_ctx": 100
+  },
+  "qwen2.5-coder:7b|precis_full|short_explicit": {
+   "n": 100,
+   "abst": 6,
+   "abst_answer_in_ctx": 3,
+   "answer_in_ctx": 79
+  },
+  "qwen2.5-coder:7b|naive_rag|sent_token": {
+   "n": 100,
+   "abst": 36,
+   "abst_answer_in_ctx": 36,
+   "answer_in_ctx": 100
+  },
+  "qwen2.5-coder:7b|precis_full|sent_token": {
+   "n": 100,
+   "abst": 60,
+   "abst_answer_in_ctx": 46,
+   "answer_in_ctx": 79
+  },
+  "qwen3.5:4b|naive_rag|short_explicit": {
+   "n": 100,
+   "abst": 3,
+   "abst_answer_in_ctx": 3,
+   "answer_in_ctx": 100
+  },
+  "qwen3.5:4b|precis_full|short_explicit": {
+   "n": 100,
+   "abst": 8,
+   "abst_answer_in_ctx": 4,
+   "answer_in_ctx": 79
+  },
+  "qwen3.5:4b|naive_rag|sent_token": {
+   "n": 100,
+   "abst": 19,
+   "abst_answer_in_ctx": 19,
+   "answer_in_ctx": 100
+  },
+  "qwen3.5:4b|precis_full|sent_token": {
+   "n": 100,
+   "abst": 30,
+   "abst_answer_in_ctx": 21,
+   "answer_in_ctx": 79
+  }
+ },
+ "fresh_abstention_vs_answerability": {
+  "N_raw": {
+   "abstained": 33,
+   "abstained_answer_in_ctx": 32
+  },
+  "N_clean": {
+   "abstained": 37,
+   "abstained_answer_in_ctx": 37
+  },
+  "D": {
+   "abstained": 33,
+   "abstained_answer_in_ctx": 33
+  },
+  "F2": {
+   "abstained": 39,
+   "abstained_answer_in_ctx": 38
+  },
+  "G": {
+   "abstained": 38,
+   "abstained_answer_in_ctx": 37
+  }
+ },
+ "g_table_rendering_defect": {
+  "cases": 108,
+  "by_kind": {
+   "placeholder_header": 103,
+   "empty_first_column": 5
+  },
+  "g_em_defective": 53,
+  "g_em_rate_defective": 0.49074074074074076,
+  "g_em_rate_other_table_contexts": 0.43636363636363634,
+  "n_other_table_contexts": 55,
+  "G_ok_on_def": 53,
+  "N_raw_ok_on_def": 53,
+  "G_vs_N_raw_discordant": [
+   5,
+   5
+  ],
+  "p": 1.0
+ },
+ "generation_latency_ms": {
+  "qwen2.5-coder:7b|naive_rag|concise": {
+   "n": 100,
+   "median": 215.5,
+   "p90": 613.0000000000001,
+   "max": 11546.0
+  },
+  "qwen2.5-coder:7b|naive_rag|standard": {
+   "n": 100,
+   "median": 483.5,
+   "p90": 946.0000000000015,
+   "max": 9086.0
+  },
+  "qwen2.5-coder:7b|precis_full|concise": {
+   "n": 100,
+   "median": 265.5,
+   "p90": 811.4000000000003,
+   "max": 1976.0
+  },
+  "qwen2.5-coder:7b|precis_full|standard": {
+   "n": 100,
+   "median": 528.0,
+   "p90": 1302.3000000000009,
+   "max": 2982.0
+  },
+  "qwen3.5:4b|naive_rag|concise": {
+   "n": 100,
+   "median": 438.0,
+   "p90": 823.300000000001,
+   "max": 1646.0
+  },
+  "qwen3.5:4b|naive_rag|standard": {
+   "n": 100,
+   "median": 740.0,
+   "p90": 1584.9000000000012,
+   "max": 9240.0
+  },
+  "qwen3.5:4b|precis_full|concise": {
+   "n": 100,
+   "median": 347.5,
+   "p90": 901.7000000000003,
+   "max": 2967.0
+  },
+  "qwen3.5:4b|precis_full|standard": {
+   "n": 100,
+   "median": 931.5,
+   "p90": 1924.3000000000006,
+   "max": 3616.0
+  }
+ }
+}

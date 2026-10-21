@@ -1,0 +1,47 @@
+{
+  "audit_timestamp": "2026-10-11 11:42:00 UTC",
+  "all_input_hashes_verified": true,
+  "input_verifications": {
+    "sample_manifest.jsonl": {
+      "path": "results/diagnostic_structural_decompilation_v3/sample_manifest.jsonl",
+      "expected": "011553c0725621b7dda73aad12254d100e6fc15f49a5f80f4524156eb4e25db7",
+      "actual": "011553c0725621b7dda73aad12254d100e6fc15f49a5f80f4524156eb4e25db7",
+      "match": true
+    },
+    "eval_records_gate5.jsonl": {
+      "path": "results/diagnostic_experiment_4_v1/gate_5_confirmatory_evaluation_20261010/eval_records.jsonl",
+      "expected": "edfeec16d87cdf5f168ceb7f8c947a875a0f237dc1c6074ca9ad22e28f600011",
+      "actual": "edfeec16d87cdf5f168ceb7f8c947a875a0f237dc1c6074ca9ad22e28f600011",
+      "match": true
+    },
+    "nq_dev.jsonl": {
+      "path": "backend/data/nq_subset/nq_dev.jsonl",
+      "expected": "14efc255a596433d6bf10dd853a1915474a5d3f6b47c593f77911ab4bb8eb491",
+      "actual": "14efc255a596433d6bf10dd853a1915474a5d3f6b47c593f77911ab4bb8eb491",
+      "match": true
+    },
+    "candidate_structural.py": {
+      "path": "backend/src/precis/pipeline/structural.py",
+      "expected": "10f16ce3f08fc00693d723c0a6e3e03e1a46a585b47d41e2feb110f6b9fb1ee4",
+      "actual": "10f16ce3f08fc00693d723c0a6e3e03e1a46a585b47d41e2feb110f6b9fb1ee4",
+      "match": true
+    },
+    "test_priority_packing.py": {
+      "path": "backend/tests/test_structural_priority_packing.py",
+      "expected": "0286142841dbfb133d4770701def61334886531c8872166ee18852e9e285d9d8",
+      "actual": "0286142841dbfb133d4770701def61334886531c8872166ee18852e9e285d9d8",
+      "match": true
+    }
+  },
+  "candidate_g_sample_count": 200,
+  "independent_recomputation": {
+    "cond_g_exact_match_count": 110,
+    "cond_g_exact_match_rate": 55.00000000000001,
+    "cond_g_containment_count": 137,
+    "cond_g_containment_rate": 68.5,
+    "reconciled_with_saved_metrics": true
+  },
+  "frozen_conditions_untouched": true,
+  "production_code_untouched_during_eval": true,
+  "integrity_status": "PASSED"
+}

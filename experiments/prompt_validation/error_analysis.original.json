@@ -1,0 +1,66 @@
+{
+  "sample_size": 30,
+  "sampling_seed": 42,
+  "sampling_method": "Fixed-seed random sample of 30 distinct questions from 100-sample confirmatory cohort",
+  "review_type": "Single-reviewer blinded analysis (inter-rater reliability omitted pending independent secondary rater)",
+  "transition_distribution": {
+    "Prompt-Correction": {
+      "count": 12,
+      "percentage": 40.0,
+      "description": "Standard prompt failed exact match; Concise prompt achieved exact match."
+    },
+    "Prompt-Degradation": {
+      "count": 0,
+      "percentage": 0.0,
+      "description": "Standard prompt achieved exact match; Concise prompt failed exact match."
+    },
+    "Persistent-Error": {
+      "count": 17,
+      "percentage": 56.7,
+      "description": "Both prompt conditions failed exact match."
+    },
+    "Persistent-Success": {
+      "count": 1,
+      "percentage": 3.3,
+      "description": "Both prompt conditions achieved exact match."
+    }
+  },
+  "failure_mode_breakdown_persistent_errors": {
+    "total_persistent_errors": 17,
+    "categories": {
+      "Evidence Insufficiency": {
+        "count": 6,
+        "percentage": 35.3,
+        "description": "Evidence context lacked gold answer entity (model appropriately output 'Insufficient information').",
+        "sample_ids": ["cdcb817f", "a58742fb", "cb137f88", "e9f029e0", "49e5d4cb", "96b7784e"]
+      },
+      "Incomplete or Extended Entity": {
+        "count": 5,
+        "percentage": 29.4,
+        "description": "Model extracted correct entity along with additional valid list items or slightly different prepositional phrasing.",
+        "sample_ids": ["f8615b3c", "3892797e", "3f25d97f", "705fa958", "f7211d0a"]
+      },
+      "Factually Ungrounded / Misaligned Context": {
+        "count": 6,
+        "percentage": 35.3,
+        "description": "Model extracted adjacent entity or conflated dates/entities from context.",
+        "sample_ids": ["a761e389", "be841808", "a2b53fba", "63973977", "95d9715a", "76495be2"]
+      }
+    }
+  },
+  "prompt_correction_mechanism": {
+    "total_corrected": 12,
+    "categories": {
+      "Conversational Preamble Stripped": {
+        "count": 8,
+        "percentage": 66.7,
+        "description": "Gold entity was present in standard output, but full-sentence framing caused EM failure. Concise prompt emitted isolated entity."
+      },
+      "Refusal Overcome by Direct Prompting": {
+        "count": 4,
+        "percentage": 33.3,
+        "description": "Standard prompt conservatively refused; concise prompt directly extracted valid entity."
+      }
+    }
+  }
+}

@@ -1,0 +1,72 @@
+{
+ "fresh_table_cohort": {
+  "n": 200,
+  "arms": {
+   "N_raw": {
+    "in_context": 199,
+    "in_context_and_em": 94,
+    "in_context_and_contains": 124,
+    "in_context_abstained": 32,
+    "in_context_wrong": 43,
+    "in_context_contains_not_em": 30,
+    "not_in_context": 1,
+    "not_in_context_but_em": 0
+   },
+   "N_clean": {
+    "in_context": 199,
+    "in_context_and_em": 88,
+    "in_context_and_contains": 115,
+    "in_context_abstained": 37,
+    "in_context_wrong": 47,
+    "in_context_contains_not_em": 27,
+    "not_in_context": 1,
+    "not_in_context_but_em": 0
+   },
+   "D": {
+    "in_context": 168,
+    "in_context_and_em": 79,
+    "in_context_and_contains": 104,
+    "in_context_abstained": 33,
+    "in_context_wrong": 31,
+    "in_context_contains_not_em": 25,
+    "not_in_context": 32,
+    "not_in_context_but_em": 0
+   },
+   "F2": {
+    "in_context": 198,
+    "in_context_and_em": 89,
+    "in_context_and_contains": 120,
+    "in_context_abstained": 38,
+    "in_context_wrong": 40,
+    "in_context_contains_not_em": 31,
+    "not_in_context": 2,
+    "not_in_context_but_em": 0
+   },
+   "G": {
+    "in_context": 197,
+    "in_context_and_em": 96,
+    "in_context_and_contains": 127,
+    "in_context_abstained": 37,
+    "in_context_wrong": 33,
+    "in_context_contains_not_em": 31,
+    "not_in_context": 3,
+    "not_in_context_but_em": 0
+   }
+  },
+  "document_has_answer": 199,
+  "raw_document_has_answer": 199
+ },
+ "nq200_v3": {
+  "n": 200,
+  "coverage_reported": 177,
+  "containment_with_aliases": 141,
+  "exact_match": 38,
+  "contained_but_not_exact": 103,
+  "not_contained_abstained": 7,
+  "not_contained_other_wrong": 52,
+  "gap_coverage_to_em": 139,
+  "lost_generation_or_abstention_upper": 36,
+  "lost_exact_match_strictness": 103,
+  "note": "per-case coverage flags were not stored, so the split uses the reported 177 as a ceiling; containment is an upper bound for correct answers"
+ }
+}

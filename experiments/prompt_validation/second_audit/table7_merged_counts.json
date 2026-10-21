@@ -1,0 +1,23 @@
+{
+ "H|standard": {
+  "Refusal / insufficient": 16,
+  "Conversational Mismatch": 13
+ },
+ "H|concise": {
+  "Refusal / insufficient": 8,
+  "Hallucination": 3,
+  "Conversational Mismatch": 3,
+  "Incomplete Entity": 3
+ },
+ "L|standard": {
+  "Refusal / insufficient": 16,
+  "Conversational Mismatch": 11,
+  "Incomplete Entity": 2
+ },
+ "L|concise": {
+  "Refusal / insufficient": 10,
+  "Conversational Mismatch": 4,
+  "Hallucination": 1,
+  "Incomplete Entity": 2
+ }
+}

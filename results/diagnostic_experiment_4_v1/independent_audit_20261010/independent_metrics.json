@@ -1,0 +1,765 @@
+{
+  "independent_summary": {
+    "cond_a": {
+      "n_total": 200,
+      "exact_match_count": 64,
+      "exact_match_pct": 32.0,
+      "containment_count": 87,
+      "containment_pct": 43.5,
+      "context_tokens": {
+        "mean": 618.83,
+        "std": 620.27,
+        "median": 367.0,
+        "min": 0,
+        "max": 2048,
+        "p25": 165.75,
+        "p75": 857.0,
+        "p90": 1870.1,
+        "ceiling_violations": 0
+      },
+      "latency_seconds": {
+        "mean": 0.0,
+        "median": 0.0
+      }
+    },
+    "cond_b": {
+      "n_total": 200,
+      "exact_match_count": 28,
+      "exact_match_pct": 14.0,
+      "containment_count": 39,
+      "containment_pct": 19.5,
+      "context_tokens": {
+        "mean": 155.44,
+        "std": 260.31,
+        "median": 63.0,
+        "min": 0,
+        "max": 1778,
+        "p25": 0.0,
+        "p75": 192.25,
+        "p90": 368.3,
+        "ceiling_violations": 0
+      },
+      "latency_seconds": {
+        "mean": 0.0,
+        "median": 0.0
+      }
+    },
+    "cond_c": {
+      "n_total": 200,
+      "exact_match_count": 61,
+      "exact_match_pct": 30.5,
+      "containment_count": 79,
+      "containment_pct": 39.5,
+      "context_tokens": {
+        "mean": 195.44,
+        "std": 271.78,
+        "median": 79.5,
+        "min": 0,
+        "max": 1161,
+        "p25": 0.0,
+        "p75": 273.25,
+        "p90": 575.4,
+        "ceiling_violations": 0
+      },
+      "latency_seconds": {
+        "mean": 0.278,
+        "median": 0.161
+      }
+    },
+    "cond_d": {
+      "n_total": 200,
+      "exact_match_count": 99,
+      "exact_match_pct": 49.5,
+      "containment_count": 122,
+      "containment_pct": 61.0,
+      "context_tokens": {
+        "mean": 326.38,
+        "std": 306.65,
+        "median": 235.0,
+        "min": 0,
+        "max": 1242,
+        "p25": 116.5,
+        "p75": 458.0,
+        "p90": 824.6,
+        "ceiling_violations": 0
+      },
+      "latency_seconds": {
+        "mean": 0.241,
+        "median": 0.161
+      }
+    },
+    "cond_e": {
+      "n_total": 200,
+      "exact_match_count": 108,
+      "exact_match_pct": 54.0,
+      "containment_count": 137,
+      "containment_pct": 68.5,
+      "context_tokens": {
+        "mean": 409.41,
+        "std": 348.79,
+        "median": 281.0,
+        "min": 9,
+        "max": 2046,
+        "p25": 143.0,
+        "p75": 583.75,
+        "p90": 967.0,
+        "ceiling_violations": 0
+      },
+      "latency_seconds": {
+        "mean": 0.498,
+        "median": 0.376
+      }
+    }
+  },
+  "independent_paired_comparisons": {
+    "cond_e_vs_cond_d": {
+      "comparison": "Condition E vs Condition D",
+      "exact_match": {
+        "status": "computed",
+        "total_n": 200,
+        "contingency_table": {
+          "a_both_positive": 96,
+          "b_cond1_pos_cond2_neg": 12,
+          "c_cond1_neg_cond2_pos": 3,
+          "d_both_negative": 89
+        },
+        "discordant_pairs": 15,
+        "cond1_wins": 12,
+        "cond2_wins": 3,
+        "net_wins_cond1": 9,
+        "risk_difference": 0.045,
+        "risk_difference_ci_95": [
+          0.0076,
+          0.0824
+        ],
+        "odds_ratio": 4.0,
+        "p_value": 0.03515625,
+        "statistically_significant_05": true
+      },
+      "containment": {
+        "status": "computed",
+        "total_n": 200,
+        "contingency_table": {
+          "a_both_positive": 120,
+          "b_cond1_pos_cond2_neg": 17,
+          "c_cond1_neg_cond2_pos": 2,
+          "d_both_negative": 61
+        },
+        "discordant_pairs": 19,
+        "cond1_wins": 17,
+        "cond2_wins": 2,
+        "net_wins_cond1": 15,
+        "risk_difference": 0.075,
+        "risk_difference_ci_95": [
+          0.0336,
+          0.1164
+        ],
+        "odds_ratio": 8.5,
+        "p_value": 0.000728607177734375,
+        "statistically_significant_05": true
+      },
+      "token_delta": {
+        "mean_delta": 83.03,
+        "median_delta": 0.0,
+        "min_delta": 0,
+        "max_delta": 1241
+      }
+    },
+    "cond_e_vs_cond_a": {
+      "comparison": "Condition E vs Condition A",
+      "exact_match": {
+        "status": "computed",
+        "total_n": 200,
+        "contingency_table": {
+          "a_both_positive": 56,
+          "b_cond1_pos_cond2_neg": 52,
+          "c_cond1_neg_cond2_pos": 8,
+          "d_both_negative": 84
+        },
+        "discordant_pairs": 60,
+        "cond1_wins": 52,
+        "cond2_wins": 8,
+        "net_wins_cond1": 44,
+        "risk_difference": 0.22,
+        "risk_difference_ci_95": [
+          0.1505,
+          0.2895
+        ],
+        "odds_ratio": 6.5,
+        "p_value": 5.205691473372798e-09,
+        "statistically_significant_05": true
+      },
+      "containment": {
+        "status": "computed",
+        "total_n": 200,
+        "contingency_table": {
+          "a_both_positive": 76,
+          "b_cond1_pos_cond2_neg": 61,
+          "c_cond1_neg_cond2_pos": 11,
+          "d_both_negative": 52
+        },
+        "discordant_pairs": 72,
+        "cond1_wins": 61,
+        "cond2_wins": 11,
+        "net_wins_cond1": 50,
+        "risk_difference": 0.25,
+        "risk_difference_ci_95": [
+          0.1744,
+          0.3256
+        ],
+        "odds_ratio": 5.5455,
+        "p_value": 1.5488945360571046e-09,
+        "statistically_significant_05": true
+      },
+      "token_delta": {
+        "mean_delta": -209.41,
+        "median_delta": -85.5,
+        "min_delta": -1652,
+        "max_delta": 516
+      }
+    },
+    "cond_e_vs_cond_c": {
+      "comparison": "Condition E vs Condition C",
+      "exact_match": {
+        "status": "computed",
+        "total_n": 200,
+        "contingency_table": {
+          "a_both_positive": 60,
+          "b_cond1_pos_cond2_neg": 48,
+          "c_cond1_neg_cond2_pos": 1,
+          "d_both_negative": 91
+        },
+        "discordant_pairs": 49,
+        "cond1_wins": 48,
+        "cond2_wins": 1,
+        "net_wins_cond1": 47,
+        "risk_difference": 0.235,
+        "risk_difference_ci_95": [
+          0.1746,
+          0.2954
+        ],
+        "odds_ratio": 48.0,
+        "p_value": 1.7763568394002505e-13,
+        "statistically_significant_05": true
+      },
+      "containment": {
+        "status": "computed",
+        "total_n": 200,
+        "contingency_table": {
+          "a_both_positive": 78,
+          "b_cond1_pos_cond2_neg": 59,
+          "c_cond1_neg_cond2_pos": 1,
+          "d_both_negative": 62
+        },
+        "discordant_pairs": 60,
+        "cond1_wins": 59,
+        "cond2_wins": 1,
+        "net_wins_cond1": 58,
+        "risk_difference": 0.29,
+        "risk_difference_ci_95": [
+          0.2256,
+          0.3544
+        ],
+        "odds_ratio": 59.0,
+        "p_value": 1.0581813203458523e-16,
+        "statistically_significant_05": true
+      },
+      "token_delta": {
+        "mean_delta": 213.97,
+        "median_delta": 68.0,
+        "min_delta": 0,
+        "max_delta": 1251
+      }
+    },
+    "cond_e_vs_cond_b": {
+      "comparison": "Condition E vs Condition B",
+      "exact_match": {
+        "status": "computed",
+        "total_n": 200,
+        "contingency_table": {
+          "a_both_positive": 23,
+          "b_cond1_pos_cond2_neg": 85,
+          "c_cond1_neg_cond2_pos": 5,
+          "d_both_negative": 87
+        },
+        "discordant_pairs": 90,
+        "cond1_wins": 85,
+        "cond2_wins": 5,
+        "net_wins_cond1": 80,
+        "risk_difference": 0.4,
+        "risk_difference_ci_95": [
+          0.3254,
+          0.4746
+        ],
+        "odds_ratio": 17.0,
+        "p_value": 7.532842063484042e-20,
+        "statistically_significant_05": true
+      },
+      "containment": {
+        "status": "computed",
+        "total_n": 200,
+        "contingency_table": {
+          "a_both_positive": 33,
+          "b_cond1_pos_cond2_neg": 104,
+          "c_cond1_neg_cond2_pos": 6,
+          "d_both_negative": 57
+        },
+        "discordant_pairs": 110,
+        "cond1_wins": 104,
+        "cond2_wins": 6,
+        "net_wins_cond1": 98,
+        "risk_difference": 0.49,
+        "risk_difference_ci_95": [
+          0.4128,
+          0.5672
+        ],
+        "odds_ratio": 17.3333,
+        "p_value": 3.497855888988012e-24,
+        "statistically_significant_05": true
+      },
+      "token_delta": {
+        "mean_delta": 253.97,
+        "median_delta": 156.0,
+        "min_delta": -774,
+        "max_delta": 1426
+      }
+    },
+    "cond_d_vs_cond_a": {
+      "comparison": "Condition D vs Condition A",
+      "exact_match": {
+        "status": "computed",
+        "total_n": 200,
+        "contingency_table": {
+          "a_both_positive": 49,
+          "b_cond1_pos_cond2_neg": 50,
+          "c_cond1_neg_cond2_pos": 15,
+          "d_both_negative": 86
+        },
+        "discordant_pairs": 65,
+        "cond1_wins": 50,
+        "cond2_wins": 15,
+        "net_wins_cond1": 35,
+        "risk_difference": 0.175,
+        "risk_difference_ci_95": [
+          0.0998,
+          0.2502
+        ],
+        "odds_ratio": 3.3333,
+        "p_value": 1.5717029852739467e-05,
+        "statistically_significant_05": true
+      },
+      "containment": {
+        "status": "computed",
+        "total_n": 200,
+        "contingency_table": {
+          "a_both_positive": 65,
+          "b_cond1_pos_cond2_neg": 57,
+          "c_cond1_neg_cond2_pos": 22,
+          "d_both_negative": 56
+        },
+        "discordant_pairs": 79,
+        "cond1_wins": 57,
+        "cond2_wins": 22,
+        "net_wins_cond1": 35,
+        "risk_difference": 0.175,
+        "risk_difference_ci_95": [
+          0.0913,
+          0.2587
+        ],
+        "odds_ratio": 2.5909,
+        "p_value": 0.00010259635179423318,
+        "statistically_significant_05": true
+      },
+      "token_delta": {
+        "mean_delta": -292.44,
+        "median_delta": -109.0,
+        "min_delta": -2048,
+        "max_delta": 516
+      }
+    },
+    "cond_d_vs_cond_c": {
+      "comparison": "Condition D vs Condition C",
+      "exact_match": {
+        "status": "computed",
+        "total_n": 200,
+        "contingency_table": {
+          "a_both_positive": 61,
+          "b_cond1_pos_cond2_neg": 38,
+          "c_cond1_neg_cond2_pos": 0,
+          "d_both_negative": 101
+        },
+        "discordant_pairs": 38,
+        "cond1_wins": 38,
+        "cond2_wins": 0,
+        "net_wins_cond1": 38,
+        "risk_difference": 0.19,
+        "risk_difference_ci_95": [
+          0.1356,
+          0.2444
+        ],
+        "odds_ratio": "inf",
+        "p_value": 7.275957614183426e-12,
+        "statistically_significant_05": true
+      },
+      "containment": {
+        "status": "computed",
+        "total_n": 200,
+        "contingency_table": {
+          "a_both_positive": 79,
+          "b_cond1_pos_cond2_neg": 43,
+          "c_cond1_neg_cond2_pos": 0,
+          "d_both_negative": 78
+        },
+        "discordant_pairs": 43,
+        "cond1_wins": 43,
+        "cond2_wins": 0,
+        "net_wins_cond1": 43,
+        "risk_difference": 0.215,
+        "risk_difference_ci_95": [
+          0.1581,
+          0.2719
+        ],
+        "odds_ratio": "inf",
+        "p_value": 2.2737367544323206e-13,
+        "statistically_significant_05": true
+      },
+      "token_delta": {
+        "mean_delta": 130.94,
+        "median_delta": 0.0,
+        "min_delta": 0,
+        "max_delta": 1242
+      }
+    },
+    "cond_d_vs_cond_b": {
+      "comparison": "Condition D vs Condition B",
+      "exact_match": {
+        "status": "computed",
+        "total_n": 200,
+        "contingency_table": {
+          "a_both_positive": 20,
+          "b_cond1_pos_cond2_neg": 79,
+          "c_cond1_neg_cond2_pos": 8,
+          "d_both_negative": 93
+        },
+        "discordant_pairs": 87,
+        "cond1_wins": 79,
+        "cond2_wins": 8,
+        "net_wins_cond1": 71,
+        "risk_difference": 0.355,
+        "risk_difference_ci_95": [
+          0.278,
+          0.432
+        ],
+        "odds_ratio": 9.875,
+        "p_value": 8.377941473730054e-16,
+        "statistically_significant_05": true
+      },
+      "containment": {
+        "status": "computed",
+        "total_n": 200,
+        "contingency_table": {
+          "a_both_positive": 29,
+          "b_cond1_pos_cond2_neg": 93,
+          "c_cond1_neg_cond2_pos": 10,
+          "d_both_negative": 68
+        },
+        "discordant_pairs": 103,
+        "cond1_wins": 93,
+        "cond2_wins": 10,
+        "net_wins_cond1": 83,
+        "risk_difference": 0.415,
+        "risk_difference_ci_95": [
+          0.3339,
+          0.4961
+        ],
+        "odds_ratio": 9.3,
+        "p_value": 5.198609903817759e-18,
+        "statistically_significant_05": true
+      },
+      "token_delta": {
+        "mean_delta": 170.94,
+        "median_delta": 129.0,
+        "min_delta": -1778,
+        "max_delta": 1242
+      }
+    }
+  },
+  "strata_audit": {
+    "stratum_1_stage_c_regressions_n47": {
+      "total": 47,
+      "cond_a_em": 47,
+      "cond_b_em": 0,
+      "cond_c_em": 21,
+      "cond_d_em": 37,
+      "cond_e_em": 41
+    },
+    "stratum_2_stage_c_recoveries_n11": {
+      "total": 11,
+      "cond_a_em": 0,
+      "cond_b_em": 11,
+      "cond_c_em": 8,
+      "cond_d_em": 8,
+      "cond_e_em": 8
+    },
+    "stratum_3_remaining_n142": {
+      "total": 142,
+      "cond_a_em": 17,
+      "cond_b_em": 17,
+      "cond_c_em": 32,
+      "cond_d_em": 54,
+      "cond_e_em": 59
+    },
+    "diagnostic_gate2_subset_n31": {
+      "total": 31,
+      "cond_a_em": 7,
+      "cond_b_em": 5,
+      "cond_c_em": 0,
+      "cond_d_em": 0,
+      "cond_e_em": 11
+    },
+    "non_gate2_subset_n169": {
+      "total": 169,
+      "cond_a_em": 57,
+      "cond_b_em": 23,
+      "cond_c_em": 61,
+      "cond_d_em": 99,
+      "cond_e_em": 97
+    }
+  },
+  "sensitivity_analysis": {
+    "ambiguous_case_id": "895b5134173847ff8837c187a367cde0",
+    "ambiguous_case_prefix": "895b5134",
+    "case_found_in_cohort": true,
+    "case_condition_d_pred": "Insufficient information",
+    "case_condition_e_pred": "Insufficient information",
+    "case_d_em": false,
+    "case_e_em": false,
+    "full_cohort_n200": {
+      "condition_e_em_pct": 54.0,
+      "condition_d_em_pct": 49.5,
+      "paired_e_vs_d": {
+        "status": "computed",
+        "total_n": 200,
+        "contingency_table": {
+          "a_both_positive": 96,
+          "b_cond1_pos_cond2_neg": 12,
+          "c_cond1_neg_cond2_pos": 3,
+          "d_both_negative": 89
+        },
+        "discordant_pairs": 15,
+        "cond1_wins": 12,
+        "cond2_wins": 3,
+        "net_wins_cond1": 9,
+        "risk_difference": 0.045,
+        "risk_difference_ci_95": [
+          0.0076,
+          0.0824
+        ],
+        "odds_ratio": 4.0,
+        "p_value": 0.03515625,
+        "statistically_significant_05": true
+      }
+    },
+    "excluding_ambiguous_case_n199": {
+      "condition_e_em_count": 108,
+      "condition_e_em_pct": 54.27,
+      "condition_d_em_count": 99,
+      "condition_d_em_pct": 49.75,
+      "paired_e_vs_d": {
+        "status": "computed",
+        "total_n": 199,
+        "contingency_table": {
+          "a_both_positive": 96,
+          "b_cond1_pos_cond2_neg": 12,
+          "c_cond1_neg_cond2_pos": 3,
+          "d_both_negative": 88
+        },
+        "discordant_pairs": 15,
+        "cond1_wins": 12,
+        "cond2_wins": 3,
+        "net_wins_cond1": 9,
+        "risk_difference": 0.0452,
+        "risk_difference_ci_95": [
+          0.0076,
+          0.0829
+        ],
+        "odds_ratio": 4.0,
+        "p_value": 0.03515625,
+        "statistically_significant_05": true
+      }
+    }
+  },
+  "discordant_analysis": {
+    "wins_count": 12,
+    "losses_count": 3,
+    "wins": [
+      {
+        "case_id": "4a3eb5f5ce6a4a35a4c3f321c1272d67",
+        "question": "what is the area code for phoenix arizona",
+        "gold_answer": "602",
+        "condition_d_prediction": "Insufficient information",
+        "condition_e_prediction": "602",
+        "provenance": {
+          "source": "gate_2_stage_2b_eval_records.jsonl",
+          "reused": true
+        }
+      },
+      {
+        "case_id": "e6bfa9f3feec4291a24060e39f516a5b",
+        "question": "what is the second book in the alchemyst series",
+        "gold_answer": "The Magician",
+        "condition_d_prediction": "Insufficient information",
+        "condition_e_prediction": "The Magician",
+        "provenance": {
+          "source": "gate_2_stage_2b_eval_records.jsonl",
+          "reused": true
+        }
+      },
+      {
+        "case_id": "363edbaa51694fedbd2a264c881f23a1",
+        "question": "what part of maryland is close to washington dc",
+        "gold_answer": "Calvert County",
+        "condition_d_prediction": "Insufficient information",
+        "condition_e_prediction": "Frederick County",
+        "provenance": {
+          "source": "gate_2_stage_2b_eval_records.jsonl",
+          "reused": true
+        }
+      },
+      {
+        "case_id": "8fe0d283d48f40cdba0e1d8084316c79",
+        "question": "who played the detective in little boy blue",
+        "gold_answer": "Stephen Graham",
+        "condition_d_prediction": "Insufficient information",
+        "condition_e_prediction": "Stephen Graham",
+        "provenance": {
+          "source": "gate_2_stage_2b_eval_records.jsonl",
+          "reused": true
+        }
+      },
+      {
+        "case_id": "bd673bbbf88e48ff8c31c633d1348df3",
+        "question": "when was the last time the womens hockey team won gold",
+        "gold_answer": "2018",
+        "condition_d_prediction": "Insufficient information",
+        "condition_e_prediction": "2018",
+        "provenance": {
+          "source": "gate_2_stage_2b_eval_records.jsonl",
+          "reused": true
+        }
+      },
+      {
+        "case_id": "122e005cbafc4d7abbaa854110fa0871",
+        "question": "who won the oscar for best actor in 1975",
+        "gold_answer": "Art Carney",
+        "condition_d_prediction": "Dustin Hoffman",
+        "condition_e_prediction": "Art Carney",
+        "provenance": {
+          "source": "live_generation",
+          "reused": false
+        }
+      },
+      {
+        "case_id": "f3bd270e6e394b4c8faef3f8ea8d5c92",
+        "question": "when did world war 2 end in the pacific",
+        "gold_answer": "September 2 , 1945",
+        "condition_d_prediction": "Insufficient information",
+        "condition_e_prediction": "September 2, 1945",
+        "provenance": {
+          "source": "gate_2_stage_2b_eval_records.jsonl",
+          "reused": true
+        }
+      },
+      {
+        "case_id": "521b6a03b8704833bc756935b19fd05c",
+        "question": "who played the little boy in polar express",
+        "gold_answer": "Dante Pastula",
+        "condition_d_prediction": "Insufficient information",
+        "condition_e_prediction": "Dante Pastula",
+        "provenance": {
+          "source": "gate_2_stage_2b_eval_records.jsonl",
+          "reused": true
+        }
+      },
+      {
+        "case_id": "3d3088e34ece49d8b9850f44ff05c029",
+        "question": "who plays big momma in big mommas house",
+        "gold_answer": "Martin Lawrence",
+        "condition_d_prediction": "Insufficient information",
+        "condition_e_prediction": "Martin Lawrence",
+        "provenance": {
+          "source": "gate_2_stage_2b_eval_records.jsonl",
+          "reused": true
+        }
+      },
+      {
+        "case_id": "023650271daf4ad596af126bd186bf80",
+        "question": "what is the zebras name in peppa pig",
+        "gold_answer": "Zoe Zebra",
+        "condition_d_prediction": "Insufficient information",
+        "condition_e_prediction": "Zoe Zebra",
+        "provenance": {
+          "source": "gate_2_stage_2b_eval_records.jsonl",
+          "reused": true
+        }
+      },
+      {
+        "case_id": "04070d67a81e4db486e31787ca7aa5bf",
+        "question": "uruguay is located along what body of water",
+        "gold_answer": "Bay of Montevideo",
+        "condition_d_prediction": "Insufficient information",
+        "condition_e_prediction": "Bay of Montevideo",
+        "provenance": {
+          "source": "gate_2_stage_2b_eval_records.jsonl",
+          "reused": true
+        }
+      },
+      {
+        "case_id": "c530f07f4ff040f5925b9a3599d9fb19",
+        "question": "who plays the queen in victoria and abdul",
+        "gold_answer": "Judi Dench",
+        "condition_d_prediction": "Insufficient information",
+        "condition_e_prediction": "Judi Dench",
+        "provenance": {
+          "source": "gate_2_stage_2b_eval_records.jsonl",
+          "reused": true
+        }
+      }
+    ],
+    "losses": [
+      {
+        "case_id": "3f5983b2021c43aabd1bda0c71bb6f9e",
+        "question": "who is the minister of youth in namibia",
+        "gold_answer": "Erastus Utoni",
+        "condition_d_prediction": "Erastus Utoni",
+        "condition_e_prediction": "Insufficient information",
+        "provenance": {
+          "source": "live_generation",
+          "reused": false
+        }
+      },
+      {
+        "case_id": "ef634417fddf44d3b9c53ffd9d13dac8",
+        "question": "who sings the song rock you like a hurricane",
+        "gold_answer": "Scorpions",
+        "condition_d_prediction": "Scorpions",
+        "condition_e_prediction": "Rudolf Schenker, Klaus Meine, Herman Rarebell",
+        "provenance": {
+          "source": "live_generation",
+          "reused": false
+        }
+      },
+      {
+        "case_id": "8f1f9bd984574fd8a829c80f8974ff13",
+        "question": "what is the definition of the name thomas",
+        "gold_answer": "twin",
+        "condition_d_prediction": "Twin",
+        "condition_e_prediction": "Aramaic: twin",
+        "provenance": {
+          "source": "live_generation",
+          "reused": false
+        }
+      }
+    ]
+  }
+}

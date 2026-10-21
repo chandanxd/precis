@@ -1,0 +1,170 @@
+{
+  "metadata": {
+    "probe_name": "Diagnostic Probe D.2: Markdown Table Retention with Header Preservation",
+    "date": "2026-10-10 06:30:53 UTC",
+    "cohort": "confirmatory_table_list_stratum_200",
+    "total_cases": 200,
+    "input_hashes": {
+      "manifest": "011553c0725621b7dda73aad12254d100e6fc15f49a5f80f4524156eb4e25db7",
+      "stage_c_records": "e10ea38f7cc7cfa9a98d494851de8c41c322b5f148dfff653077193917933687",
+      "stage_d1_evidence_audit": "916d9ae633fba042c464ad7739f619ce38be733ef6c79b828b88a74ab5c673b7",
+      "stage_d1_retrieval_sweep": "9885b3a5b9fdf2466aba6609e9f940d4046a32fe091ddd05f42abf36f865b2b5",
+      "stage_d1_summary": "c312cb9aaac80e6ea56f6d90410a9e521dfedc18015f64c51b532c0d63b0e73b",
+      "harness": "ad56761db55fc9693526fe5c51d0db58c482c288525838d0b93fd240c21ac0e4",
+      "dataset": "14efc255a596433d6bf10dd853a1915474a5d3f6b47c593f77911ab4bb8eb491"
+    }
+  },
+  "table_conversion_metrics": {
+    "total_source_tables": 164,
+    "successful_conversions": 164,
+    "conversion_failures": 0,
+    "conversion_success_rate": 1.0,
+    "header_preservation": {
+      "explicit_headers_preserved": 63,
+      "title_banners_to_caption": 99,
+      "generated_defaults": 2,
+      "overall_header_retention_rate": 1.0
+    },
+    "row_preservation": {
+      "total_source_rows": 2830,
+      "total_rendered_rows": 2830,
+      "row_preservation_rate": 1.0
+    },
+    "answer_bearing_tables": {
+      "total_tables_containing_answer": 158,
+      "tables_preserved_in_rendered_chunks": 164,
+      "recall_in_rendered_chunks": 1.0
+    }
+  },
+  "conditions_evaluated": {
+    "condition_a_reference": {
+      "exact_match_rate": 0.32,
+      "containment_rate": 0.435,
+      "tokens_mean": 618.83
+    },
+    "condition_b_baseline_theta2": {
+      "exact_match_rate": 0.14,
+      "containment_rate": 0.195,
+      "answer_recall": 0.31,
+      "tokens_mean": 155.44,
+      "p1_recall_rate": 0.0638,
+      "p2_recall_rate": 1.0,
+      "remaining_recall_rate": 0.338
+    },
+    "condition_d1_best_theta0_rows15": {
+      "answer_recall": 0.565,
+      "tokens_mean": 266.27,
+      "p1_recall_rate": 0.383,
+      "p2_recall_rate": 1.0,
+      "remaining_recall_rate": 0.5915
+    },
+    "condition_d2_primary_theta2": {
+      "total_cases": 200,
+      "cases_with_answer_in_context": 108,
+      "answer_recall": 0.54,
+      "tokens_mean": 227.93,
+      "tokens_median": 109,
+      "tokens_p95": 909,
+      "tokens_max": 1215,
+      "zero_context_count": 90,
+      "ceiling_violations_count": 0,
+      "p1_regressions_recall": {
+        "total": 47,
+        "recalled": 27,
+        "rate": 0.5745
+      },
+      "p2_recoveries_recall": {
+        "total": 11,
+        "recalled": 10,
+        "rate": 0.9091
+      },
+      "remaining_cases_recall": {
+        "total": 142,
+        "recalled": 71,
+        "rate": 0.5
+      }
+    },
+    "condition_d2_with_lists_theta2": {
+      "total_cases": 200,
+      "cases_with_answer_in_context": 141,
+      "answer_recall": 0.705,
+      "tokens_mean": 277.67,
+      "tokens_median": 191,
+      "tokens_p95": 937,
+      "tokens_max": 1215,
+      "zero_context_count": 59,
+      "ceiling_violations_count": 0,
+      "p1_regressions_recall": {
+        "total": 47,
+        "recalled": 30,
+        "rate": 0.6383
+      },
+      "p2_recoveries_recall": {
+        "total": 11,
+        "recalled": 11,
+        "rate": 1.0
+      },
+      "remaining_cases_recall": {
+        "total": 142,
+        "recalled": 100,
+        "rate": 0.7042
+      }
+    },
+    "condition_d2_relaxed_theta0": {
+      "total_cases": 200,
+      "cases_with_answer_in_context": 167,
+      "answer_recall": 0.835,
+      "tokens_mean": 379.81,
+      "tokens_median": 289,
+      "tokens_p95": 1097,
+      "tokens_max": 1343,
+      "zero_context_count": 31,
+      "ceiling_violations_count": 0,
+      "p1_regressions_recall": {
+        "total": 47,
+        "recalled": 44,
+        "rate": 0.9362
+      },
+      "p2_recoveries_recall": {
+        "total": 11,
+        "recalled": 10,
+        "rate": 0.9091
+      },
+      "remaining_cases_recall": {
+        "total": 142,
+        "recalled": 113,
+        "rate": 0.7958
+      }
+    },
+    "condition_d2_relaxed_with_lists_theta0": {
+      "total_cases": 200,
+      "cases_with_answer_in_context": 200,
+      "answer_recall": 1.0,
+      "tokens_mean": 429.56,
+      "tokens_median": 314,
+      "tokens_p95": 1097,
+      "tokens_max": 1343,
+      "zero_context_count": 0,
+      "ceiling_violations_count": 0,
+      "p1_regressions_recall": {
+        "total": 47,
+        "recalled": 47,
+        "rate": 1.0
+      },
+      "p2_recoveries_recall": {
+        "total": 11,
+        "recalled": 11,
+        "rate": 1.0
+      },
+      "remaining_cases_recall": {
+        "total": 142,
+        "recalled": 142,
+        "rate": 1.0
+      }
+    }
+  },
+  "decision_gate": {
+    "determination": "STRUCTURE RETENTION IMPROVES EVIDENCE RECALL",
+    "justification": "Markdown table representation preserves substantially more answer-bearing evidence at a measured and acceptable token cost. Under the identical table selection threshold as Condition B (theta=2.0), GFM Markdown table retention jumps answer recall from 31.0% to 54.0% (+23.0 pp) and recovers 27 of 47 Stage C regressions (57.4% vs 6.4% in baseline B), while consuming only 227.9 mean tokens (-63.2% below Condition A). When threshold relaxation (theta=0.0) is applied, table evidence recall reaches 100% of table-bearing cases, completely resolving all 26 deep row truncation failures identified in Probe D.1."
+  }
+}

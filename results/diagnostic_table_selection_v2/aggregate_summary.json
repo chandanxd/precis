@@ -1,0 +1,193 @@
+{
+  "timestamp": "2026-10-09 16:21:57 UTC",
+  "experiment_duration_sec": 2640.0,
+  "configuration": {
+    "model": "qwen2.5-coder:7b",
+    "temperature": 0.0,
+    "top_p": 0.9,
+    "max_tokens": 512,
+    "seed": 42,
+    "context_ceiling": 2048,
+    "prompt_style": "concise"
+  },
+  "preflight": {
+    "passed": true,
+    "tests": {
+      "1_header_alignment": {
+        "passed": true
+      },
+      "2_category_column_exclusion": {
+        "passed": true,
+        "resolved": [
+          "mercury"
+        ]
+      },
+      "3_hearst_pattern_group_exclusion": {
+        "passed": true,
+        "resolved": [
+          "lake superior",
+          "lake huron"
+        ]
+      },
+      "4_individual_entity_except": {
+        "passed": true
+      },
+      "5_negation_scope_precision": {
+        "passed": true
+      },
+      "6_ambiguous_group_fallback": {
+        "passed": true
+      },
+      "7_typed_qualifiers_flash_ep3": {
+        "passed": true,
+        "top_row": {
+          "No. overall": "72",
+          "No. in season": "3",
+          "Title": "Luck Be a Lady",
+          "Original air date": "October 24, 2017"
+        }
+      },
+      "8_budget_caps_enforcement": {
+        "passed": true,
+        "count": 5
+      },
+      "9_global_row_scope": {
+        "passed": true
+      },
+      "10_cohort_a_recovery_under_v2": {
+        "passed": true,
+        "recovered": "6/6"
+      }
+    }
+  },
+  "cohort_b_regression_audit": {
+    "num_samples": 50,
+    "em_regressions_vs_baseline": 0,
+    "containment_regressions_vs_baseline": 1,
+    "avg_baseline_tokens": 262.84,
+    "avg_cond_c_tokens": 288.88,
+    "context_overhead_pct": 9.91,
+    "guardrail_passed": true
+  },
+  "confirmatory_evaluation": {
+    "table_bearing_stratum": {
+      "stratum": "table_bearing",
+      "sample_size": 200,
+      "em_baseline": 0.415,
+      "em_cond_b_frozen": 0.465,
+      "em_cond_b_approved": 0.44,
+      "em_cond_c": 0.405,
+      "em_cond_c1": 0.43,
+      "em_cond_c2": 0.425,
+      "em_delta_vs_a": -0.01,
+      "em_discordant_wins": 7,
+      "em_discordant_losses": 9,
+      "em_mcnemar_p_value": 0.80362,
+      "containment_baseline": 0.505,
+      "containment_cond_b_frozen": 0.61,
+      "containment_cond_b_approved": 0.565,
+      "containment_cond_c": 0.52,
+      "containment_cond_c1": 0.545,
+      "containment_cond_c2": 0.545,
+      "containment_delta_vs_a": 0.015,
+      "containment_discordant_wins": 9,
+      "containment_discordant_losses": 6,
+      "containment_mcnemar_p_value": 0.60724,
+      "avg_baseline_tokens": 626.22,
+      "avg_cond_b_frozen_tokens": 1155.52,
+      "avg_cond_b_approved_tokens": 1037.79,
+      "avg_cond_c_tokens": 745.21,
+      "avg_cond_c1_tokens": 780.12,
+      "avg_cond_c2_tokens": 831.98,
+      "token_growth_pct_vs_a": 19.0,
+      "token_reduction_pct_vs_bf": -35.51,
+      "wilcoxon_tokens_c_vs_a_p_value": 0.0,
+      "wilcoxon_tokens_c_vs_bf_p_value": 0.0
+    },
+    "prose_only_stratum": {
+      "stratum": "prose_only",
+      "sample_size": 100,
+      "em_baseline": 0.42,
+      "em_cond_b_frozen": 0.42,
+      "em_cond_b_approved": 0.42,
+      "em_cond_c": 0.42,
+      "em_cond_c1": 0.42,
+      "em_cond_c2": 0.42,
+      "em_delta_vs_a": 0.0,
+      "em_discordant_wins": 0,
+      "em_discordant_losses": 0,
+      "em_mcnemar_p_value": 1.0,
+      "containment_baseline": 0.48,
+      "containment_cond_b_frozen": 0.48,
+      "containment_cond_b_approved": 0.48,
+      "containment_cond_c": 0.48,
+      "containment_cond_c1": 0.48,
+      "containment_cond_c2": 0.48,
+      "containment_delta_vs_a": 0.0,
+      "containment_discordant_wins": 0,
+      "containment_discordant_losses": 0,
+      "containment_mcnemar_p_value": 1.0,
+      "avg_baseline_tokens": 287.14,
+      "avg_cond_b_frozen_tokens": 287.14,
+      "avg_cond_b_approved_tokens": 287.14,
+      "avg_cond_c_tokens": 287.14,
+      "avg_cond_c1_tokens": 287.14,
+      "avg_cond_c2_tokens": 287.14,
+      "token_growth_pct_vs_a": 0.0,
+      "token_reduction_pct_vs_bf": 0.0,
+      "wilcoxon_tokens_c_vs_a_p_value": 1.0,
+      "wilcoxon_tokens_c_vs_bf_p_value": 1.0
+    },
+    "combined_stratum": {
+      "stratum": "combined_all",
+      "sample_size": 300,
+      "em_baseline": 0.4167,
+      "em_cond_b_frozen": 0.45,
+      "em_cond_b_approved": 0.4333,
+      "em_cond_c": 0.41,
+      "em_cond_c1": 0.4267,
+      "em_cond_c2": 0.4233,
+      "em_delta_vs_a": -0.0067,
+      "em_discordant_wins": 7,
+      "em_discordant_losses": 9,
+      "em_mcnemar_p_value": 0.80362,
+      "containment_baseline": 0.4967,
+      "containment_cond_b_frozen": 0.5667,
+      "containment_cond_b_approved": 0.5367,
+      "containment_cond_c": 0.5067,
+      "containment_cond_c1": 0.5233,
+      "containment_cond_c2": 0.5233,
+      "containment_delta_vs_a": 0.01,
+      "containment_discordant_wins": 9,
+      "containment_discordant_losses": 6,
+      "containment_mcnemar_p_value": 0.60724,
+      "avg_baseline_tokens": 513.19,
+      "avg_cond_b_frozen_tokens": 866.06,
+      "avg_cond_b_approved_tokens": 787.57,
+      "avg_cond_c_tokens": 592.52,
+      "avg_cond_c1_tokens": 615.79,
+      "avg_cond_c2_tokens": 650.37,
+      "token_growth_pct_vs_a": 15.46,
+      "token_reduction_pct_vs_bf": -31.58,
+      "wilcoxon_tokens_c_vs_a_p_value": 0.0,
+      "wilcoxon_tokens_c_vs_bf_p_value": 0.0
+    },
+    "holm_fwer_secondary_family": {
+      "tokens_vs_a": {
+        "raw_p": 0.0,
+        "alpha_target": 0.01667,
+        "significant": true
+      },
+      "tokens_reduction_vs_bf": {
+        "raw_p": 0.0,
+        "alpha_target": 0.025,
+        "significant": true
+      },
+      "containment_vs_a": {
+        "raw_p": 0.60724,
+        "alpha_target": 0.05,
+        "significant": false
+      }
+    }
+  }
+}

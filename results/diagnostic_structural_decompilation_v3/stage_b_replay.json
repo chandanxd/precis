@@ -1,0 +1,25 @@
+{
+  "cohort_name": "stage_b_diagnostic_replay",
+  "n_unique_samples": 59,
+  "cond_a": {
+    "em": 0.6271186440677966,
+    "containment": 0.7288135593220338,
+    "avg_tokens": 346.2881355932203
+  },
+  "cond_b": {
+    "em": 0.6101694915254238,
+    "containment": 0.711864406779661,
+    "avg_tokens": 232.52542372881356,
+    "overhead_vs_a": -0.32852038568841463,
+    "em_wins": 1,
+    "em_losses": 2
+  },
+  "cond_c": {
+    "em": 0.6440677966101694,
+    "containment": 0.7288135593220338,
+    "avg_tokens": 232.59322033898306,
+    "overhead_vs_a": -0.3283246047672654,
+    "em_wins": 2,
+    "em_losses": 1
+  }
+}

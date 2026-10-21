@@ -1,0 +1,61 @@
+review_id,output,label,borderline,note
+REV_01,A,evidence insufficiency,no,the passage doesnt mention anything about the leader of punic war
+REV_01,B,evidence insufficiency,no,"both the outputs are correct, but output b gave info that wasnt required. It could be relevant when asked but not initially."
+REV_02,A,conversational mismatch,no,this output adds content that wasnt required and wasnt asked
+REV_02,B,pass,no,the answer matches the gold answer and the first letter uppercase doesnt matter much as it can be fixed by llm when giving an output
+REV_03,A,conversational mismatch,no,the excess information is unnecessary 
+REV_03,B,evidence insufficiency,no,there’s no for who played yoda in the given facts
+REV_04,A,other,no,the outputs match the content from the facts given but i dont know where the gold answer is taken from
+REV_04,B,other,no,"if the test dataset had the gold answer, i think i can say that the dataset is false(?)"
+REV_05,A,other,no,both the outputs are right in a way
+REV_05,B,other,no,"I’ve marked them as other because they dont match the gold answer. But in my pov, the gold answer is incomplete rather than the outputs being conversational mismatch. I consider them both pass"
+REV_06,A,other,no,"according to the facts, the answer is correct, so pass"
+REV_06,B,other,no,this is more of conversational mismatch because it talks a lot of unnecessary stuff and the answer differs from the gold answer. But the gold answer itself is incorrect according to the facts
+REV_07,A,conversational mismatch,no,"it just a bit of extra wording, doesn’t matter but that’s how it is"
+REV_07,B,pass,no,this passes with a perfect match with the gold answer
+REV_08,A,evidence insufficiency,no,it doesnt talk anything about what the current time in alaska is
+REV_08,B,hallucination,no,"it extracted the time offset, which is not the actual time"
+REV_09,A,conversational mismatch,no,it has all the correct info but it also talks about where it took place which is irrelevant for this question
+REV_09,B,conversational mismatch,no,good but has a bit more info than the gold answer
+REV_10,A,conversational mismatch,yes,hesitated between pass and conversational mismatch because the president is an extra word
+REV_10,B,pass,no,this is on-point and concise and clear
+REV_11,A,conversational mismatch,no,"the question who is krishna’s son, not who is krishna wife and her son’s name"
+REV_11,B,pass,no,this passes and matches the gold answer
+REV_12,A,evidence insufficiency,no,the data is a table which makes it hard to process and very vague as the table is not accurately made
+REV_12,B,hallucination,no,miami dolphins is not even mentioned among the facts
+REV_13,A,conversational mismatch,no,it mentions abigail hawk but has unwanted info
+REV_13,B,incomplete entity,no,it has abigail but not hawk
+REV_14,A,other,no,the model has failed understand the facts properly
+REV_14,B,pass,no,this worked and extracted the answer properly
+REV_15,A,conversational mismatch,no,both outputs mention the gold answer as a part of them but with extra stuff
+REV_15,B,conversational mismatch,no,but i also think that the facts were not extracted properly
+REV_16,A,conversational mismatch,no,
+REV_16,B,pass,no,
+REV_17,A,other,no,the answer / outputs are correct if you look at the give facts
+REV_17,B,other,no,but the gold answer looks wrong
+REV_18,A,incomplete entity,no,doesnt mention the edt part
+REV_18,B,conversational mismatch,ni,
+REV_19,A,pass,no,the answer is correct
+REV_19,B,other,no,the way the llm understood this is wrong move
+REV_20,A,evidence insufficiency,no,
+REV_20,B,pass,no,
+REV_21,A,conversational mismatch,ni,it just adds a bit of the question and family name which is not required
+REV_21,B,pass,no,this is correct
+REV_22,A,evidence insufficiency,no,the llm didnt process it properly
+REV_22,B,incomplete entity,no,the answer is okay but isnt the same as the gold answer
+REV_23,A,conversational mismatch,no,talks about india act which is not being asked about here
+REV_23,B,conversational mismatch,no,kinda pass but redundant stuff
+REV_24,A,pass,no,"this is good, but the gold answer doesnt have all the info properly extracted"
+REV_24,B,evidence insufficiency,ni,the llm didnt understand properly
+REV_25,A,conversational mismatch,no,
+REV_25,B,conversational mismatch,no,
+REV_26,A,pass,no,
+REV_26,B,evidence insufficiency,no,the extraction was not correct ig
+REV_27,A,evidence insufficiency,no,there’s no info for this
+REV_27,B,evidence insufficiency,no,no info provided about the question (it’s contents) asked
+REV_28,A,pass,no,
+REV_28,B,pass,no,
+REV_29,A,other,no,the input is in table-ish which made it harder after to extract to get proper info
+REV_29,B,other,no,
+REV_30,A,hallucination,,
+REV_30,B,evidence insufficiency,,

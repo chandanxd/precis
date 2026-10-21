@@ -1,0 +1,61 @@
+{
+  "audit_target": "Experiment 4.5.6 Phase 1 Preflight Test Accounting",
+  "timestamp": "2026-10-10T22:58:00+05:30",
+  "total_unique_collected_tests": 476,
+  "total_passed": 476,
+  "total_failed": 0,
+  "total_skipped": 0,
+  "suite_breakdown": [
+    {
+      "suite_name": "Full Backend Test Suite",
+      "path": "backend/tests/",
+      "collected": 418,
+      "passed": 418,
+      "failed": 0,
+      "skipped": 0,
+      "command": "./backend/venv/bin/pytest backend/tests/"
+    },
+    {
+      "suite_name": "Persistence & Remediation Audit Suite",
+      "path": "scripts/test_experiment_4_5_persistence_audit.py",
+      "collected": 25,
+      "passed": 25,
+      "failed": 0,
+      "skipped": 0,
+      "command": "./backend/venv/bin/pytest scripts/test_experiment_4_5_persistence_audit.py -v"
+    },
+    {
+      "suite_name": "Experiment 4.2 Integrity Suite",
+      "path": "scripts/test_experiment_4_2_integrity.py",
+      "collected": 13,
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "command": "./backend/venv/bin/pytest scripts/test_experiment_4_2_integrity.py -v"
+    },
+    {
+      "suite_name": "Experiment 4.3 Fixtures Suite",
+      "path": "scripts/test_experiment_4_3_fixtures.py",
+      "collected": 5,
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0,
+      "command": "./backend/venv/bin/pytest scripts/test_experiment_4_3_fixtures.py -v"
+    },
+    {
+      "suite_name": "Experiment 4.4 Extractor Audit Suite",
+      "path": "scripts/test_experiment_4_4_audit_extractor.py",
+      "collected": 15,
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0,
+      "command": "./backend/venv/bin/pytest scripts/test_experiment_4_4_audit_extractor.py -v"
+    }
+  ],
+  "disjointness_verification": "Verified: Zero shared test node IDs between backend/tests/ and any scripts/ test file.",
+  "gate5_preflight_probes": {
+    "cohort_provenance": "100% match across all 200 cases and frozen A-E records (0 mismatches)",
+    "deterministic_lifecycle": "11/11 lifecycle checks passed on frozen HTML docs via REST and WebSocket",
+    "retrieval_and_budget_safety": "7/7 probes passed (DEFECT-01 fixed, DEFECT-03 fixed, tie-breaking deterministic, chunk limit 3, budget ceiling 2048 obeyed, ARCH-01 limitation characterized)"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "passed": true,
+  "tests": {
+    "1_header_alignment": {
+      "passed": true
+    },
+    "2_category_column_exclusion": {
+      "passed": true,
+      "resolved": [
+        "mercury"
+      ]
+    },
+    "3_hearst_pattern_group_exclusion": {
+      "passed": true,
+      "resolved": [
+        "lake superior",
+        "lake huron"
+      ]
+    },
+    "4_individual_entity_except": {
+      "passed": true
+    },
+    "5_negation_scope_precision": {
+      "passed": true
+    },
+    "6_ambiguous_group_fallback": {
+      "passed": true
+    },
+    "7_typed_qualifiers_flash_ep3": {
+      "passed": true,
+      "top_row": {
+        "No. overall": "72",
+        "No. in season": "3",
+        "Title": "Luck Be a Lady",
+        "Original air date": "October 24, 2017"
+      }
+    },
+    "8_budget_caps_enforcement": {
+      "passed": true,
+      "count": 5
+    },
+    "9_global_row_scope": {
+      "passed": true
+    },
+    "10_cohort_a_recovery_under_v2": {
+      "passed": true,
+      "recovered": "6/6"
+    }
+  }
+}

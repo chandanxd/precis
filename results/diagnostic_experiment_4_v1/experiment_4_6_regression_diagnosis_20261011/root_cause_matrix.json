@@ -1,0 +1,319 @@
+{
+  "case_findings": [
+    {
+      "case_id": "930786840c6b41ec962f0cb6a052242b",
+      "question": "wolf of wall street number of f words",
+      "gold_answer": "569",
+      "cond_d_pred": "569",
+      "cond_f_pred": "The Wolf of Wall Street contains 8.35 f-words.",
+      "cond_d_em": true,
+      "cond_f_em": false,
+      "cond_d_cont": true,
+      "cond_f_cont": false,
+      "evidence_in_context": true,
+      "semantic_binding_intact": false,
+      "earliest_failure_point": "context_packing",
+      "primary_cause": "hybrid_svoa_fact_contamination",
+      "secondary_causes": [
+        "table_column_alignment_error"
+      ],
+      "confidence": "HIGH",
+      "notes": "Context packed 2 table chunks followed by 32 scrambled SVOA facts. Model confused column 8.35 (uses/min of Swearnet) with 569 count."
+    },
+    {
+      "case_id": "f89cf8b19f694d918051b0aaac628643",
+      "question": "who wrote the declaration of man and citizen",
+      "gold_answer": "General Lafayette , ( sometimes with Thomas Jefferson ) and Honor\u00e9 Mirabeau",
+      "cond_d_pred": "General Lafayette, sometimes with Thomas Jefferson, and Honor\u00e9 Mirabeau",
+      "cond_f_pred": "General Lafayette",
+      "cond_d_em": true,
+      "cond_f_em": false,
+      "cond_d_cont": true,
+      "cond_f_cont": false,
+      "evidence_in_context": true,
+      "semantic_binding_intact": true,
+      "earliest_failure_point": "output_scoring",
+      "primary_cause": "evaluation_surface_variation",
+      "secondary_causes": [
+        "partial_gold_extraction"
+      ],
+      "confidence": "HIGH",
+      "notes": "Model accurately extracted primary author General Lafayette from Author row, omitting parenthetical co-authors."
+    },
+    {
+      "case_id": "8b41e6511ab041aa990a3f1e85ec6a36",
+      "question": "who is the supreme justice of the supreme court",
+      "gold_answer": "John Roberts",
+      "cond_d_pred": "John Roberts",
+      "cond_f_pred": "John Jay",
+      "cond_d_em": true,
+      "cond_f_em": false,
+      "cond_d_cont": true,
+      "cond_f_cont": false,
+      "evidence_in_context": true,
+      "semantic_binding_intact": false,
+      "earliest_failure_point": "context_packing",
+      "primary_cause": "hybrid_svoa_fact_contamination",
+      "secondary_causes": [
+        "svoa_present_tense_hallucination",
+        "historical_distractor_confusion"
+      ],
+      "confidence": "HIGH",
+      "notes": "Table had both Incumbent John Roberts and Inaugural holder John Jay. Fact 1 asserted John Jay serves as Chief Justice, prompting model to predict John Jay."
+    },
+    {
+      "case_id": "b786366cbb7242aea1e9f08fbeacad0d",
+      "question": "who has the most ncaa basketball tournament appearances",
+      "gold_answer": "Kentucky",
+      "cond_d_pred": "Kentucky",
+      "cond_f_pred": "Based on the information provided in the facts, Kansas has the most NCAA basketball tournament appearances with 31.",
+      "cond_d_em": true,
+      "cond_f_em": false,
+      "cond_d_cont": true,
+      "cond_f_cont": false,
+      "evidence_in_context": true,
+      "semantic_binding_intact": false,
+      "earliest_failure_point": "context_packing",
+      "primary_cause": "hybrid_svoa_fact_contamination",
+      "secondary_causes": [
+        "conversational_preamble_insertion",
+        "svoa_triple_distractor_flooding"
+      ],
+      "confidence": "HIGH",
+      "notes": "Table had Kentucky with 57 bids. SVOA facts repeated Kansas with 31 across 7 facts, causing model to cite facts and predict Kansas."
+    },
+    {
+      "case_id": "44408e374eb84b7fb309aa1ca5916278",
+      "question": "what is the 3rd largest state in usa",
+      "gold_answer": "California",
+      "cond_d_pred": "California",
+      "cond_f_pred": "Based on the data provided in the facts, the 3rd largest state in the USA is California.",
+      "cond_d_em": true,
+      "cond_f_em": false,
+      "cond_d_cont": true,
+      "cond_f_cont": true,
+      "evidence_in_context": true,
+      "semantic_binding_intact": true,
+      "earliest_failure_point": "output_formatting",
+      "primary_cause": "conversational_preamble_insertion",
+      "secondary_causes": [
+        "hybrid_svoa_fact_contamination"
+      ],
+      "confidence": "HIGH",
+      "notes": "Table had California Rank 3. 24 SVOA facts primed the conversational prefix. Containment is True; EM is False solely due to preamble."
+    },
+    {
+      "case_id": "d84f0eaa074c433695b53191098627c1",
+      "question": "when did lionel messi play his first game for barcelona",
+      "gold_answer": "2001",
+      "cond_d_pred": "2001",
+      "cond_f_pred": "2004",
+      "cond_d_em": true,
+      "cond_f_em": false,
+      "cond_d_cont": true,
+      "cond_f_cont": false,
+      "evidence_in_context": true,
+      "semantic_binding_intact": true,
+      "earliest_failure_point": "ambiguous_premise",
+      "primary_cause": "benchmark_premise_ambiguity",
+      "secondary_causes": [
+        "hybrid_svoa_fact_contamination"
+      ],
+      "confidence": "HIGH",
+      "notes": "Table distinguishes Youth career (2001) from Senior career (2004). Query does not specify youth vs senior. SVOA facts heavily emphasized 2004."
+    },
+    {
+      "case_id": "cf2d77b03e924c5185c68c3418114ac0",
+      "question": "who got the first arjun award in athletics",
+      "gold_answer": "Gurbachan Singh Randhawa",
+      "cond_d_pred": "Gurbachan Singh Randhawa",
+      "cond_f_pred": "Insufficient information",
+      "cond_d_em": true,
+      "cond_f_em": false,
+      "cond_d_cont": true,
+      "cond_f_cont": false,
+      "evidence_in_context": false,
+      "semantic_binding_intact": false,
+      "earliest_failure_point": "retrieval_relevance_filter",
+      "primary_cause": "retrieval_relevance_filtering_false_negative",
+      "secondary_causes": [
+        "missing_document_title_grounding",
+        "svoa_prose_scrambling_fallback"
+      ],
+      "confidence": "HIGH",
+      "notes": "Table lacked document title in headers/caption, yielding sim=0.2296 (<0.25). Retriever discarded table; fallback SVOA facts scrambled Randhawa into Fact 7."
+    },
+    {
+      "case_id": "ef634417fddf44d3b9c53ffd9d13dac8",
+      "question": "who sings the song rock you like a hurricane",
+      "gold_answer": "Scorpions",
+      "cond_d_pred": "Scorpions",
+      "cond_f_pred": "Rudolf Schenker, Klaus Meine, Herman Rarebell",
+      "cond_d_em": true,
+      "cond_f_em": false,
+      "cond_d_cont": true,
+      "cond_f_cont": false,
+      "evidence_in_context": true,
+      "semantic_binding_intact": false,
+      "earliest_failure_point": "context_packing",
+      "primary_cause": "hybrid_svoa_fact_contamination",
+      "secondary_causes": [
+        "entity_role_confusion"
+      ],
+      "confidence": "HIGH",
+      "notes": "Table listed Single by Scorpions and Songwriter(s). SVOA facts repeated the songwriters 3 times, causing model to predict songwriters instead of band."
+    },
+    {
+      "case_id": "0541c730c2414d71b55608a01a487ccd",
+      "question": "when did last podcast on the left start",
+      "gold_answer": "2011",
+      "cond_d_pred": "2011",
+      "cond_f_pred": "2011 -- present",
+      "cond_d_em": true,
+      "cond_f_em": false,
+      "cond_d_cont": true,
+      "cond_f_cont": true,
+      "evidence_in_context": true,
+      "semantic_binding_intact": true,
+      "earliest_failure_point": "output_formatting",
+      "primary_cause": "evaluation_surface_variation",
+      "secondary_causes": [
+        "format_range_normalization"
+      ],
+      "confidence": "HIGH",
+      "notes": "Table lists Original release as 2011 -- present. Model extracted exact cell string. Containment is True; EM is False due to range hyphenation."
+    },
+    {
+      "case_id": "e44f257a404f4ebea90329a3928b1c62",
+      "question": "what was the first episode of season 2 riverdale",
+      "gold_answer": "Chapter Fourteen : A Kiss Before Dying",
+      "cond_d_pred": "Chapter Fourteen : A Kiss Before Dying",
+      "cond_f_pred": "Insufficient information",
+      "cond_d_em": true,
+      "cond_f_em": false,
+      "cond_d_cont": true,
+      "cond_f_cont": false,
+      "evidence_in_context": true,
+      "semantic_binding_intact": false,
+      "earliest_failure_point": "structural_extraction",
+      "primary_cause": "table_cell_value_omission",
+      "secondary_causes": [
+        "missing_section_header_context",
+        "chunk_rank_ordering_disruption"
+      ],
+      "confidence": "HIGH",
+      "notes": "Markdown table conversion left No. in season column blank. Table chunk lacked Season 2 section header, and vector search placed earlier episodes in Chunk 2."
+    },
+    {
+      "case_id": "1e07903c9cf74537affa95819a30deac",
+      "question": "who is known as the philippine queen of bossa nova",
+      "gold_answer": "Sitti Navarro",
+      "cond_d_pred": "Sitti Navarro",
+      "cond_f_pred": "Sitti Katrina Baiddin Navarro",
+      "cond_d_em": true,
+      "cond_f_em": false,
+      "cond_d_cont": true,
+      "cond_f_cont": false,
+      "evidence_in_context": true,
+      "semantic_binding_intact": true,
+      "earliest_failure_point": "output_scoring",
+      "primary_cause": "evaluation_surface_variation",
+      "secondary_causes": [
+        "full_legal_name_variation"
+      ],
+      "confidence": "HIGH",
+      "notes": "Table lists Sitti Navarro (stage name) and Sitti Katrina Baiddin Navarro (birth name). Model output full birth name, failing exact string match."
+    },
+    {
+      "case_id": "5868443c22ea4967b506165a6afc1c6e",
+      "question": "who is the supreme justice of the supreme court",
+      "gold_answer": "John Roberts",
+      "cond_d_pred": "John Roberts",
+      "cond_f_pred": "John Jay",
+      "cond_d_em": true,
+      "cond_f_em": false,
+      "cond_d_cont": true,
+      "cond_f_cont": false,
+      "evidence_in_context": true,
+      "semantic_binding_intact": false,
+      "earliest_failure_point": "context_packing",
+      "primary_cause": "hybrid_svoa_fact_contamination",
+      "secondary_causes": [
+        "svoa_present_tense_hallucination",
+        "historical_distractor_confusion"
+      ],
+      "confidence": "HIGH",
+      "notes": "Duplicate question/infobox of 8b41e651. Fact 1 asserted John Jay serves as Chief Justice, prompting model to predict John Jay."
+    },
+    {
+      "case_id": "42d988894e4a4b3999d70225eeda47e2",
+      "question": "which is the only test playing nation that india has never beat in t20",
+      "gold_answer": "Scotland",
+      "cond_d_pred": "Scotland",
+      "cond_f_pred": "Ireland",
+      "cond_d_em": true,
+      "cond_f_em": false,
+      "cond_d_cont": true,
+      "cond_f_cont": false,
+      "evidence_in_context": true,
+      "semantic_binding_intact": false,
+      "earliest_failure_point": "structural_extraction",
+      "primary_cause": "missing_column_headers",
+      "secondary_causes": [
+        "hybrid_svoa_fact_contamination",
+        "table_reasoning_error"
+      ],
+      "confidence": "HIGH",
+      "notes": "HTML conversion left columns 2-5 headers blank (Matches, Won, Lost, Tied). SVOA noise exacerbated reasoning error, resulting in Ireland."
+    }
+  ],
+  "shared_causes_summary": {
+    "hybrid_svoa_fact_contamination": {
+      "case_count": 8,
+      "case_ids": [
+        "930786840c6b41ec962f0cb6a052242b",
+        "8b41e6511ab041aa990a3f1e85ec6a36",
+        "b786366cbb7242aea1e9f08fbeacad0d",
+        "44408e374eb84b7fb309aa1ca5916278",
+        "d84f0eaa074c433695b53191098627c1",
+        "ef634417fddf44d3b9c53ffd9d13dac8",
+        "5868443c22ea4967b506165a6afc1c6e",
+        "42d988894e4a4b3999d70225eeda47e2"
+      ],
+      "status": "CONFIRMED"
+    },
+    "table_header_and_cell_structural_loss": {
+      "case_count": 3,
+      "case_ids": [
+        "e44f257a404f4ebea90329a3928b1c62",
+        "42d988894e4a4b3999d70225eeda47e2",
+        "930786840c6b41ec962f0cb6a052242b"
+      ],
+      "status": "CONFIRMED"
+    },
+    "retrieval_relevance_filtering_false_negative": {
+      "case_count": 1,
+      "case_ids": [
+        "cf2d77b03e924c5185c68c3418114ac0"
+      ],
+      "status": "CONFIRMED"
+    },
+    "evaluation_surface_variation": {
+      "case_count": 4,
+      "case_ids": [
+        "f89cf8b19f694d918051b0aaac628643",
+        "0541c730c2414d71b55608a01a487ccd",
+        "1e07903c9cf74537affa95819a30deac",
+        "44408e374eb84b7fb309aa1ca5916278"
+      ],
+      "status": "CONFIRMED"
+    },
+    "benchmark_premise_ambiguity": {
+      "case_count": 1,
+      "case_ids": [
+        "d84f0eaa074c433695b53191098627c1"
+      ],
+      "status": "CONFIRMED"
+    }
+  }
+}

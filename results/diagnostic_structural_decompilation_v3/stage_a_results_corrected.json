@@ -1,0 +1,77 @@
+{
+  "tests": {
+    "test_a1_great_lakes_leakage": {
+      "passed": true,
+      "clean_prose_len": 4,
+      "prose_facts": 0,
+      "leaked_facts": 0,
+      "struct_facts": 2,
+      "verified_historical_sid": "bad74caad55343f9ad68de7cd705689a",
+      "verified_salt_lake": true,
+      "verified_woods_lake": true
+    },
+    "test_a2_multi_row_multi_header_table": {
+      "passed": true
+    },
+    "test_a3_caption_and_headers": {
+      "passed": true
+    },
+    "test_a4_lists_nested_in_prose": {
+      "passed": true
+    },
+    "test_a5_surrounding_prose_preservation": {
+      "passed": true
+    },
+    "test_a6_abbreviations_and_dates": {
+      "passed": true
+    },
+    "test_a7_multiple_tables_in_document": {
+      "passed": true
+    },
+    "test_a8_prose_only_invariance": {
+      "passed": true
+    },
+    "test_a9_malformed_unclosed_html_recovery": {
+      "passed": true
+    },
+    "test_a10_conservative_cross_path_dedup": {
+      "passed": true,
+      "dedup_count": 2,
+      "total_facts": 14,
+      "reasons_tested": [
+        "EXACT_DUPLICATE_CORROBORATED",
+        "CONFLICT_TEMPORAL",
+        "CONFLICT_LOCATION",
+        "CONFLICT_ROLE",
+        "CONFLICT_MANNER",
+        "CONFLICT_QUALIFIER",
+        "MODALITY_MISMATCH"
+      ]
+    },
+    "test_a11_sortable_name_pattern1": {
+      "passed": true
+    },
+    "test_a12_source_provenance_and_ordering": {
+      "passed": true,
+      "prose_facts_count": 1,
+      "table_facts_count": 1,
+      "list_facts_count": 1,
+      "table_block_ids": [
+        "0"
+      ],
+      "list_block_ids": [
+        "1"
+      ]
+    },
+    "test_a13_structured_content_availability": {
+      "passed": true
+    },
+    "test_a14_legitimate_prose_preserved": {
+      "passed": true
+    },
+    "test_a15_nested_blocks_inside_cell": {
+      "passed": true
+    }
+  },
+  "all_passed": true
+}

@@ -1,0 +1,79 @@
+{
+  "cohort_accounting": {
+    "total_audited_cases": 61,
+    "priority_1_regressions_a_correct_b_incorrect": 47,
+    "priority_2_recoveries_a_incorrect_b_correct": 11,
+    "priority_3_prediction_divergence_b_vs_c": 4,
+    "unique_case_ids_count": 61
+  },
+  "regression_evidence_survival_breakdown_p1": {
+    "total_p1_regressions": 47,
+    "confirmed_missing_evidence_in_final_context": 44,
+    "confirmed_evidence_present_in_final_context": 3,
+    "zero_packed_context_tokens": 18,
+    "zero_structured_facts": 18,
+    "insufficient_information_total": 40,
+    "insufficient_information_despite_nonempty_context": 22
+  },
+  "primary_root_cause_distribution_all_audited": {
+    "Table/list extraction omission": 20,
+    "Baseline failure recovered: Noise reduction and structured row isolation": 11,
+    "Row/fact selection or ranking failure": 24,
+    "Metadata prompt perturbation (Pattern 1 unconditional adjunct insertion)": 3,
+    "Evidence present but generation failure": 1,
+    "Header-to-cell or entity-to-value binding failure": 1,
+    "Scoring/reference-answer formulation mismatch": 1
+  },
+  "primary_root_cause_distribution_p1_regressions_only": {
+    "Row/fact selection or ranking failure": 24,
+    "Table/list extraction omission": 20,
+    "Header-to-cell or entity-to-value binding failure": 1,
+    "Evidence present but generation failure": 1,
+    "Scoring/reference-answer formulation mismatch": 1
+  },
+  "contributing_cause_distribution": {
+    "Heuristic table score below threshold": 16,
+    "Literal keyword mismatch": 16,
+    "Baseline attention dilution / noisy context": 6,
+    "Structured adapter isolated exact target row": 6,
+    "Context starvation via row truncation": 24,
+    "Distractor entity prioritization": 24,
+    "Baseline raw HTML ceiling truncation/SVOA failure": 5,
+    "Decompilation recovered missing evidence": 5,
+    "Parser/document-boundary damage": 1,
+    "Header-to-cell or entity-to-value binding failure": 1,
+    "Sortable-name normalization error": 3,
+    "Zero actual sortable-name text changes": 3,
+    "List proposition regex pattern omission": 3,
+    "Actor-as-role pattern missing": 3,
+    "Qualifier, date, rank, negation, or relationship loss": 1,
+    "Evidence present but generation failure": 1,
+    "Row label misalignment": 1,
+    "Multi-entity prediction containing reference": 1
+  },
+  "confidence_accounting": {
+    "CONFIRMED": 61,
+    "LIKELY": 0,
+    "UNKNOWN": 0,
+    "untraceable_cases_count": 0
+  },
+  "pattern_1_ablation_forensics": {
+    "total_cases_evaluated": 200,
+    "cases_with_actual_cell_text_transformation": 3,
+    "case_ids_with_transformations": [
+      "17d9c792e7924e1a859eb73cb3671f70",
+      "ab744abcb9ee47cf9dfbec0a49335aa6",
+      "009fc8bae30f48b18d2c317acf80b554"
+    ],
+    "em_impact_from_transformations": 0,
+    "containment_impact_from_transformations": 0,
+    "cases_with_prediction_divergence_between_b_and_c": 4,
+    "case_ids_with_prediction_divergence": [
+      "2c62d7eb04924071959544f85e978b8b",
+      "64d578f5dec04579b6c1574a651ce239",
+      "ef634417fddf44d3b9c53ffd9d13dac8",
+      "122e005cbafc4d7abbaa854110fa0871"
+    ],
+    "cause_of_prediction_divergence": "Prompt perturbation from unconditional (name_normalized: true) metadata adjunct string injection in line 436"
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "timestamp": "2026-10-10T22:25:00+05:30",
+  "audit_target": "Experiment 4.5.4 Remediation",
+  "auditor": "Independent Audit Subagent (Antigravity AI)",
+  "safety_invariants": {
+    "live_model_inference_executed": false,
+    "external_network_requests_made": false,
+    "accuracy_benchmarks_evaluated": false,
+    "git_commits_created": false,
+    "git_resets_or_stashes_performed": false,
+    "branch_switched": false,
+    "production_code_modified_by_audit": false
+  },
+  "feature_flag_status": {
+    "name": "PRECIS_ENABLE_LIST_EXTRACTION",
+    "default_value": false,
+    "verified_in_clean_subshell": true
+  },
+  "audited_file_hashes": {
+    "backend/src/precis/pipeline/structural.py": {
+      "sha256": "1d0f747878237df82a66a5b5ce185679936a1dddaa1a1b5f5d9c257be9c2e1aa",
+      "status": "MODIFIED_IN_4.5.4",
+      "audit_verification": "Verified contains similarity-dominant ranking and deterministic tie-breaking"
+    },
+    "backend/main.py": {
+      "sha256": "fcb0f64a5a6e8f2e0a26c9b4589bb4c575e6fc9bd58385deca5ac1270478b329",
+      "status": "MODIFIED_IN_4.5.4",
+      "audit_verification": "Verified contains dual-collection empty-store guards in REST and WebSocket"
+    },
+    "scripts/test_experiment_4_5_persistence_audit.py": {
+      "sha256": "964f69d18955f0012f339fe601d99ea308992e0aae23f3395aa372f9082704f6",
+      "status": "MODIFIED_IN_4.5.4",
+      "audit_verification": "Verified contains strict assertions for Tests A through G"
+    },
+    "backend/src/precis/pipeline/orchestrator.py": {
+      "sha256": "e6706cc08cf68c6bae9f4d1928793fbc25d39208e7a3c7c90e7cf8b439d80803",
+      "status": "UNTOUCHED_IN_4.5.4"
+    },
+    "backend/src/precis/pipeline/packer.py": {
+      "sha256": "046e029cf0b7d8f08116d1a4da603ff1a648a54286b8767d07f006f8080dc7a1",
+      "status": "UNTOUCHED_IN_4.5.4"
+    },
+    "backend/src/precis/graph/store.py": {
+      "sha256": "6db9d6d48d25f2f6f703054e488da10196666a47c0e3da4d7e7c68beb49dcb07",
+      "status": "UNTOUCHED_IN_4.5.4"
+    },
+    "backend/src/precis/graph/schema.py": {
+      "sha256": "2c5ed7e123da6b2187ededcc72cacc8db8ed39022a7900704a31a67f4af8e441",
+      "status": "UNTOUCHED_IN_4.5.4"
+    },
+    "backend/tests/test_structural_persistence.py": {
+      "sha256": "14e56f11f4050f00c92e89f50cc212492163ce97eea249f44fc1a87ec05c83c1",
+      "status": "UNTOUCHED_IN_4.5.4"
+    },
+    "backend/tests/test_production_wiring.py": {
+      "sha256": "d4e228ec01f15070b3ed13cff6768b4f02345666de47f17e965362c1f08997d8",
+      "status": "UNTOUCHED_IN_4.5.4"
+    },
+    "backend/tests/test_structural_integration.py": {
+      "sha256": "c776619a4b37fd2a904a04eece41ab79369db9e0de79631ca99e8b7ffa1440e1",
+      "status": "UNTOUCHED_IN_4.5.4"
+    }
+  },
+  "frozen_artifact_checks": {
+    "test_experiment_4_2_integrity_hashes": {
+      "result": "PASSED",
+      "dataset_hash": "VERIFIED_MATCH",
+      "manifest_hash": "VERIFIED_MATCH",
+      "stage_c_hash": "VERIFIED_MATCH"
+    },
+    "experiment_4_3_fixtures": "UNTOUCHED",
+    "experiment_4_4_audit_records": "UNTOUCHED"
+  },
+  "working_tree_preservation_assessment": {
+    "pre_existing_modified_files": 17,
+    "pre_existing_deleted_files": 16,
+    "pre_existing_untracked_files": 33,
+    "preservation_status": "VERIFIED_PRESERVED_AGAINST_4.5.4_BASELINE",
+    "independent_history_limit": "Git cannot prove uncommitted untracked files were not altered prior to 4.5.4 audit baseline"
+  },
+  "unverified_checks": []
+}

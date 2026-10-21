@@ -1,0 +1,116 @@
+{
+  "audit_target": "Experiment 4.5.6 Phase 1 Preflight",
+  "timestamp": "2026-10-10T22:58:00+05:30",
+  "git_status": "Clean with respect to audit; pre-existing modified/untracked files preserved untouched",
+  "zero_git_commits": true,
+  "zero_git_resets_or_stashes": true,
+  "zero_live_inferences_executed": true,
+  "zero_network_calls_made": true,
+  "zero_benchmarks_executed": true,
+  "files_hashed": {
+    "structural.py": {
+      "path": "backend/src/precis/pipeline/structural.py",
+      "sha256": "1d0f747878237df82a66a5b5ce185679936a1dddaa1a1b5f5d9c257be9c2e1aa",
+      "bytes": 54885,
+      "exists": true
+    },
+    "orchestrator.py": {
+      "path": "backend/src/precis/pipeline/orchestrator.py",
+      "sha256": "e6706cc08cf68c6bae9f4d1928793fbc25d39208e7a3c7c90e7cf8b439d80803",
+      "bytes": 14408,
+      "exists": true
+    },
+    "store.py": {
+      "path": "backend/src/precis/graph/store.py",
+      "sha256": "6db9d6d48d25f2f6f703054e488da10196666a47c0e3da4d7e7c68beb49dcb07",
+      "bytes": 25331,
+      "exists": true
+    },
+    "main.py": {
+      "path": "backend/main.py",
+      "sha256": "fcb0f64a5a6e8f2e0a26c9b4589bb4c575e6fc9bd58385deca5ac1270478b329",
+      "bytes": 26857,
+      "exists": true
+    },
+    "test_experiment_4_5_persistence_audit.py": {
+      "path": "scripts/test_experiment_4_5_persistence_audit.py",
+      "sha256": "964f69d18955f0012f339fe601d99ea308992e0aae23f3395aa372f9082704f6",
+      "bytes": 28099,
+      "exists": true
+    },
+    "test_structural_persistence.py": {
+      "path": "backend/tests/test_structural_persistence.py",
+      "sha256": "14e56f11f4050f00c92e89f50cc212492163ce97eea249f44fc1a87ec05c83c1",
+      "bytes": 27207,
+      "exists": true
+    },
+    "test_production_wiring.py": {
+      "path": "backend/tests/test_production_wiring.py",
+      "sha256": "d4e228ec01f15070b3ed13cff6768b4f02345666de47f17e965362c1f08997d8",
+      "bytes": 17901,
+      "exists": true
+    },
+    "test_structural_integration.py": {
+      "path": "backend/tests/test_structural_integration.py",
+      "sha256": "c776619a4b37fd2a904a04eece41ab79369db9e0de79631ca99e8b7ffa1440e1",
+      "bytes": 17254,
+      "exists": true
+    },
+    "sample_manifest.jsonl": {
+      "path": "results/diagnostic_structural_decompilation_v3/sample_manifest.jsonl",
+      "sha256": "011553c0725621b7dda73aad12254d100e6fc15f49a5f80f4524156eb4e25db7",
+      "bytes": 87954,
+      "exists": true
+    },
+    "eval_records_stage_c.jsonl": {
+      "path": "results/diagnostic_structural_decompilation_v3/eval_records_stage_c.jsonl",
+      "sha256": "e10ea38f7cc7cfa9a98d494851de8c41c322b5f148dfff653077193917933687",
+      "bytes": 312090,
+      "exists": true
+    },
+    "nq_dev.jsonl": {
+      "path": "backend/data/nq_subset/nq_dev.jsonl",
+      "sha256": "14efc255a596433d6bf10dd853a1915474a5d3f6b47c593f77911ab4bb8eb491",
+      "bytes": 13651266,
+      "exists": true
+    },
+    "eval_records_exp4_2.jsonl": {
+      "path": "results/diagnostic_experiment_4_v1/full_cohort_threshold_20261010/eval_records.jsonl",
+      "sha256": "d8a42cc906bf7fa4aebafff6868345c20a0667f971dea4f2309e3e199a3079f0",
+      "bytes": 942161,
+      "exists": true
+    },
+    "stage_2b_eval_records.jsonl": {
+      "path": "results/diagnostic_experiment_4_v1/gate_2_list_extraction_20261010/stage_2b_eval_records.jsonl",
+      "sha256": "417fab9df822674e128c052fae2ad5153a9b8f96faf6e9995760eec334fc9e4f",
+      "bytes": 46767,
+      "exists": true
+    },
+    "eval_records_exp4_4.jsonl": {
+      "path": "results/diagnostic_experiment_4_v1/full_cohort_evaluation_20261010/eval_records.jsonl",
+      "sha256": "73df76085485fbead2b67fa6a783be3c10420edbf8d9afa9c42203d6737f2c47",
+      "bytes": 595210,
+      "exists": true
+    },
+    "aggregate_summary_exp4_4.json": {
+      "path": "results/diagnostic_experiment_4_v1/full_cohort_evaluation_20261010/aggregate_summary.json",
+      "sha256": "180acec1e14bac3f0b8b4ee9c462a46446b29aaf21c701f627adfd52a2c8469c",
+      "bytes": 8063,
+      "exists": true
+    },
+    "paired_comparisons_exp4_4.json": {
+      "path": "results/diagnostic_experiment_4_v1/full_cohort_evaluation_20261010/paired_comparisons.json",
+      "sha256": "8f9b7a112a0eed6c1de7d27c411cc43f5d580eab7e099c578c50b6c431502b42",
+      "bytes": 4320,
+      "exists": true
+    }
+  },
+  "frozen_artifact_integrity": {
+    "sample_manifest_matches_canonical": true,
+    "eval_records_stage_c_matches_canonical": true,
+    "nq_dev_matches_canonical": true,
+    "eval_records_exp4_2_matches_canonical": true,
+    "gate2_records_matches_canonical": true
+  },
+  "verdict": "READY FOR EXPLICIT AUTHORIZATION"
+}

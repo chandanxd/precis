@@ -1,0 +1,126 @@
+{
+  "timestamp": "2026-10-09T11:58:00+05:30",
+  "ollama_version": "0.35.1",
+  "hardware": {
+    "device_name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+    "total_vram_mib": 8188,
+    "driver_version": "580.173.02",
+    "cuda_version": "13.0"
+  },
+  "decoding": {
+    "temperature": 0.0,
+    "top_p": 0.9,
+    "seed": 42,
+    "max_tokens": 512,
+    "think": false
+  },
+  "api_endpoint": "http://localhost:11434/api/chat",
+  "models": {
+    "reference": {
+      "tag": "qwen2.5-coder:7b",
+      "family": "qwen2",
+      "parameters": "7.6B",
+      "quantization": "Q4_K_M",
+      "digest": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364",
+      "mode": "controlled_non_thinking"
+    },
+    "candidates": [
+      {
+        "tag": "qwen3.5:4b",
+        "family": "qwen35",
+        "parameters": "4.2B",
+        "quantization": "Q4_K_M",
+        "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04",
+        "mode": "controlled_non_thinking"
+      },
+      {
+        "tag": "qwen3.5:9b",
+        "family": "qwen35",
+        "parameters": "9.0B",
+        "quantization": "Q4_K_M",
+        "digest": "56671c2ab9385f9cfcb404638e32cd62d88e3501d44822208363c010179a3c90",
+        "mode": "controlled_non_thinking"
+      },
+      {
+        "tag": "gemma4:e2b",
+        "family": "gemma4",
+        "parameters": "4.6B",
+        "quantization": "Q4_K_M",
+        "digest": "b37049369adfe3d2b653af0ab301a062ca5cbe96ace6aa0d3f2559ee9b563fc2",
+        "mode": "controlled_non_thinking"
+      },
+      {
+        "tag": "gemma4:e4b",
+        "family": "gemma4",
+        "parameters": "7.5B",
+        "quantization": "Q4_K_M",
+        "digest": "dc35e8d9c6061baa6f0fa870975ab6932e2542b579b13ea0f199fa4bb7300c9c",
+        "mode": "controlled_non_thinking"
+      },
+      {
+        "tag": "gemma4:12b",
+        "family": "gemma4",
+        "parameters": "11.9B",
+        "quantization": "Q4_K_M",
+        "digest": "6114515d63c17436a7c0417d82820ac65ad643e2806c5a3c89cb62846436ed0b",
+        "mode": "controlled_non_thinking"
+      }
+    ],
+    "exploratory": [
+      {
+        "tag": "deepseek-r1:8b",
+        "family": "qwen3",
+        "parameters": "8.2B",
+        "quantization": "Q4_K_M",
+        "digest": "6995872bfe4c521a67b32da386cd21d5c6e819b6e0d62f79f64ec83be99f5763",
+        "mode": "native_reasoning"
+      }
+    ]
+  },
+  "retrieval": {
+    "naive_rag": {
+      "chunk_size": 512,
+      "overlap": 128,
+      "top_k": 5,
+      "embedding_model": "sentence-transformers/all-MiniLM-L6-v2"
+    },
+    "precis_v3": {
+      "token_ceiling": 2048,
+      "sdh_weights": {
+        "alpha": 0.35,
+        "beta": 0.25,
+        "gamma": 0.25,
+        "delta": 0.15
+      },
+      "epistemic_filtering": true
+    }
+  },
+  "cohorts": {
+    "stage_a_dev": {
+      "selection_method": "first 35 canonical question clusters sorted by SHA-256",
+      "distinct_questions": 35,
+      "sample_records": 101
+    },
+    "stage_b_eval": {
+      "selection_method": "first 100 eligible disjoint records sorted by SHA-256",
+      "source_pool_size": 4004,
+      "distinct_questions": 100,
+      "distinct_documents": 100
+    }
+  },
+  "metrics": {
+    "primary": "exact_match",
+    "guardrail": "containment_correct",
+    "secondary": [
+      "rouge_l",
+      "bert_score_deberta",
+      "minilm_cosine",
+      "latency_ms",
+      "generated_tokens",
+      "context_words"
+    ],
+    "bertscore_model": "microsoft/deberta-large-mnli",
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 42
+  }
+}

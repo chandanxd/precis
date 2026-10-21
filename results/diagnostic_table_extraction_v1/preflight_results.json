@@ -1,0 +1,107 @@
+{
+  "passed": true,
+  "tests": {
+    "1_header_cell_alignment": {
+      "passed": true,
+      "facts_count": 6,
+      "details": [
+        "Alice | records | Team: Hawks, Points: 25",
+        "Alice | has Team | Hawks",
+        "Alice | has Points | 25",
+        "Bob | records | Points: 10, Year: 2020",
+        "Bob | has Points | 10",
+        "Bob | has Year | 2020"
+      ]
+    },
+    "2_absent_headers_infobox": {
+      "passed": true,
+      "facts_count": 2,
+      "details": [
+        "Motto Labor Omnia Vincit Established 1890 | has Motto | Labor Omnia Vincit",
+        "Motto Labor Omnia Vincit Established 1890 | has Established | 1890"
+      ]
+    },
+    "3_nested_markup_and_fragments": {
+      "passed": true,
+      "facts_count": 2,
+      "details": [
+        "John Doe (Captain) | records | Country: Canada",
+        "John Doe (Captain) | has Country | Canada"
+      ]
+    },
+    "4_entity_column_selection": {
+      "passed": true,
+      "facts_count": 3,
+      "details": [
+        "Pilot | records | Rank: 1, Rating: 9.5",
+        "Pilot | has Rank | 1",
+        "Pilot | has Rating | 9.5"
+      ]
+    },
+    "5_list_item_patterns": {
+      "passed": true,
+      "facts_count": 4,
+      "details": [
+        "Mowgli | is | A human boy raised by wolves .",
+        "Batman | is portrayed by | Christian Bale",
+        "Batman | is | The Dark Knight",
+        "Green Bay Packers | participated in | I , II , XXXI , XLV"
+      ]
+    },
+    "6_deduplication_guardrails": {
+      "passed": true,
+      "facts_count": 2
+    },
+    "7_budget_caps_enforcement": {
+      "passed": true,
+      "facts_count": 15
+    },
+    "8_cohort_a_documents_preflight": {
+      "passed": true,
+      "cases": [
+        {
+          "sample_id": "1aaee123c19e49e2af80d5e53d1f76ce",
+          "description": "baby elephant list",
+          "gold_answer": "Hathi Jr .",
+          "facts_extracted": 1,
+          "recovered": true
+        },
+        {
+          "sample_id": "d79cf47218e54495ba21ea59ca54fc57",
+          "description": "rugby statistics table",
+          "gold_answer": "Daisuke Ohata",
+          "facts_extracted": 30,
+          "recovered": true
+        },
+        {
+          "sample_id": "2ec7c62e2fe547f0802d8cf34e5e9be0",
+          "description": "yo gabba gabba cast credits",
+          "gold_answer": "DJ Lance Rock",
+          "facts_extracted": 13,
+          "recovered": true
+        },
+        {
+          "sample_id": "9dd3961d209a41abac49a36413371d6c",
+          "description": "super bowls enumeration",
+          "gold_answer": "New England Patriots",
+          "facts_extracted": 1,
+          "recovered": true
+        },
+        {
+          "sample_id": "11cabb55e53047449cd8304480660c0b",
+          "description": "university infobox",
+          "gold_answer": "51,331",
+          "facts_extracted": 27,
+          "recovered": true
+        },
+        {
+          "sample_id": "78b30a922137434fbb2170da0e0d79ae",
+          "description": "greys anatomy episode schedule",
+          "gold_answer": "March 1 , 2018",
+          "facts_extracted": 30,
+          "recovered": true
+        }
+      ]
+    }
+  }
+}

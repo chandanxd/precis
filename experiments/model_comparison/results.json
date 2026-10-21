@@ -1,0 +1,902 @@
+{
+  "stage_a": {
+    "reference_model": "qwen2.5-coder:7b",
+    "reference_precis_cont_threshold": 0.6039603960396039,
+    "controlled_models": {
+      "qwen2.5-coder:7b": {
+        "model_tag": "qwen2.5-coder:7b",
+        "params_b": 7.0,
+        "sample_count": 101,
+        "naive_rag": {
+          "count": 101,
+          "exact_match": {
+            "count": 29,
+            "rate": 0.2871287128712871
+          },
+          "containment": {
+            "count": 76,
+            "rate": 0.7524752475247525
+          },
+          "rouge_l_f1": {
+            "mean": 0.49720891089108926,
+            "std": 0.3674281205650734
+          },
+          "minilm_cosine": {
+            "mean": 0.6043148514851485,
+            "std": 0.2901207660412199
+          },
+          "bert_score_f1": {
+            "mean": 0.6836089108910892,
+            "std": 0.21364836989829802
+          },
+          "latency_ms": {
+            "mean": 574.6534653465346,
+            "p50": 400.0,
+            "p90": 868.0
+          },
+          "generated_tokens": {
+            "mean": 16.980198019801982,
+            "p50": 15.0
+          }
+        },
+        "precis_full": {
+          "count": 101,
+          "exact_match": {
+            "count": 26,
+            "rate": 0.25742574257425743
+          },
+          "containment": {
+            "count": 61,
+            "rate": 0.6039603960396039
+          },
+          "rouge_l_f1": {
+            "mean": 0.42707623762376234,
+            "std": 0.38787039612198393
+          },
+          "minilm_cosine": {
+            "mean": 0.555258415841584,
+            "std": 0.30593233519244467
+          },
+          "bert_score_f1": {
+            "mean": 0.641329702970297,
+            "std": 0.22636536992634712
+          },
+          "latency_ms": {
+            "mean": 628.7623762376238,
+            "p50": 501.0,
+            "p90": 1231.0
+          },
+          "generated_tokens": {
+            "mean": 21.316831683168317,
+            "p50": 17.0
+          }
+        },
+        "deltas": {
+          "em_gap_precis_minus_naive": -0.029702970297029674,
+          "cont_gap_precis_minus_naive": -0.14851485148514854
+        },
+        "selection_keys": {
+          "precis_em": 0.25742574257425743,
+          "precis_cont": 0.6039603960396039,
+          "precis_latency_mean": 628.7623762376238,
+          "params_b": 7.0
+        }
+      },
+      "qwen3.5:4b": {
+        "model_tag": "qwen3.5:4b",
+        "params_b": 4.0,
+        "sample_count": 101,
+        "naive_rag": {
+          "count": 101,
+          "exact_match": {
+            "count": 5,
+            "rate": 0.04950495049504951
+          },
+          "containment": {
+            "count": 75,
+            "rate": 0.7425742574257426
+          },
+          "rouge_l_f1": {
+            "mean": 0.335461386138614,
+            "std": 0.26733550025593034
+          },
+          "minilm_cosine": {
+            "mean": 0.49893168316831676,
+            "std": 0.21753598174236022
+          },
+          "bert_score_f1": {
+            "mean": 0.5741128712871287,
+            "std": 0.15005673426306568
+          },
+          "latency_ms": {
+            "mean": 744.8910891089109,
+            "p50": 506.0,
+            "p90": 1078.0
+          },
+          "generated_tokens": {
+            "mean": 26.03960396039604,
+            "p50": 20.0
+          }
+        },
+        "precis_full": {
+          "count": 101,
+          "exact_match": {
+            "count": 25,
+            "rate": 0.24752475247524752
+          },
+          "containment": {
+            "count": 68,
+            "rate": 0.6732673267326733
+          },
+          "rouge_l_f1": {
+            "mean": 0.3786247524752477,
+            "std": 0.397255436044018
+          },
+          "minilm_cosine": {
+            "mean": 0.542820792079208,
+            "std": 0.3134175970837452
+          },
+          "bert_score_f1": {
+            "mean": 0.597669306930693,
+            "std": 0.22584249472646223
+          },
+          "latency_ms": {
+            "mean": 866.1188118811881,
+            "p50": 563.0,
+            "p90": 1414.0
+          },
+          "generated_tokens": {
+            "mean": 36.81188118811881,
+            "p50": 18.0
+          }
+        },
+        "deltas": {
+          "em_gap_precis_minus_naive": 0.19801980198019803,
+          "cont_gap_precis_minus_naive": -0.06930693069306926
+        },
+        "selection_keys": {
+          "precis_em": 0.24752475247524752,
+          "precis_cont": 0.6732673267326733,
+          "precis_latency_mean": 866.1188118811881,
+          "params_b": 4.0
+        }
+      },
+      "qwen3.5:9b": {
+        "model_tag": "qwen3.5:9b",
+        "params_b": 9.0,
+        "sample_count": 101,
+        "naive_rag": {
+          "count": 101,
+          "exact_match": {
+            "count": 0,
+            "rate": 0.0
+          },
+          "containment": {
+            "count": 87,
+            "rate": 0.8613861386138614
+          },
+          "rouge_l_f1": {
+            "mean": 0.24982178217821777,
+            "std": 0.18264197439982252
+          },
+          "minilm_cosine": {
+            "mean": 0.4600178217821781,
+            "std": 0.158507527007482
+          },
+          "bert_score_f1": {
+            "mean": 0.5268871287128711,
+            "std": 0.10950936002616336
+          },
+          "latency_ms": {
+            "mean": 1481.8118811881188,
+            "p50": 1303.0,
+            "p90": 2360.0
+          },
+          "generated_tokens": {
+            "mean": 39.198019801980195,
+            "p50": 38.0
+          }
+        },
+        "precis_full": {
+          "count": 101,
+          "exact_match": {
+            "count": 6,
+            "rate": 0.0594059405940594
+          },
+          "containment": {
+            "count": 67,
+            "rate": 0.6633663366336634
+          },
+          "rouge_l_f1": {
+            "mean": 0.22293564356435638,
+            "std": 0.2543868612275011
+          },
+          "minilm_cosine": {
+            "mean": 0.44938613861386145,
+            "std": 0.22925820327364083
+          },
+          "bert_score_f1": {
+            "mean": 0.5108584158415842,
+            "std": 0.1574746129263455
+          },
+          "latency_ms": {
+            "mean": 1639.019801980198,
+            "p50": 1601.0,
+            "p90": 2847.0
+          },
+          "generated_tokens": {
+            "mean": 47.67326732673267,
+            "p50": 47.0
+          }
+        },
+        "deltas": {
+          "em_gap_precis_minus_naive": 0.0594059405940594,
+          "cont_gap_precis_minus_naive": -0.19801980198019797
+        },
+        "selection_keys": {
+          "precis_em": 0.0594059405940594,
+          "precis_cont": 0.6633663366336634,
+          "precis_latency_mean": 1639.019801980198,
+          "params_b": 9.0
+        }
+      },
+      "gemma4:e2b": {
+        "model_tag": "gemma4:e2b",
+        "params_b": 2.0,
+        "sample_count": 101,
+        "naive_rag": {
+          "count": 101,
+          "exact_match": {
+            "count": 0,
+            "rate": 0.0
+          },
+          "containment": {
+            "count": 78,
+            "rate": 0.7722772277227723
+          },
+          "rouge_l_f1": {
+            "mean": 0.245709900990099,
+            "std": 0.19992316123205908
+          },
+          "minilm_cosine": {
+            "mean": 0.43494554455445555,
+            "std": 0.1766527793733997
+          },
+          "bert_score_f1": {
+            "mean": 0.5337425742574258,
+            "std": 0.12306593286119828
+          },
+          "latency_ms": {
+            "mean": 375.51485148514854,
+            "p50": 217.0,
+            "p90": 356.0
+          },
+          "generated_tokens": {
+            "mean": 28.495049504950494,
+            "p50": 24.0
+          }
+        },
+        "precis_full": {
+          "count": 101,
+          "exact_match": {
+            "count": 0,
+            "rate": 0.0
+          },
+          "containment": {
+            "count": 60,
+            "rate": 0.594059405940594
+          },
+          "rouge_l_f1": {
+            "mean": 0.2440831683168317,
+            "std": 0.21352427091820242
+          },
+          "minilm_cosine": {
+            "mean": 0.40981782178217824,
+            "std": 0.2108232779696522
+          },
+          "bert_score_f1": {
+            "mean": 0.5225128712871288,
+            "std": 0.13129970226366847
+          },
+          "latency_ms": {
+            "mean": 248.5049504950495,
+            "p50": 225.0,
+            "p90": 362.0
+          },
+          "generated_tokens": {
+            "mean": 23.801980198019802,
+            "p50": 20.0
+          }
+        },
+        "deltas": {
+          "em_gap_precis_minus_naive": 0.0,
+          "cont_gap_precis_minus_naive": -0.17821782178217827
+        },
+        "selection_keys": {
+          "precis_em": 0.0,
+          "precis_cont": 0.594059405940594,
+          "precis_latency_mean": 248.5049504950495,
+          "params_b": 2.0
+        }
+      },
+      "gemma4:e4b": {
+        "model_tag": "gemma4:e4b",
+        "params_b": 4.0,
+        "sample_count": 101,
+        "naive_rag": {
+          "count": 101,
+          "exact_match": {
+            "count": 0,
+            "rate": 0.0
+          },
+          "containment": {
+            "count": 77,
+            "rate": 0.7623762376237624
+          },
+          "rouge_l_f1": {
+            "mean": 0.23428613861386144,
+            "std": 0.18653944133667444
+          },
+          "minilm_cosine": {
+            "mean": 0.4192673267326733,
+            "std": 0.17962543818003202
+          },
+          "bert_score_f1": {
+            "mean": 0.524729702970297,
+            "std": 0.11753715700215568
+          },
+          "latency_ms": {
+            "mean": 585.0792079207921,
+            "p50": 354.0,
+            "p90": 622.0
+          },
+          "generated_tokens": {
+            "mean": 30.138613861386137,
+            "p50": 23.0
+          }
+        },
+        "precis_full": {
+          "count": 101,
+          "exact_match": {
+            "count": 0,
+            "rate": 0.0
+          },
+          "containment": {
+            "count": 52,
+            "rate": 0.5148514851485149
+          },
+          "rouge_l_f1": {
+            "mean": 0.19625049504950495,
+            "std": 0.195646059299841
+          },
+          "minilm_cosine": {
+            "mean": 0.347960396039604,
+            "std": 0.21797939773626984
+          },
+          "bert_score_f1": {
+            "mean": 0.4803683168316832,
+            "std": 0.11918053775820639
+          },
+          "latency_ms": {
+            "mean": 434.9009900990099,
+            "p50": 374.0,
+            "p90": 675.0
+          },
+          "generated_tokens": {
+            "mean": 26.85148514851485,
+            "p50": 20.0
+          }
+        },
+        "deltas": {
+          "em_gap_precis_minus_naive": 0.0,
+          "cont_gap_precis_minus_naive": -0.24752475247524752
+        },
+        "selection_keys": {
+          "precis_em": 0.0,
+          "precis_cont": 0.5148514851485149,
+          "precis_latency_mean": 434.9009900990099,
+          "params_b": 4.0
+        }
+      },
+      "gemma4:12b": {
+        "model_tag": "gemma4:12b",
+        "params_b": 12.0,
+        "sample_count": 101,
+        "naive_rag": {
+          "count": 101,
+          "exact_match": {
+            "count": 0,
+            "rate": 0.0
+          },
+          "containment": {
+            "count": 76,
+            "rate": 0.7524752475247525
+          },
+          "rouge_l_f1": {
+            "mean": 0.27579405940594054,
+            "std": 0.21099065242387846
+          },
+          "minilm_cosine": {
+            "mean": 0.4477138613861385,
+            "std": 0.20473465949360156
+          },
+          "bert_score_f1": {
+            "mean": 0.5413158415841586,
+            "std": 0.1391888970283726
+          },
+          "latency_ms": {
+            "mean": 3281.5841584158416,
+            "p50": 1635.0,
+            "p90": 5771.0
+          },
+          "generated_tokens": {
+            "mean": 26.95049504950495,
+            "p50": 20.0
+          }
+        },
+        "precis_full": {
+          "count": 101,
+          "exact_match": {
+            "count": 2,
+            "rate": 0.019801980198019802
+          },
+          "containment": {
+            "count": 48,
+            "rate": 0.4752475247524752
+          },
+          "rouge_l_f1": {
+            "mean": 0.2046950495049505,
+            "std": 0.22627478842434634
+          },
+          "minilm_cosine": {
+            "mean": 0.3393227722772278,
+            "std": 0.2536173858242263
+          },
+          "bert_score_f1": {
+            "mean": 0.4826405940594059,
+            "std": 0.16027882399565227
+          },
+          "latency_ms": {
+            "mean": 2551.980198019802,
+            "p50": 1505.0,
+            "p90": 3424.0
+          },
+          "generated_tokens": {
+            "mean": 21.376237623762375,
+            "p50": 18.0
+          }
+        },
+        "deltas": {
+          "em_gap_precis_minus_naive": 0.019801980198019802,
+          "cont_gap_precis_minus_naive": -0.27722772277227725
+        },
+        "selection_keys": {
+          "precis_em": 0.019801980198019802,
+          "precis_cont": 0.4752475247524752,
+          "precis_latency_mean": 2551.980198019802,
+          "params_b": 12.0
+        }
+      }
+    },
+    "qualifying_count": 2,
+    "disqualified_count": 3,
+    "selected_candidate": "qwen3.5:4b",
+    "selection_details": {
+      "model_tag": "qwen3.5:4b",
+      "params_b": 4.0,
+      "sample_count": 101,
+      "naive_rag": {
+        "count": 101,
+        "exact_match": {
+          "count": 5,
+          "rate": 0.04950495049504951
+        },
+        "containment": {
+          "count": 75,
+          "rate": 0.7425742574257426
+        },
+        "rouge_l_f1": {
+          "mean": 0.335461386138614,
+          "std": 0.26733550025593034
+        },
+        "minilm_cosine": {
+          "mean": 0.49893168316831676,
+          "std": 0.21753598174236022
+        },
+        "bert_score_f1": {
+          "mean": 0.5741128712871287,
+          "std": 0.15005673426306568
+        },
+        "latency_ms": {
+          "mean": 744.8910891089109,
+          "p50": 506.0,
+          "p90": 1078.0
+        },
+        "generated_tokens": {
+          "mean": 26.03960396039604,
+          "p50": 20.0
+        }
+      },
+      "precis_full": {
+        "count": 101,
+        "exact_match": {
+          "count": 25,
+          "rate": 0.24752475247524752
+        },
+        "containment": {
+          "count": 68,
+          "rate": 0.6732673267326733
+        },
+        "rouge_l_f1": {
+          "mean": 0.3786247524752477,
+          "std": 0.397255436044018
+        },
+        "minilm_cosine": {
+          "mean": 0.542820792079208,
+          "std": 0.3134175970837452
+        },
+        "bert_score_f1": {
+          "mean": 0.597669306930693,
+          "std": 0.22584249472646223
+        },
+        "latency_ms": {
+          "mean": 866.1188118811881,
+          "p50": 563.0,
+          "p90": 1414.0
+        },
+        "generated_tokens": {
+          "mean": 36.81188118811881,
+          "p50": 18.0
+        }
+      },
+      "deltas": {
+        "em_gap_precis_minus_naive": 0.19801980198019803,
+        "cont_gap_precis_minus_naive": -0.06930693069306926
+      },
+      "selection_keys": {
+        "precis_em": 0.24752475247524752,
+        "precis_cont": 0.6732673267326733,
+        "precis_latency_mean": 866.1188118811881,
+        "params_b": 4.0
+      }
+    },
+    "selection_reason": "Ranked #1 among 2 qualifying models. Pr\u00e9cis EM: 0.2475, Containment: 0.6733 >= 0.6040.",
+    "exploratory_models": {
+      "deepseek-r1:8b": {
+        "model_tag": "deepseek-r1:8b",
+        "sample_count": 101,
+        "naive_rag": {
+          "count": 101,
+          "exact_match": {
+            "count": 24,
+            "rate": 0.2376237623762376
+          },
+          "containment": {
+            "count": 69,
+            "rate": 0.6831683168316832
+          },
+          "rouge_l_f1": {
+            "mean": 0.4021584158415841,
+            "std": 0.377200675709769
+          },
+          "minilm_cosine": {
+            "mean": 0.49751881188118807,
+            "std": 0.35554133672663246
+          },
+          "bert_score_f1": {
+            "mean": 0.5540643564356437,
+            "std": 0.32904906028747594
+          },
+          "latency_ms": {
+            "mean": 9565.633663366336,
+            "p50": 9316.0,
+            "p90": 13010.0
+          },
+          "generated_tokens": {
+            "mean": 366.33663366336634,
+            "p50": 353.0
+          }
+        },
+        "precis_full": {
+          "count": 101,
+          "exact_match": {
+            "count": 19,
+            "rate": 0.18811881188118812
+          },
+          "containment": {
+            "count": 43,
+            "rate": 0.42574257425742573
+          },
+          "rouge_l_f1": {
+            "mean": 0.308529702970297,
+            "std": 0.387335077531135
+          },
+          "minilm_cosine": {
+            "mean": 0.3998108910891089,
+            "std": 0.36847849055297116
+          },
+          "bert_score_f1": {
+            "mean": 0.4524297029702971,
+            "std": 0.3414693911001799
+          },
+          "latency_ms": {
+            "mean": 10143.841584158416,
+            "p50": 9770.0,
+            "p90": 13286.0
+          },
+          "generated_tokens": {
+            "mean": 390.13861386138615,
+            "p50": 379.0
+          }
+        },
+        "note": "Reasoning mode enabled (512 tokens). Not eligible for non-thinking candidate ranking."
+      }
+    }
+  },
+  "stage_b": {
+    "n_samples": 100,
+    "reference_model": {
+      "model_tag": "qwen2.5-coder:7b",
+      "precis_full": {
+        "count": 100,
+        "exact_match": {
+          "count": 9,
+          "rate": 0.09
+        },
+        "containment": {
+          "count": 49,
+          "rate": 0.49
+        },
+        "rouge_l_f1": {
+          "mean": 0.35136999999999996,
+          "std": 0.31408312259655086
+        },
+        "minilm_cosine": {
+          "mean": 0.525552,
+          "std": 0.2568916286997301
+        },
+        "bert_score_f1": {
+          "mean": 0.59187,
+          "std": 0.19617580712208119
+        },
+        "latency_ms": {
+          "mean": 796.62,
+          "p50": 605.5,
+          "p90": 1496.3000000000002
+        },
+        "generated_tokens": {
+          "mean": 24.16,
+          "p50": 18.0
+        }
+      },
+      "naive_rag": {
+        "count": 100,
+        "exact_match": {
+          "count": 16,
+          "rate": 0.16
+        },
+        "containment": {
+          "count": 58,
+          "rate": 0.58
+        },
+        "rouge_l_f1": {
+          "mean": 0.434592,
+          "std": 0.32673807665468074
+        },
+        "minilm_cosine": {
+          "mean": 0.591872,
+          "std": 0.26081184101953653
+        },
+        "bert_score_f1": {
+          "mean": 0.636737,
+          "std": 0.20382542268078335
+        },
+        "latency_ms": {
+          "mean": 815.91,
+          "p50": 476.5,
+          "p90": 1452.4
+        },
+        "generated_tokens": {
+          "mean": 22.23,
+          "p50": 16.0
+        }
+      }
+    },
+    "selected_candidate": {
+      "model_tag": "qwen3.5:4b",
+      "precis_full": {
+        "count": 100,
+        "exact_match": {
+          "count": 7,
+          "rate": 0.07
+        },
+        "containment": {
+          "count": 61,
+          "rate": 0.61
+        },
+        "rouge_l_f1": {
+          "mean": 0.30368100000000003,
+          "std": 0.2986675180514279
+        },
+        "minilm_cosine": {
+          "mean": 0.507717,
+          "std": 0.25916921539990045
+        },
+        "bert_score_f1": {
+          "mean": 0.552134,
+          "std": 0.19266642375878573
+        },
+        "latency_ms": {
+          "mean": 1210.55,
+          "p50": 799.0,
+          "p90": 2099.8000000000006
+        },
+        "generated_tokens": {
+          "mean": 47.32,
+          "p50": 22.5
+        }
+      },
+      "naive_rag": {
+        "count": 100,
+        "exact_match": {
+          "count": 8,
+          "rate": 0.08
+        },
+        "containment": {
+          "count": 68,
+          "rate": 0.68
+        },
+        "rouge_l_f1": {
+          "mean": 0.324576,
+          "std": 0.3052130076258218
+        },
+        "minilm_cosine": {
+          "mean": 0.513405,
+          "std": 0.2510069454716343
+        },
+        "bert_score_f1": {
+          "mean": 0.55517,
+          "std": 0.1852343847669757
+        },
+        "latency_ms": {
+          "mean": 1179.47,
+          "p50": 1028.5,
+          "p90": 1832.8000000000034
+        },
+        "generated_tokens": {
+          "mean": 41.99,
+          "p50": 33.0
+        }
+      }
+    },
+    "h1_hypothesis": {
+      "description": "H1: qwen3.5:4b achieves higher Pr\u00e9cis EM than qwen2.5-coder:7b.",
+      "cand_precis_em_count": 7,
+      "ref_precis_em_count": 9,
+      "mcnemar": {
+        "n": 100,
+        "table": {
+          "n00": 85,
+          "n01_ref_only": 8,
+          "n10_cand_only": 6,
+          "n11_both": 1
+        },
+        "discordant_pairs": 14,
+        "odds_ratio": 0.75,
+        "p_value_two_sided": 0.79052734375,
+        "p_value_one_sided_greater": 0.78802490234375
+      },
+      "supported": false
+    },
+    "h2_hypothesis": {
+      "description": "H2: Selected candidate reduces the EM gap between Pr\u00e9cis and Naive RAG relative to reference model.",
+      "bootstrap_results": {
+        "point_estimate": 0.06,
+        "std_error": 0.03924199066051568,
+        "ci_95": [
+          -0.02,
+          0.14
+        ],
+        "ci_lower": -0.02,
+        "ci_upper": 0.14,
+        "n_resamples": 10000,
+        "classification": "INCONCLUSIVE",
+        "components": {
+          "cand_precis_em": 0.07,
+          "cand_naive_em": 0.08,
+          "cand_gap": -0.009999999999999995,
+          "ref_precis_em": 0.09,
+          "ref_naive_em": 0.16,
+          "ref_gap": -0.07
+        }
+      },
+      "supported": false,
+      "inconclusive": true,
+      "opposite_direction": false
+    }
+  },
+  "stage_c": {
+    "n_samples": 100,
+    "model_tag": "qwen3.5:4b",
+    "standard_prompt": {
+      "count": 100,
+      "exact_match": {
+        "count": 7,
+        "rate": 0.07
+      },
+      "containment": {
+        "count": 61,
+        "rate": 0.61
+      },
+      "rouge_l_f1": {
+        "mean": 0.30368100000000003,
+        "std": 0.2986675180514279
+      },
+      "minilm_cosine": {
+        "mean": 0.507717,
+        "std": 0.25916921539990045
+      },
+      "bert_score_f1": {
+        "mean": 0.552134,
+        "std": 0.19266642375878573
+      },
+      "latency_ms": {
+        "mean": 1210.55,
+        "p50": 799.0,
+        "p90": 2099.8000000000006
+      },
+      "generated_tokens": {
+        "mean": 47.32,
+        "p50": 22.5
+      }
+    },
+    "concise_prompt": {
+      "count": 100,
+      "exact_match": {
+        "count": 33,
+        "rate": 0.33
+      },
+      "containment": {
+        "count": 48,
+        "rate": 0.48
+      },
+      "rouge_l_f1": {
+        "mean": 0.516738,
+        "std": 0.4267298507908721
+      },
+      "minilm_cosine": {
+        "mean": 0.654246,
+        "std": 0.34954169319839373
+      },
+      "bert_score_f1": {
+        "mean": 0.6888380000000001,
+        "std": 0.2718317957046232
+      },
+      "latency_ms": {
+        "mean": 695.33,
+        "p50": 388.0,
+        "p90": 1044.6000000000001
+      },
+      "generated_tokens": {
+        "mean": 19.56,
+        "p50": 5.0
+      }
+    },
+    "em_mcnemar": {
+      "n": 100,
+      "table": {
+        "n00": 67,
+        "n01_ref_only": 0,
+        "n10_cand_only": 26,
+        "n11_both": 7
+      },
+      "discordant_pairs": 26,
+      "odds_ratio": Infinity,
+      "p_value_two_sided": 2.9802322387695312e-08,
+      "p_value_one_sided_greater": 1.4901161193847656e-08
+    },
+    "mean_tokens_standard": 47.32,
+    "mean_tokens_concise": 19.56,
+    "brevity_ratio": 0.4133558748943364
+  }
+}

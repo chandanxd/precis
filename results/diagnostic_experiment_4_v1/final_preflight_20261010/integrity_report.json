@@ -1,0 +1,111 @@
+{
+  "report_id": "experiment_4_3_final_preflight_integrity_audit",
+  "timestamp": "2026-10-10T17:40:00+05:30",
+  "overall_verdict": "READY_FOR_EXPLICIT_AUTHORIZATION",
+  "safety_invariants": {
+    "production_code_untouched": true,
+    "production_directory": "backend/src/precis/",
+    "zero_production_diff_verified": true,
+    "model_inferences_executed_during_review": 0,
+    "historical_files_overwritten": false,
+    "directory_isolation": true,
+    "review_directory": "results/diagnostic_experiment_4_v1/final_preflight_20261010",
+    "proposed_inference_count": 169
+  },
+  "automated_tests": {
+    "test_experiment_4_3_fixtures": "5 passed",
+    "test_experiment_4_2_integrity": "13 passed",
+    "total_tests_passed": 18,
+    "failures": 0,
+    "git_diff_check_exit_code": 0
+  },
+  "cohort_partition": {
+    "total_table_bearing_cases": 200,
+    "reused_gate2_condition_e_cases": 31,
+    "remaining_generation_cases": 169,
+    "intersection_count": 0,
+    "exact_partition_match": true
+  },
+  "input_and_historical_files": {
+    "sample_manifest.jsonl": {
+      "path": "results/diagnostic_structural_decompilation_v3/sample_manifest.jsonl",
+      "size_bytes": 87954,
+      "sha256": "011553c0725621b7dda73aad12254d100e6fc15f49a5f80f4524156eb4e25db7",
+      "exists": true
+    },
+    "eval_records_stage_c.jsonl": {
+      "path": "results/diagnostic_structural_decompilation_v3/eval_records_stage_c.jsonl",
+      "size_bytes": 312090,
+      "sha256": "e10ea38f7cc7cfa9a98d494851de8c41c322b5f148dfff653077193917933687",
+      "exists": true
+    },
+    "nq_dev.jsonl": {
+      "path": "backend/data/nq_subset/nq_dev.jsonl",
+      "size_bytes": 13651266,
+      "sha256": "14efc255a596433d6bf10dd853a1915474a5d3f6b47c593f77911ab4bb8eb491",
+      "exists": true
+    },
+    "eval_records_exp42.jsonl": {
+      "path": "results/diagnostic_experiment_4_v1/full_cohort_threshold_20261010/eval_records.jsonl",
+      "size_bytes": 942161,
+      "sha256": "d8a42cc906bf7fa4aebafff6868345c20a0667f971dea4f2309e3e199a3079f0",
+      "exists": true
+    },
+    "failure_inventory_gate1.jsonl": {
+      "path": "results/diagnostic_experiment_4_v1/failure_attribution_20261010/failure_inventory.jsonl",
+      "size_bytes": 166695,
+      "sha256": "748037a0a0d718b684f1021487476f2b2fd3692103aac44c8b556255b84ef08c",
+      "exists": true
+    },
+    "gate2_stage_2b_records.jsonl": {
+      "path": "results/diagnostic_experiment_4_v1/gate_2_list_extraction_20261010/stage_2b_eval_records.jsonl",
+      "size_bytes": 46767,
+      "sha256": "417fab9df822674e128c052fae2ad5153a9b8f96faf6e9995760eec334fc9e4f",
+      "exists": true
+    },
+    "diagnostic_list_extractor.py": {
+      "path": "scripts/diagnostic_list_extractor.py",
+      "size_bytes": 7936,
+      "sha256": "4dafe954f5fb04492a85943d26365acd9cb7e64bc3bf665fd7a60f2ab7e92e4a",
+      "exists": true
+    },
+    "eval_experiment_4_3_gate2_runner.py": {
+      "path": "scripts/eval_experiment_4_3_gate2_runner.py",
+      "size_bytes": 22657,
+      "sha256": "96e75e6af01706e148146d31747c53b652daa78f1ef92cc8a6fa8226bb57290b",
+      "exists": true
+    },
+    "test_experiment_4_3_fixtures.py": {
+      "path": "scripts/test_experiment_4_3_fixtures.py",
+      "size_bytes": 5211,
+      "sha256": "d94dfd00d58265cf090a3f791042d0213c4b4fc8aafae157f73387451dc3d8a3",
+      "exists": true
+    },
+    "test_experiment_4_2_integrity.py": {
+      "path": "scripts/test_experiment_4_2_integrity.py",
+      "size_bytes": 14485,
+      "sha256": "f01840d94d02de61c099c2e67f448ef7c18254ec1931e341f101df6afbf38487",
+      "exists": true
+    }
+  },
+  "new_deliverables": {
+    "ambiguous_case_review.md": {
+      "path": "results/diagnostic_experiment_4_v1/final_preflight_20261010/ambiguous_case_review.md",
+      "size_bytes": 6722,
+      "sha256": "7a67883b9b1f4b78a6e4df5ad324bcf55b3904fcefa114cd954cd402bbce3ee9",
+      "exists": true
+    },
+    "prediction_reuse_audit.json": {
+      "path": "results/diagnostic_experiment_4_v1/final_preflight_20261010/prediction_reuse_audit.json",
+      "size_bytes": 21799,
+      "sha256": "5370c360255d90c58704aaf6a6bf96b73f45dad027018fb3b17114de8be776dc",
+      "exists": true
+    },
+    "full_cohort_preflight_audit.md": {
+      "path": "results/diagnostic_experiment_4_v1/final_preflight_20261010/full_cohort_preflight_audit.md",
+      "size_bytes": 10022,
+      "sha256": "2a44df969c6f4a5cb584d047662817c807006e0bbb32ffc94298a67011717fb3",
+      "exists": true
+    }
+  }
+}

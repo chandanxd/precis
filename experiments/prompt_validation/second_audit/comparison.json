@@ -1,0 +1,80 @@
+{
+ "n_labels": 60,
+ "pass_vs_exact_match": {
+  "label_pass_and_em": 14,
+  "label_pass_not_em": 0,
+  "em_not_pass": 0
+ },
+ "second_rater_by_prompt": {
+  "concise": {
+   "Evidence Insufficiency": 5,
+   "Pass": 13,
+   "Conversational Mismatch": 4,
+   "Other": 5,
+   "Hallucination": 1,
+   "Incomplete Entity": 2
+  },
+  "standard": {
+   "Evidence Insufficiency": 6,
+   "Conversational Mismatch": 11,
+   "Other": 10,
+   "Incomplete Entity": 2,
+   "Pass": 1
+  }
+ },
+ "second_rater_total": {
+  "Evidence Insufficiency": 11,
+  "Conversational Mismatch": 15,
+  "Pass": 14,
+  "Other": 15,
+  "Incomplete Entity": 4,
+  "Hallucination": 1
+ },
+ "paper_table7": {
+  "standard": {
+   "Evidence Insufficiency": 14,
+   "Conversational Mismatch": 14,
+   "Hallucination": 1,
+   "Incomplete Entity": 0,
+   "Pass": 1
+  },
+  "concise": {
+   "Evidence Insufficiency": 5,
+   "Conversational Mismatch": 3,
+   "Hallucination": 5,
+   "Incomplete Entity": 4,
+   "Pass": 13
+  },
+  "total": {
+   "Evidence Insufficiency": 19,
+   "Conversational Mismatch": 17,
+   "Hallucination": 6,
+   "Incomplete Entity": 4,
+   "Pass": 14
+  }
+ },
+ "borderline_labels": 15,
+ "corrections_standard_output_labels": {
+  "Conversational Mismatch": 7,
+  "Other": 5
+ },
+ "persistent_errors_n": 1,
+ "persistent_errors_concise_agreement_mapped3": 1,
+ "persistent_errors_cohens_kappa_mapped3": null,
+ "persistent_errors_crosstab": [
+  [
+   [
+    "ES",
+    "ES"
+   ],
+   1
+  ]
+ ],
+ "persistent_errors_detail": [
+  [
+   "cdcb817f",
+   "ES",
+   "Evidence Insufficiency"
+  ]
+ ]
+}

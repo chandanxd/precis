@@ -1,0 +1,34 @@
+{
+  "sample_manifest.jsonl": {
+    "path": "results/diagnostic_structural_decompilation_v3/sample_manifest.jsonl",
+    "sha256": "011553c0725621b7dda73aad12254d100e6fc15f49a5f80f4524156eb4e25db7"
+  },
+  "eval_records_gate5.jsonl": {
+    "path": "results/diagnostic_experiment_4_v1/gate_5_confirmatory_evaluation_20261010/eval_records.jsonl",
+    "sha256": "edfeec16d87cdf5f168ceb7f8c947a875a0f237dc1c6074ca9ad22e28f600011"
+  },
+  "regression_reaudit.jsonl": {
+    "path": "results/diagnostic_experiment_4_v1/gate_5_independent_audit_20261011/regression_reaudit.jsonl",
+    "sha256": "a1113ba1aef6ed0b222d36821ea07517186186500b1d1c353f33882fc1393449"
+  },
+  "nq_dev.jsonl": {
+    "path": "backend/data/nq_subset/nq_dev.jsonl",
+    "sha256": "14efc255a596433d6bf10dd853a1915474a5d3f6b47c593f77911ab4bb8eb491"
+  },
+  "structural.py": {
+    "path": "backend/src/precis/pipeline/structural.py",
+    "sha256": "1d0f747878237df82a66a5b5ce185679936a1dddaa1a1b5f5d9c257be9c2e1aa"
+  },
+  "orchestrator.py": {
+    "path": "backend/src/precis/pipeline/orchestrator.py",
+    "sha256": "e6706cc08cf68c6bae9f4d1928793fbc25d39208e7a3c7c90e7cf8b439d80803"
+  },
+  "store.py": {
+    "path": "backend/src/precis/graph/store.py",
+    "sha256": "6db9d6d48d25f2f6f703054e488da10196666a47c0e3da4d7e7c68beb49dcb07"
+  },
+  "main.py": {
+    "path": "backend/main.py",
+    "sha256": "fcb0f64a5a6e8f2e0a26c9b4589bb4c575e6fc9bd58385deca5ac1270478b329"
+  }
+}

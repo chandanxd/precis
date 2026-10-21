@@ -1,0 +1,84 @@
+{
+  "audit_metadata": {
+    "report_identifier": "audit_report_exp_4_7_0_1_test_hardening",
+    "date": "2026-10-11",
+    "audit_scope": "Experiment 4.7.0.1 Acceptance-Test Failure-Sensitivity Audit",
+    "read_only_boundaries_respected": true
+  },
+  "file_hashes": {
+    "results/diagnostic_experiment_4_v1/experiment_4_7_0_readiness_20261011/acceptance_test_plan.md": "ef996d8c90e213e4702902884434615f0e0e2d9ea8261ba7ec9c78ae172fea17",
+    "results/diagnostic_experiment_4_v1/experiment_4_7_0_implementation_20261011/walkthrough.md": "90c04fb1f741c3f66eb53ba6604080fdbc8a2942d96aa8100f6c01b6fbed4d31",
+    "backend/tests/test_structural_priority_packing.py": "49e75989b52acd6511ee53f696cc6c5015b216fc42ff0d264b0288a0c03d4e4b",
+    "backend/src/precis/pipeline/structural.py": "10f16ce3f08fc00693d723c0a6e3e03e1a46a585b47d41e2feb110f6b9fb1ee4",
+    "backend/src/precis/pipeline/orchestrator.py": "e6706cc08cf68c6bae9f4d1928793fbc25d39208e7a3c7c90e7cf8b439d80803",
+    "backend/src/precis/pipeline/packer.py": "046e029cf0b7d8f08116d1a4da603ff1a648a54286b8767d07f006f8080dc7a1",
+    "backend/src/precis/graph/store.py": "6db9d6d48d25f2f6f703054e488da10196666a47c0e3da4d7e7c68beb49dcb07",
+    "backend/main.py": "fcb0f64a5a6e8f2e0a26c9b4589bb4c575e6fc9bd58385deca5ac1270478b329",
+    "backend/tests/test_production_wiring.py": "d4e228ec01f15070b3ed13cff6768b4f02345666de47f17e965362c1f08997d8",
+    "backend/tests/test_structural_persistence.py": "14e56f11f4050f00c92e89f50cc212492163ce97eea249f44fc1a87ec05c83c1",
+    "backend/tests/test_structural_integration.py": "c776619a4b37fd2a904a04eece41ab79369db9e0de79631ca99e8b7ffa1440e1"
+  },
+  "verification_checks": {
+    "production_code_modified_during_audit": false,
+    "only_test_file_hardened": true,
+    "hardened_test_file": "backend/tests/test_structural_priority_packing.py",
+    "ingestion_subsystems_modified": false,
+    "database_schema_modified": false,
+    "vector_retrieval_modified": false,
+    "prompt_templates_modified": false,
+    "evaluation_scoring_modified": false,
+    "default_feature_flag_status": "PRECIS_ENABLE_LIST_EXTRACTION default is False",
+    "frozen_evaluation_records_modified": false,
+    "historical_artifacts_modified": false,
+    "model_inference_executed": false,
+    "ollama_service_called": false,
+    "git_history_preserved": true
+  },
+  "test_summary": {
+    "hardened_acceptance_tests_run": 14,
+    "hardened_acceptance_tests_passed": 14,
+    "existing_regression_tests_run": 77,
+    "existing_regression_tests_passed": 77,
+    "total_tests_passed": 91,
+    "failures": 0,
+    "skipped": 0
+  },
+  "failure_sensitivity_mutations": [
+    {
+      "mutation_id": "MUT-01",
+      "target_test": "test_atp_01_suppresses_same_doc_facts_when_structural_packed",
+      "simulated_fault": "Leak same-document SVOA fact into context alongside table",
+      "assertion_tripped": "assert \"Fact 1:\" not in assembled.context / assert assembled.facts_packed == 0",
+      "detected_failure": true
+    },
+    {
+      "mutation_id": "MUT-02",
+      "target_test": "test_atp_02_fallback_when_structural_retrieval_below_threshold",
+      "simulated_fault": "Return empty context on structural relevance rejection",
+      "assertion_tripped": "assert \"Fact 1:\" in assembled.context / assert \"Dr. Smith discovered\" in assembled.context",
+      "detected_failure": true
+    },
+    {
+      "mutation_id": "MUT-03",
+      "target_test": "test_atp_03_fallback_when_structural_evidence_exceeds_budget",
+      "simulated_fault": "Table chunk retained despite exceeding 40-token budget (150 tokens)",
+      "assertion_tripped": "assert assembled.tokens_used <= tiny_budget / assert estimate_text_tokens(context) <= tiny_budget",
+      "detected_failure": true
+    },
+    {
+      "mutation_id": "MUT-04",
+      "target_test": "test_atp_04_cross_document_isolation_and_retention",
+      "simulated_fault": "Over-suppression: suppress all facts including distinct cross-doc facts from Doc B",
+      "assertion_tripped": "assert any(f.source_doc == \"history.html\" for f in assembled.facts_used) / assert \"Arthur Pendelton\" in assembled.context",
+      "detected_failure": true
+    },
+    {
+      "mutation_id": "MUT-05",
+      "target_test": "test_atp_10_verbatim_deduplication_on_retained_cross_doc_facts",
+      "simulated_fault": "Deduplication failure: leak redundant cross-doc duplicate fact into context",
+      "assertion_tripped": "assert not any(f.subject == \"AlphaCorp\" for f in assembled.facts_used) / assert \"AlphaCorp is Equipment Supplier\" not in context",
+      "detected_failure": true
+    }
+  ],
+  "verdict": "READY FOR INFERENCE AUTHORIZATION"
+}

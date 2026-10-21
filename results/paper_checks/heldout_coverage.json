@@ -1,0 +1,35 @@
+{
+ "n_records": 12836,
+ "n_dev": 200,
+ "pool_after_exclusions": 12616,
+ "pool_distinct_questions": 4103,
+ "dev200_no_coref": {
+  "covered": 182,
+  "n": 200,
+  "pct": 91.0,
+  "cluster_boot95": [
+   85.6,
+   95.5
+  ],
+  "mean_facts": 10.5
+ },
+ "heldout_200": {
+  "covered": 175,
+  "n": 200,
+  "pct": 87.5,
+  "cluster_boot95": [
+   83.0,
+   92.0
+  ]
+ },
+ "heldout_1000": {
+  "covered": 866,
+  "n": 1000,
+  "pct": 86.6,
+  "cluster_boot95": [
+   84.4,
+   88.7
+  ]
+ },
+ "heldout_has_table_or_list_markup_share": 0.249
+}

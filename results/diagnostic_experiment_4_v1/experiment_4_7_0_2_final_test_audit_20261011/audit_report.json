@@ -1,0 +1,132 @@
+{
+  "experiment_id": "4.7.0.2",
+  "audit_name": "Final Acceptance-Test Determinism Check",
+  "timestamp": "2026-10-11T10:57:30+05:30",
+  "target_scope": "Guarded Structural-Priority Context Packing (Intervention 1)",
+  "production_code_modified": false,
+  "files_inspected": [
+    {
+      "path": "backend/src/precis/pipeline/structural.py",
+      "sha256": "10f16ce3f08fc00693d723c0a6e3e03e1a46a585b47d41e2feb110f6b9fb1ee4",
+      "modified_in_4_7_0_2": false
+    },
+    {
+      "path": "backend/tests/test_structural_priority_packing.py",
+      "sha256": "0286142841dbfb133d4770701def61334886531c8872166ee18852e9e285d9d8",
+      "modified_in_4_7_0_2": true
+    }
+  ],
+  "feature_flags": {
+    "PRECIS_ENABLE_LIST_EXTRACTION_default": false,
+    "verified_safe_default": true
+  },
+  "acceptance_test_audit_summary": {
+    "test_suite_file": "backend/tests/test_structural_priority_packing.py",
+    "total_tests": 14,
+    "tests_passed": 14,
+    "tests_failed": 0,
+    "atp_02_deterministic_relevance_rejection": {
+      "mechanism": "Controlled mock of store.query_similar_structural returning low similarity score (0.10 < 0.25 threshold) and no keyword overlap",
+      "production_fallback_exercised": true,
+      "svoa_facts_present": true,
+      "table_chunks_absent": true,
+      "tokens_within_ceiling": true,
+      "empty_context_injection_fails": true
+    },
+    "atp_08_structural_rejection_fact_survival": {
+      "mechanism": "Controlled mock of store.query_similar_structural returning empty result list",
+      "production_fallback_exercised": true,
+      "known_fact_survives": true,
+      "table_chunks_absent": true,
+      "empty_context_injection_fails": true
+    },
+    "atp_09_budget_accounting_across_scales": {
+      "scales_tested": [40, 100, 250, 500, 1000, 2048],
+      "unconditional_assertions": {
+        "tokens_used_le_ceiling": true,
+        "estimate_text_tokens_le_ceiling": true
+      },
+      "overflow_injection_fails": true,
+      "token_accounting_characteristics": {
+        "structural_packing": "tokens_used is exactly total_context_estimated_tokens (estimate_text_tokens(context)), so tokens_used == estimate_text_tokens",
+        "svoa_fallback": "tokens_used is computed by packer.py summing estimate_fact_tokens(f); estimate_text_tokens(context) measures overall string tokenization",
+        "ceiling_compliance": "Both tokens_used and estimate_text_tokens are strictly <= ceiling across all evaluated scales"
+      }
+    },
+    "atp_10_bidirectional_deduplication": {
+      "duplicate_fact_suppression": {
+        "fact": "AlphaCorp acquired BetaLLC in 2021",
+        "doc_id": "doc_b",
+        "present_in_context": false,
+        "present_in_facts_used": false
+      },
+      "distinct_cross_document_fact_preservation": {
+        "fact_1": "ZetaCorp launched OmegaApp in 2023",
+        "doc_id": "doc_b",
+        "present_in_context": true,
+        "present_in_facts_used": true
+      },
+      "same_subject_distinct_fact_preservation": {
+        "fact_2": "AlphaCorp acquired GammaCorp in Berlin",
+        "doc_id": "doc_b",
+        "present_in_context": true,
+        "present_in_facts_used": true
+      },
+      "leak_injection_fails": true,
+      "oversuppression_injection_fails": true
+    }
+  },
+  "fault_injection_evaluation": {
+    "total_injections": 5,
+    "successful_detections": 5,
+    "results": [
+      {
+        "test": "ATP-02",
+        "injection_type": "Empty fallback context",
+        "caught_by_assertion": true,
+        "exception": "AssertionError"
+      },
+      {
+        "test": "ATP-08",
+        "injection_type": "Empty fallback context",
+        "caught_by_assertion": true,
+        "exception": "AssertionError"
+      },
+      {
+        "test": "ATP-09",
+        "injection_type": "Budget overflow (tokens_used = ceiling + 1)",
+        "caught_by_assertion": true,
+        "exception": "AssertionError"
+      },
+      {
+        "test": "ATP-10",
+        "injection_type": "Duplicate fact leaked into context",
+        "caught_by_assertion": true,
+        "exception": "AssertionError"
+      },
+      {
+        "test": "ATP-10",
+        "injection_type": "Same-subject distinct fact oversuppression",
+        "caught_by_assertion": true,
+        "exception": "AssertionError"
+      }
+    ]
+  },
+  "regression_test_summary": {
+    "suites": [
+      "backend/tests/test_production_wiring.py",
+      "backend/tests/test_structural_persistence.py",
+      "backend/tests/test_structural_integration.py"
+    ],
+    "total_tests": 77,
+    "tests_passed": 77,
+    "tests_failed": 0
+  },
+  "invariants_confirmed": {
+    "zero_production_code_edits": true,
+    "zero_model_inference_executed": true,
+    "working_tree_preserved": true,
+    "deterministic_execution": true
+  },
+  "verdict": "READY FOR INFERENCE AUTHORIZATION"
+}

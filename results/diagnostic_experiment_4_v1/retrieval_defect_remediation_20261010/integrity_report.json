@@ -1,0 +1,67 @@
+{
+  "timestamp": "2026-10-10T22:14:00+05:30",
+  "feature_flag": {
+    "name": "PRECIS_ENABLE_LIST_EXTRACTION",
+    "default_value": false,
+    "verified_disabled_by_default": true
+  },
+  "constraints_verification": {
+    "live_model_inference_run": false,
+    "network_calls_made": false,
+    "accuracy_benchmark_evaluated": false,
+    "git_commits_created": false,
+    "git_resets_or_stashes_performed": false,
+    "unrelated_working_tree_files_modified": false,
+    "frozen_4_2_artifacts_modified": false,
+    "frozen_4_3_artifacts_modified": false,
+    "frozen_4_4_artifacts_modified": false
+  },
+  "file_hashes": {
+    "backend/src/precis/pipeline/structural.py": {
+      "pre_remediation_sha256": "f41e3b368819484b69b868cff4e34335f3320fc00644165ca10a44ac36e713c6",
+      "post_remediation_sha256": "1d0f747878237df82a66a5b5ce185679936a1dddaa1a1b5f5d9c257be9c2e1aa",
+      "modified": true,
+      "purpose": "Remediated DEFECT-01 and DEFECT-03 via similarity-dominant ranking and deterministic tie-breaking"
+    },
+    "backend/main.py": {
+      "pre_remediation_sha256": "7f9c29df2685f816982757b4eebd3c3ffe310cbe365467059dca307d03b52695",
+      "post_remediation_sha256": "fcb0f64a5a6e8f2e0a26c9b4589bb4c575e6fc9bd58385deca5ac1270478b329",
+      "modified": true,
+      "purpose": "Remediated DEFECT-02 in REST and WebSocket empty-store guards"
+    },
+    "scripts/test_experiment_4_5_persistence_audit.py": {
+      "pre_remediation_sha256": "ede7c073836b22cbc70575ab7db5efeb481fbaac16b430a17e8def73bec44cfb",
+      "post_remediation_sha256": "964f69d18955f0012f339fe601d99ea308992e0aae23f3395aa372f9082704f6",
+      "modified": true,
+      "purpose": "Strengthened audit suite with strict assertions for Tests A through G"
+    },
+    "backend/src/precis/pipeline/orchestrator.py": {
+      "sha256": "e6706cc08cf68c6bae9f4d1928793fbc25d39208e7a3c7c90e7cf8b439d80803",
+      "modified": false
+    },
+    "backend/src/precis/pipeline/packer.py": {
+      "sha256": "046e029cf0b7d8f08116d1a4da603ff1a648a54286b8767d07f006f8080dc7a1",
+      "modified": false
+    },
+    "backend/src/precis/graph/store.py": {
+      "sha256": "6db9d6d48d25f2f6f703054e488da10196666a47c0e3da4d7e7c68beb49dcb07",
+      "modified": false
+    },
+    "backend/src/precis/graph/schema.py": {
+      "sha256": "2c5ed7e123da6b2187ededcc72cacc8db8ed39022a7900704a31a67f4af8e441",
+      "modified": false
+    },
+    "backend/tests/test_structural_persistence.py": {
+      "sha256": "14e56f11f4050f00c92e89f50cc212492163ce97eea249f44fc1a87ec05c83c1",
+      "modified": false
+    },
+    "backend/tests/test_production_wiring.py": {
+      "sha256": "d4e228ec01f15070b3ed13cff6768b4f02345666de47f17e965362c1f08997d8",
+      "modified": false
+    },
+    "backend/tests/test_structural_integration.py": {
+      "sha256": "c776619a4b37fd2a904a04eece41ab79369db9e0de79631ca99e8b7ffa1440e1",
+      "modified": false
+    }
+  }
+}

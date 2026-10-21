@@ -1,0 +1,86 @@
+{
+  "audit_experiment_id": "diagnostic_experiment_4_5_9_gate_5_audit",
+  "timestamp": "2026-10-11T00:30:00+05:30",
+  "zero_modifications_to_production_code": true,
+  "zero_modifications_to_frozen_records": true,
+  "zero_live_model_inferences_executed": true,
+  "zero_network_calls_made": true,
+  "zero_benchmark_reruns": true,
+  "input_hash_verifications": {
+    "sample_manifest.jsonl": {
+      "path": "/home/chandan/Projects/major-project/precis/results/diagnostic_structural_decompilation_v3/sample_manifest.jsonl",
+      "sha256": "011553c0725621b7dda73aad12254d100e6fc15f49a5f80f4524156eb4e25db7",
+      "expected": "011553c0725621b7dda73aad12254d100e6fc15f49a5f80f4524156eb4e25db7",
+      "match": true
+    },
+    "eval_records_stage_c.jsonl": {
+      "path": "/home/chandan/Projects/major-project/precis/results/diagnostic_structural_decompilation_v3/eval_records_stage_c.jsonl",
+      "sha256": "e10ea38f7cc7cfa9a98d494851de8c41c322b5f148dfff653077193917933687",
+      "expected": "e10ea38f7cc7cfa9a98d494851de8c41c322b5f148dfff653077193917933687",
+      "match": true
+    },
+    "eval_records_exp42.jsonl": {
+      "path": "/home/chandan/Projects/major-project/precis/results/diagnostic_experiment_4_v1/full_cohort_threshold_20261010/eval_records.jsonl",
+      "sha256": "d8a42cc906bf7fa4aebafff6868345c20a0667f971dea4f2309e3e199a3079f0",
+      "expected": "d8a42cc906bf7fa4aebafff6868345c20a0667f971dea4f2309e3e199a3079f0",
+      "match": true
+    },
+    "eval_records_exp44.jsonl": {
+      "path": "/home/chandan/Projects/major-project/precis/results/diagnostic_experiment_4_v1/full_cohort_evaluation_20261010/eval_records.jsonl",
+      "sha256": "73df76085485fbead2b67fa6a783be3c10420edbf8d9afa9c42203d6737f2c47",
+      "expected": "73df76085485fbead2b67fa6a783be3c10420edbf8d9afa9c42203d6737f2c47",
+      "match": true
+    },
+    "stage_2b_eval_records.jsonl": {
+      "path": "/home/chandan/Projects/major-project/precis/results/diagnostic_experiment_4_v1/gate_2_list_extraction_20261010/stage_2b_eval_records.jsonl",
+      "sha256": "417fab9df822674e128c052fae2ad5153a9b8f96faf6e9995760eec334fc9e4f",
+      "expected": "417fab9df822674e128c052fae2ad5153a9b8f96faf6e9995760eec334fc9e4f",
+      "match": true
+    },
+    "nq_dev.jsonl": {
+      "path": "/home/chandan/Projects/major-project/precis/backend/data/nq_subset/nq_dev.jsonl",
+      "sha256": "14efc255a596433d6bf10dd853a1915474a5d3f6b47c593f77911ab4bb8eb491",
+      "expected": "14efc255a596433d6bf10dd853a1915474a5d3f6b47c593f77911ab4bb8eb491",
+      "match": true
+    }
+  },
+  "production_code_hash_verifications": {
+    "structural.py": {
+      "path": "/home/chandan/Projects/major-project/precis/backend/src/precis/pipeline/structural.py",
+      "sha256": "1d0f747878237df82a66a5b5ce185679936a1dddaa1a1b5f5d9c257be9c2e1aa",
+      "expected": "1d0f747878237df82a66a5b5ce185679936a1dddaa1a1b5f5d9c257be9c2e1aa",
+      "match": true
+    },
+    "orchestrator.py": {
+      "path": "/home/chandan/Projects/major-project/precis/backend/src/precis/pipeline/orchestrator.py",
+      "sha256": "e6706cc08cf68c6bae9f4d1928793fbc25d39208e7a3c7c90e7cf8b439d80803",
+      "expected": "e6706cc08cf68c6bae9f4d1928793fbc25d39208e7a3c7c90e7cf8b439d80803",
+      "match": true
+    },
+    "store.py": {
+      "path": "/home/chandan/Projects/major-project/precis/backend/src/precis/graph/store.py",
+      "sha256": "6db9d6d48d25f2f6f703054e488da10196666a47c0e3da4d7e7c68beb49dcb07",
+      "expected": "6db9d6d48d25f2f6f703054e488da10196666a47c0e3da4d7e7c68beb49dcb07",
+      "match": true
+    },
+    "main.py": {
+      "path": "/home/chandan/Projects/major-project/precis/backend/main.py",
+      "sha256": "fcb0f64a5a6e8f2e0a26c9b4589bb4c575e6fc9bd58385deca5ac1270478b329",
+      "expected": "fcb0f64a5a6e8f2e0a26c9b4589bb4c575e6fc9bd58385deca5ac1270478b329",
+      "match": true
+    }
+  },
+  "audit_script": {
+    "path": "/home/chandan/Projects/major-project/precis/results/diagnostic_experiment_4_v1/gate_5_independent_audit_20261011/audit_gate_5.py",
+    "sha256": "8cfc734eec70c14a64cdfedea0338c007a3b13a9fb3d6577918d9fcb3a0ad013"
+  },
+  "evaluation_records_integrity": {
+    "path": "/home/chandan/Projects/major-project/precis/results/diagnostic_experiment_4_v1/gate_5_confirmatory_evaluation_20261010/eval_records.jsonl",
+    "sha256": "edfeec16d87cdf5f168ceb7f8c947a875a0f237dc1c6074ca9ad22e28f600011",
+    "total_lines": 201,
+    "total_records": 200,
+    "unique_case_ids": 200,
+    "match_manifest_ordering": true
+  },
+  "verdict": "PASS WITH CORRECTIONS"
+}

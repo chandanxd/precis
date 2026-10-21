@@ -1,0 +1,62 @@
+{
+  "experiment": "Experiment 4.5.3: Independent Structural Persistence Integration Audit",
+  "timestamp": "2026-10-10T16:06:03Z",
+  "executive_verdict": "PASS WITH LIMITATIONS",
+  "summary": "Core persistence, end-to-end REST/WebSocket wiring, and disabled-mode parity are verified. However, two critical/high architectural limitations were discovered and reproduced: (1) top_doc SVOA bias causing wrongful exclusion of correct structural records, and (2) rejection of pure-structural documents when SVOA count is 0.",
+  "test_execution_accounting": {
+    "backend_tests_total": 418,
+    "backend_tests_passed": 418,
+    "backend_tests_failed": 0,
+    "backend_tests_duration_s": 195.22,
+    "scripts_tests_total": 52,
+    "scripts_tests_passed": 52,
+    "scripts_tests_failed": 0,
+    "scripts_tests_duration_s": 58.31,
+    "unique_tests_total": 470,
+    "unique_tests_passed": 470,
+    "unique_tests_failed": 0,
+    "overlap_correction": {
+      "previous_reported_total": 528,
+      "double_counted_tests": 77,
+      "corrected_prior_unique_total": 451,
+      "new_audit_tests_added": 19,
+      "true_codebase_unique_total": 470
+    }
+  },
+  "reproduced_defects": [
+    {
+      "id": "DEFECT-01",
+      "title": "Hidden SVOA Dependency in Multi-Document Structural Selection (top_doc Bias)",
+      "severity": "HIGH",
+      "location": "backend/src/precis/pipeline/structural.py:1320-1323",
+      "description": "When SVOA facts from Document A rank #1 due to lexical prose overlap, top_doc is assigned to Document A. If Document A has any structural chunk with sim >= 0.25, the system selects only Document A chunks and drops more relevant structural chunks (e.g. sim 0.75+) from Document B.",
+      "reproduced_in": "scripts/test_experiment_4_5_persistence_audit.py::TestAuditQueryRetrievalAndIsolationScrutiny::test_top_doc_defect_vulnerability_demonstration",
+      "status": "REPRODUCED"
+    },
+    {
+      "id": "DEFECT-02",
+      "title": "Rejection of Pure-Structural Documents by REST/WebSocket Handlers",
+      "severity": "HIGH",
+      "location": "backend/main.py:272,550 and backend/src/precis/pipeline/packer.py:218",
+      "description": "If an ingested document consists entirely of tables or lists (producing 0 SVOA facts), store.count() == 0. Both POST /api/query and WebSocket _handle_ws_query reject queries with HTTP 400 or error: \"No documents ingested\", even though structural evidence exists in the store.",
+      "reproduced_in": "scripts/test_experiment_4_5_persistence_audit.py::TestAuditQueryRetrievalAndIsolationScrutiny::test_zero_svoa_facts_store_rejection",
+      "status": "REPRODUCED"
+    },
+    {
+      "id": "DEFECT-03",
+      "title": "Starvation of Non-fact_docs Structural Candidates by matched_items",
+      "severity": "MEDIUM",
+      "location": "backend/src/precis/pipeline/structural.py:1325-1327",
+      "description": "The expression (matched_items if matched_items else other_items) completely starves other_items if any item in matched_items exists, regardless of similarity scores.",
+      "status": "IDENTIFIED_BY_CODE_INSPECTION"
+    },
+    {
+      "id": "DEFECT-04",
+      "title": "Inflated Test Accounting in Experiment 4.5.2 Report",
+      "severity": "MEDIUM",
+      "location": "results/diagnostic_experiment_4_v1/production_persistence_20261010/implementation_report.md",
+      "description": "Double-counted 77 tests that are part of backend/tests/ by summing individual test files with the full suite total.",
+      "status": "RECONCILED"
+    }
+  ]
+}

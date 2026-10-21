@@ -1,0 +1,56 @@
+{
+  "timestamp": "2026-10-10T16:05:35Z",
+  "audit_type": "Experiment 4.5.3 Independent Integrity Verification",
+  "production_files_modified": false,
+  "status": "VERIFIED_UNTOUCHED",
+  "file_hashes": [
+    {
+      "file": "backend/src/precis/graph/schema.py",
+      "baseline_hash": "2c5ed7e123da6b2187ededcc72cacc8db8ed39022a7900704a31a67f4af8e441",
+      "audit_hash": "2c5ed7e123da6b2187ededcc72cacc8db8ed39022a7900704a31a67f4af8e441",
+      "match": true
+    },
+    {
+      "file": "backend/src/precis/graph/store.py",
+      "baseline_hash": "6db9d6d48d25f2f6f703054e488da10196666a47c0e3da4d7e7c68beb49dcb07",
+      "audit_hash": "6db9d6d48d25f2f6f703054e488da10196666a47c0e3da4d7e7c68beb49dcb07",
+      "match": true
+    },
+    {
+      "file": "backend/src/precis/pipeline/structural.py",
+      "baseline_hash": "f41e3b368819484b69b868cff4e34335f3320fc00644165ca10a44ac36e713c6",
+      "audit_hash": "f41e3b368819484b69b868cff4e34335f3320fc00644165ca10a44ac36e713c6",
+      "match": true
+    },
+    {
+      "file": "backend/src/precis/pipeline/orchestrator.py",
+      "baseline_hash": "e6706cc08cf68c6bae9f4d1928793fbc25d39208e7a3c7c90e7cf8b439d80803",
+      "audit_hash": "e6706cc08cf68c6bae9f4d1928793fbc25d39208e7a3c7c90e7cf8b439d80803",
+      "match": true
+    },
+    {
+      "file": "backend/main.py",
+      "baseline_hash": "7f9c29df2685f816982757b4eebd3c3ffe310cbe365467059dca307d03b52695",
+      "audit_hash": "7f9c29df2685f816982757b4eebd3c3ffe310cbe365467059dca307d03b52695",
+      "match": true
+    },
+    {
+      "file": "backend/tests/test_structural_persistence.py",
+      "baseline_hash": "14e56f11f4050f00c92e89f50cc212492163ce97eea249f44fc1a87ec05c83c1",
+      "audit_hash": "14e56f11f4050f00c92e89f50cc212492163ce97eea249f44fc1a87ec05c83c1",
+      "match": true
+    },
+    {
+      "file": "backend/tests/test_production_wiring.py",
+      "baseline_hash": "d4e228ec01f15070b3ed13cff6768b4f02345666de47f17e965362c1f08997d8",
+      "audit_hash": "d4e228ec01f15070b3ed13cff6768b4f02345666de47f17e965362c1f08997d8",
+      "match": true
+    },
+    {
+      "file": "backend/tests/test_structural_integration.py",
+      "baseline_hash": "c776619a4b37fd2a904a04eece41ab79369db9e0de79631ca99e8b7ffa1440e1",
+      "audit_hash": "c776619a4b37fd2a904a04eece41ab79369db9e0de79631ca99e8b7ffa1440e1",
+      "match": true
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+ "runner_errors": {},
+ "table_cohort_rebuilt_estimates": {
+  "A": {
+   "contexts": 200,
+   "with_NOT": 19,
+   "doubled": 11,
+   "doubled_and_stored_em_wrong": 8
+  },
+  "B": {
+   "contexts": 200,
+   "with_NOT": 0,
+   "doubled": 0,
+   "doubled_and_stored_em_wrong": 0
+  },
+  "C": {
+   "contexts": 200,
+   "with_NOT": 0,
+   "doubled": 0,
+   "doubled_and_stored_em_wrong": 0
+  },
+  "E": {
+   "contexts": 200,
+   "with_NOT": 17,
+   "doubled": 9,
+   "doubled_and_stored_em_wrong": 4
+  }
+ },
+ "D": "tables only, no facts: no exposure by construction",
+ "nq200_v3_packed_fact_scan": {
+  "samples": 200,
+  "samples_with_NOT": 27,
+  "samples_doubled": 7,
+  "packed_facts": 2101,
+  "facts_with_NOT": 49,
+  "facts_doubled": 8
+ }
+}

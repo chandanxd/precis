@@ -1,0 +1,93 @@
+{
+  "timestamp": "2026-10-10T22:12:00+05:30",
+  "experiment": "Experiment 4.5.4: Structural Retrieval Defect Remediation",
+  "environment": {
+    "os": "Linux x86_64",
+    "python": "3.12.3",
+    "pytest": "9.1.1",
+    "cuda": "cuda:0 available"
+  },
+  "summary": {
+    "total_unique_tests": 476,
+    "total_passed": 476,
+    "total_failed": 0,
+    "total_skipped": 0,
+    "pass_rate": 1.0,
+    "double_counted_overlap": 0
+  },
+  "suites": [
+    {
+      "suite_name": "Full Backend Test Suite",
+      "command": "./backend/venv/bin/pytest backend/tests/",
+      "tests_collected": 418,
+      "passed": 418,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 203.48,
+      "exit_code": 0
+    },
+    {
+      "suite_name": "Persistence Audit & Defect Remediation Suite",
+      "command": "./backend/venv/bin/pytest scripts/test_experiment_4_5_persistence_audit.py -v",
+      "tests_collected": 25,
+      "passed": 25,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 86.27,
+      "exit_code": 0
+    },
+    {
+      "suite_name": "Diagnostic Integrity Suite (4.2)",
+      "command": "./backend/venv/bin/pytest scripts/test_experiment_4_2_integrity.py",
+      "tests_collected": 13,
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 0.58,
+      "exit_code": 0
+    },
+    {
+      "suite_name": "Diagnostic Fixtures Suite (4.3)",
+      "command": "./backend/venv/bin/pytest scripts/test_experiment_4_3_fixtures.py",
+      "tests_collected": 5,
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 0.32,
+      "exit_code": 0
+    },
+    {
+      "suite_name": "Diagnostic Extractor Audit Suite (4.4)",
+      "command": "./backend/venv/bin/pytest scripts/test_experiment_4_4_audit_extractor.py",
+      "tests_collected": 15,
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 3.03,
+      "exit_code": 0
+    }
+  ],
+  "remediated_defects": {
+    "DEFECT-01": {
+      "name": "Hard top_doc bias discards relevant structural evidence from other documents",
+      "status": "REMEDIATED",
+      "verification_test": "test_top_doc_defect_vulnerability_demonstration",
+      "result": "PASS"
+    },
+    "DEFECT-02": {
+      "name": "REST and WebSocket queries reject stores containing structural evidence but zero SVOA facts",
+      "status": "REMEDIATED",
+      "verification_tests": [
+        "test_rest_pure_structural_query_test_d",
+        "test_websocket_pure_structural_query_test_e"
+      ],
+      "result": "PASS"
+    },
+    "DEFECT-03": {
+      "name": "The matched_items if matched_items else other_items selection logic starves potentially better structural candidates",
+      "status": "REMEDIATED",
+      "verification_test": "test_candidate_starvation_remediation_test_b",
+      "result": "PASS"
+    }
+  }
+}

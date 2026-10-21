@@ -1,0 +1,516 @@
+{
+  "metadata": {
+    "experiment_id": "diagnostic_experiment_4_v1",
+    "date": "2026-10-10 09:02:37 UTC",
+    "total_cases": 5,
+    "dry_run": false
+  },
+  "condition_summaries": {
+    "cond_a": {
+      "status": "completed",
+      "attempted_count": 5,
+      "success_count": 5,
+      "failed_count": 0,
+      "unscorable_count": 0,
+      "dry_run_count": 0,
+      "scored_denominator": 5,
+      "exact_match_count": 1,
+      "exact_match_rate": 0.2,
+      "containment_count": 1,
+      "containment_rate": 0.2,
+      "mean_rouge_l": 0.2,
+      "mean_context_estimated_tokens": 278.6,
+      "mean_full_prompt_model_tokens": null,
+      "mean_generated_tokens": 0.0,
+      "unsuccessful_case_ids": {
+        "failed": [],
+        "unscorable": []
+      }
+    },
+    "cond_b": {
+      "status": "completed",
+      "attempted_count": 5,
+      "success_count": 5,
+      "failed_count": 0,
+      "unscorable_count": 0,
+      "dry_run_count": 0,
+      "scored_denominator": 5,
+      "exact_match_count": 2,
+      "exact_match_rate": 0.4,
+      "containment_count": 2,
+      "containment_rate": 0.4,
+      "mean_rouge_l": 0.4,
+      "mean_context_estimated_tokens": 167.4,
+      "mean_full_prompt_model_tokens": null,
+      "mean_generated_tokens": 0.0,
+      "unsuccessful_case_ids": {
+        "failed": [],
+        "unscorable": []
+      }
+    },
+    "cond_c": {
+      "status": "completed",
+      "attempted_count": 5,
+      "success_count": 5,
+      "failed_count": 0,
+      "unscorable_count": 0,
+      "dry_run_count": 0,
+      "scored_denominator": 5,
+      "exact_match_count": 3,
+      "exact_match_rate": 0.6,
+      "containment_count": 3,
+      "containment_rate": 0.6,
+      "mean_rouge_l": 0.6,
+      "mean_context_estimated_tokens": 184.4,
+      "mean_full_prompt_model_tokens": 454.6,
+      "mean_generated_tokens": 4.2,
+      "unsuccessful_case_ids": {
+        "failed": [],
+        "unscorable": []
+      }
+    },
+    "cond_d": {
+      "status": "completed",
+      "attempted_count": 5,
+      "success_count": 5,
+      "failed_count": 0,
+      "unscorable_count": 0,
+      "dry_run_count": 0,
+      "scored_denominator": 5,
+      "exact_match_count": 3,
+      "exact_match_rate": 0.6,
+      "containment_count": 3,
+      "containment_rate": 0.6,
+      "mean_rouge_l": 0.6,
+      "mean_context_estimated_tokens": 212.4,
+      "mean_full_prompt_model_tokens": 489.0,
+      "mean_generated_tokens": 4.2,
+      "unsuccessful_case_ids": {
+        "failed": [],
+        "unscorable": []
+      }
+    }
+  },
+  "condition_accuracies": {
+    "cond_a": {
+      "status": "completed",
+      "attempted_count": 5,
+      "success_count": 5,
+      "failed_count": 0,
+      "unscorable_count": 0,
+      "dry_run_count": 0,
+      "scored_denominator": 5,
+      "exact_match_count": 1,
+      "exact_match_rate": 0.2,
+      "containment_count": 1,
+      "containment_rate": 0.2,
+      "mean_rouge_l": 0.2,
+      "mean_context_estimated_tokens": 278.6,
+      "mean_full_prompt_model_tokens": null,
+      "mean_generated_tokens": 0.0,
+      "unsuccessful_case_ids": {
+        "failed": [],
+        "unscorable": []
+      }
+    },
+    "cond_b": {
+      "status": "completed",
+      "attempted_count": 5,
+      "success_count": 5,
+      "failed_count": 0,
+      "unscorable_count": 0,
+      "dry_run_count": 0,
+      "scored_denominator": 5,
+      "exact_match_count": 2,
+      "exact_match_rate": 0.4,
+      "containment_count": 2,
+      "containment_rate": 0.4,
+      "mean_rouge_l": 0.4,
+      "mean_context_estimated_tokens": 167.4,
+      "mean_full_prompt_model_tokens": null,
+      "mean_generated_tokens": 0.0,
+      "unsuccessful_case_ids": {
+        "failed": [],
+        "unscorable": []
+      }
+    },
+    "cond_c": {
+      "status": "completed",
+      "attempted_count": 5,
+      "success_count": 5,
+      "failed_count": 0,
+      "unscorable_count": 0,
+      "dry_run_count": 0,
+      "scored_denominator": 5,
+      "exact_match_count": 3,
+      "exact_match_rate": 0.6,
+      "containment_count": 3,
+      "containment_rate": 0.6,
+      "mean_rouge_l": 0.6,
+      "mean_context_estimated_tokens": 184.4,
+      "mean_full_prompt_model_tokens": 454.6,
+      "mean_generated_tokens": 4.2,
+      "unsuccessful_case_ids": {
+        "failed": [],
+        "unscorable": []
+      }
+    },
+    "cond_d": {
+      "status": "completed",
+      "attempted_count": 5,
+      "success_count": 5,
+      "failed_count": 0,
+      "unscorable_count": 0,
+      "dry_run_count": 0,
+      "scored_denominator": 5,
+      "exact_match_count": 3,
+      "exact_match_rate": 0.6,
+      "containment_count": 3,
+      "containment_rate": 0.6,
+      "mean_rouge_l": 0.6,
+      "mean_context_estimated_tokens": 212.4,
+      "mean_full_prompt_model_tokens": 489.0,
+      "mean_generated_tokens": 4.2,
+      "unsuccessful_case_ids": {
+        "failed": [],
+        "unscorable": []
+      }
+    }
+  },
+  "paired_comparisons": {
+    "exact_match": {
+      "c_vs_a": {
+        "status": "computed",
+        "attempted_pair_count": 5,
+        "valid_paired_denominator": 5,
+        "evaluated_case_ids": [
+          "2c62d7eb04924071959544f85e978b8b",
+          "a16cca39f27e4d78a64de2d8285bc4bf",
+          "3f0497f4a228459c8b2201e7f871a520",
+          "16caa32e50d342878340cacefe5a417a",
+          "00d7c7cc7b534abeaf1f9dded1d3639b"
+        ],
+        "excluded_count": 0,
+        "excluded_case_ids": [],
+        "exclusion_details": [],
+        "mcnemar_exact": {
+          "status": "computed",
+          "total_n": 5,
+          "contingency_table": {
+            "a_both_positive": 1,
+            "b_cond1_pos_cond2_neg": 2,
+            "c_cond1_neg_cond2_pos": 0,
+            "d_both_negative": 2
+          },
+          "discordant_pairs": 2,
+          "cond1_wins": 2,
+          "cond2_wins": 0,
+          "net_wins_cond1": 2,
+          "risk_difference": 0.4,
+          "odds_ratio": Infinity,
+          "p_value": 0.5,
+          "statistically_significant_05": false
+        }
+      },
+      "c_vs_b": {
+        "status": "computed",
+        "attempted_pair_count": 5,
+        "valid_paired_denominator": 5,
+        "evaluated_case_ids": [
+          "2c62d7eb04924071959544f85e978b8b",
+          "a16cca39f27e4d78a64de2d8285bc4bf",
+          "3f0497f4a228459c8b2201e7f871a520",
+          "16caa32e50d342878340cacefe5a417a",
+          "00d7c7cc7b534abeaf1f9dded1d3639b"
+        ],
+        "excluded_count": 0,
+        "excluded_case_ids": [],
+        "exclusion_details": [],
+        "mcnemar_exact": {
+          "status": "computed",
+          "total_n": 5,
+          "contingency_table": {
+            "a_both_positive": 1,
+            "b_cond1_pos_cond2_neg": 2,
+            "c_cond1_neg_cond2_pos": 1,
+            "d_both_negative": 1
+          },
+          "discordant_pairs": 3,
+          "cond1_wins": 2,
+          "cond2_wins": 1,
+          "net_wins_cond1": 1,
+          "risk_difference": 0.2,
+          "odds_ratio": 2.0,
+          "p_value": 1.0,
+          "statistically_significant_05": false
+        }
+      },
+      "d_vs_a": {
+        "status": "computed",
+        "attempted_pair_count": 5,
+        "valid_paired_denominator": 5,
+        "evaluated_case_ids": [
+          "2c62d7eb04924071959544f85e978b8b",
+          "a16cca39f27e4d78a64de2d8285bc4bf",
+          "3f0497f4a228459c8b2201e7f871a520",
+          "16caa32e50d342878340cacefe5a417a",
+          "00d7c7cc7b534abeaf1f9dded1d3639b"
+        ],
+        "excluded_count": 0,
+        "excluded_case_ids": [],
+        "exclusion_details": [],
+        "mcnemar_exact": {
+          "status": "computed",
+          "total_n": 5,
+          "contingency_table": {
+            "a_both_positive": 1,
+            "b_cond1_pos_cond2_neg": 2,
+            "c_cond1_neg_cond2_pos": 0,
+            "d_both_negative": 2
+          },
+          "discordant_pairs": 2,
+          "cond1_wins": 2,
+          "cond2_wins": 0,
+          "net_wins_cond1": 2,
+          "risk_difference": 0.4,
+          "odds_ratio": Infinity,
+          "p_value": 0.5,
+          "statistically_significant_05": false
+        }
+      },
+      "d_vs_b": {
+        "status": "computed",
+        "attempted_pair_count": 5,
+        "valid_paired_denominator": 5,
+        "evaluated_case_ids": [
+          "2c62d7eb04924071959544f85e978b8b",
+          "a16cca39f27e4d78a64de2d8285bc4bf",
+          "3f0497f4a228459c8b2201e7f871a520",
+          "16caa32e50d342878340cacefe5a417a",
+          "00d7c7cc7b534abeaf1f9dded1d3639b"
+        ],
+        "excluded_count": 0,
+        "excluded_case_ids": [],
+        "exclusion_details": [],
+        "mcnemar_exact": {
+          "status": "computed",
+          "total_n": 5,
+          "contingency_table": {
+            "a_both_positive": 1,
+            "b_cond1_pos_cond2_neg": 2,
+            "c_cond1_neg_cond2_pos": 1,
+            "d_both_negative": 1
+          },
+          "discordant_pairs": 3,
+          "cond1_wins": 2,
+          "cond2_wins": 1,
+          "net_wins_cond1": 1,
+          "risk_difference": 0.2,
+          "odds_ratio": 2.0,
+          "p_value": 1.0,
+          "statistically_significant_05": false
+        }
+      },
+      "d_vs_c": {
+        "status": "computed",
+        "attempted_pair_count": 5,
+        "valid_paired_denominator": 5,
+        "evaluated_case_ids": [
+          "2c62d7eb04924071959544f85e978b8b",
+          "a16cca39f27e4d78a64de2d8285bc4bf",
+          "3f0497f4a228459c8b2201e7f871a520",
+          "16caa32e50d342878340cacefe5a417a",
+          "00d7c7cc7b534abeaf1f9dded1d3639b"
+        ],
+        "excluded_count": 0,
+        "excluded_case_ids": [],
+        "exclusion_details": [],
+        "mcnemar_exact": {
+          "status": "computed",
+          "total_n": 5,
+          "contingency_table": {
+            "a_both_positive": 3,
+            "b_cond1_pos_cond2_neg": 0,
+            "c_cond1_neg_cond2_pos": 0,
+            "d_both_negative": 2
+          },
+          "discordant_pairs": 0,
+          "cond1_wins": 0,
+          "cond2_wins": 0,
+          "net_wins_cond1": 0,
+          "risk_difference": 0.0,
+          "odds_ratio": 1.0,
+          "p_value": 1.0,
+          "statistically_significant_05": false
+        }
+      }
+    },
+    "containment": {
+      "c_vs_a": {
+        "status": "computed",
+        "attempted_pair_count": 5,
+        "valid_paired_denominator": 5,
+        "evaluated_case_ids": [
+          "2c62d7eb04924071959544f85e978b8b",
+          "a16cca39f27e4d78a64de2d8285bc4bf",
+          "3f0497f4a228459c8b2201e7f871a520",
+          "16caa32e50d342878340cacefe5a417a",
+          "00d7c7cc7b534abeaf1f9dded1d3639b"
+        ],
+        "excluded_count": 0,
+        "excluded_case_ids": [],
+        "exclusion_details": [],
+        "mcnemar_exact": {
+          "status": "computed",
+          "total_n": 5,
+          "contingency_table": {
+            "a_both_positive": 1,
+            "b_cond1_pos_cond2_neg": 2,
+            "c_cond1_neg_cond2_pos": 0,
+            "d_both_negative": 2
+          },
+          "discordant_pairs": 2,
+          "cond1_wins": 2,
+          "cond2_wins": 0,
+          "net_wins_cond1": 2,
+          "risk_difference": 0.4,
+          "odds_ratio": Infinity,
+          "p_value": 0.5,
+          "statistically_significant_05": false
+        }
+      },
+      "c_vs_b": {
+        "status": "computed",
+        "attempted_pair_count": 5,
+        "valid_paired_denominator": 5,
+        "evaluated_case_ids": [
+          "2c62d7eb04924071959544f85e978b8b",
+          "a16cca39f27e4d78a64de2d8285bc4bf",
+          "3f0497f4a228459c8b2201e7f871a520",
+          "16caa32e50d342878340cacefe5a417a",
+          "00d7c7cc7b534abeaf1f9dded1d3639b"
+        ],
+        "excluded_count": 0,
+        "excluded_case_ids": [],
+        "exclusion_details": [],
+        "mcnemar_exact": {
+          "status": "computed",
+          "total_n": 5,
+          "contingency_table": {
+            "a_both_positive": 1,
+            "b_cond1_pos_cond2_neg": 2,
+            "c_cond1_neg_cond2_pos": 1,
+            "d_both_negative": 1
+          },
+          "discordant_pairs": 3,
+          "cond1_wins": 2,
+          "cond2_wins": 1,
+          "net_wins_cond1": 1,
+          "risk_difference": 0.2,
+          "odds_ratio": 2.0,
+          "p_value": 1.0,
+          "statistically_significant_05": false
+        }
+      },
+      "d_vs_a": {
+        "status": "computed",
+        "attempted_pair_count": 5,
+        "valid_paired_denominator": 5,
+        "evaluated_case_ids": [
+          "2c62d7eb04924071959544f85e978b8b",
+          "a16cca39f27e4d78a64de2d8285bc4bf",
+          "3f0497f4a228459c8b2201e7f871a520",
+          "16caa32e50d342878340cacefe5a417a",
+          "00d7c7cc7b534abeaf1f9dded1d3639b"
+        ],
+        "excluded_count": 0,
+        "excluded_case_ids": [],
+        "exclusion_details": [],
+        "mcnemar_exact": {
+          "status": "computed",
+          "total_n": 5,
+          "contingency_table": {
+            "a_both_positive": 1,
+            "b_cond1_pos_cond2_neg": 2,
+            "c_cond1_neg_cond2_pos": 0,
+            "d_both_negative": 2
+          },
+          "discordant_pairs": 2,
+          "cond1_wins": 2,
+          "cond2_wins": 0,
+          "net_wins_cond1": 2,
+          "risk_difference": 0.4,
+          "odds_ratio": Infinity,
+          "p_value": 0.5,
+          "statistically_significant_05": false
+        }
+      },
+      "d_vs_b": {
+        "status": "computed",
+        "attempted_pair_count": 5,
+        "valid_paired_denominator": 5,
+        "evaluated_case_ids": [
+          "2c62d7eb04924071959544f85e978b8b",
+          "a16cca39f27e4d78a64de2d8285bc4bf",
+          "3f0497f4a228459c8b2201e7f871a520",
+          "16caa32e50d342878340cacefe5a417a",
+          "00d7c7cc7b534abeaf1f9dded1d3639b"
+        ],
+        "excluded_count": 0,
+        "excluded_case_ids": [],
+        "exclusion_details": [],
+        "mcnemar_exact": {
+          "status": "computed",
+          "total_n": 5,
+          "contingency_table": {
+            "a_both_positive": 1,
+            "b_cond1_pos_cond2_neg": 2,
+            "c_cond1_neg_cond2_pos": 1,
+            "d_both_negative": 1
+          },
+          "discordant_pairs": 3,
+          "cond1_wins": 2,
+          "cond2_wins": 1,
+          "net_wins_cond1": 1,
+          "risk_difference": 0.2,
+          "odds_ratio": 2.0,
+          "p_value": 1.0,
+          "statistically_significant_05": false
+        }
+      },
+      "d_vs_c": {
+        "status": "computed",
+        "attempted_pair_count": 5,
+        "valid_paired_denominator": 5,
+        "evaluated_case_ids": [
+          "2c62d7eb04924071959544f85e978b8b",
+          "a16cca39f27e4d78a64de2d8285bc4bf",
+          "3f0497f4a228459c8b2201e7f871a520",
+          "16caa32e50d342878340cacefe5a417a",
+          "00d7c7cc7b534abeaf1f9dded1d3639b"
+        ],
+        "excluded_count": 0,
+        "excluded_case_ids": [],
+        "exclusion_details": [],
+        "mcnemar_exact": {
+          "status": "computed",
+          "total_n": 5,
+          "contingency_table": {
+            "a_both_positive": 3,
+            "b_cond1_pos_cond2_neg": 0,
+            "c_cond1_neg_cond2_pos": 0,
+            "d_both_negative": 2
+          },
+          "discordant_pairs": 0,
+          "cond1_wins": 0,
+          "cond2_wins": 0,
+          "net_wins_cond1": 0,
+          "risk_difference": 0.0,
+          "odds_ratio": 1.0,
+          "p_value": 1.0,
+          "statistically_significant_05": false
+        }
+      }
+    }
+  }
+}

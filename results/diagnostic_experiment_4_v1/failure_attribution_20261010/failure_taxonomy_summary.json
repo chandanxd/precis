@@ -1,0 +1,75 @@
+{
+  "total_failures_audited": 101,
+  "full_cohort_denominator": 200,
+  "condition_d_accuracy_baseline": {
+    "exact_match_success": 99,
+    "exact_match_rate": 0.495,
+    "containment_success": 122,
+    "containment_rate": 0.61
+  },
+  "historical_runner_breakdown": {
+    "GENERATION_REASONING_FAILURE": 44,
+    "EXTRACTION_OMISSION": 34,
+    "SURFACE_FORM_MISMATCH": 23
+  },
+  "prose_aware_breakdown": {
+    "GENERATION_REASONING_FAILURE": 45,
+    "EXTRACTION_OMISSION": 33,
+    "SURFACE_FORM_MISMATCH": 23
+  },
+  "revised_gate_1_taxonomy": {
+    "extraction_omissions": {
+      "total": 31,
+      "breakdown": {
+        "EXTRACTION_OMISSION_LIST_ORDERED": 1,
+        "EXTRACTION_OMISSION_LIST_UNORDERED": 30
+      }
+    },
+    "generation_reasoning_failures": {
+      "total": 44,
+      "breakdown": {
+        "GENERATION_ATTENTION_INSUFFICIENT_INFO": 14,
+        "GENERATION_DISTRACTOR_ROW": 30
+      }
+    },
+    "surface_form_mismatches": {
+      "total": 24,
+      "breakdown": {
+        "SURFACE_FORM_PARENTHETICAL_ADDITION": 2,
+        "SURFACE_FORM_MULTI_ENTITY_OVERCOMPLETE": 14,
+        "SURFACE_FORM_UNIT_OR_CATEGORY": 7,
+        "SURFACE_FORM_INCOMPLETE": 1
+      }
+    },
+    "dataset_annotator_errors": {
+      "total": 2,
+      "cases": [
+        "2b464be1aa404b8485e37a6791c0d2d5",
+        "f24383739b994db88f0309514cbc5a21"
+      ]
+    }
+  },
+  "structural_location_breakdown": {
+    "table": 66,
+    "ordered_list": 1,
+    "unordered_list": 33,
+    "none": 1
+  },
+  "semantic_answerability_breakdown": {
+    "SUPPORTED": 98,
+    "AMBIGUOUS_OR_CONSTRAINED": 1,
+    "ANNOTATOR_ERROR_UNSUPPORTED": 2
+  },
+  "plausible_recovery_interventions": {
+    "ROW_PRIORITIZATION": 14,
+    "LIST_EXTRACTION": 31,
+    "ROW_PRIORITIZATION_AND_GROUNDING": 30,
+    "PROMPT_CONCISENESS_NORMALIZATION": 9,
+    "SCORING_NORMALIZATION_SET_MATCH": 14,
+    "IRRECOVERABLE_DATASET_ERROR": 2,
+    "PROMPT_NORMALIZATION": 1
+  },
+  "attribution_confidence_levels": {
+    "HIGH": 101
+  }
+}

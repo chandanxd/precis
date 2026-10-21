@@ -1,0 +1,105 @@
+{
+  "report_id": "experiment_4_4_full_cohort_confirmatory_integrity",
+  "timestamp": "2026-10-10T17:50:00+05:30",
+  "status": "PASS",
+  "recommendation": "PROCEED_TO_PRODUCTION_INTEGRATION",
+  "inference_accounting": {
+    "total_cases_evaluated": 200,
+    "reused_gate2_condition_e_cases": 31,
+    "newly_generated_condition_e_cases": 169,
+    "failed_inferences": 0,
+    "unscorable_inferences": 0,
+    "completion_rate": 1.0,
+    "ceiling_violations": 0
+  },
+  "safety_invariants": {
+    "production_code_untouched": true,
+    "production_directory": "backend/src/precis/",
+    "zero_production_diff_verified": true,
+    "historical_files_overwritten": false,
+    "isolated_output_directory": "results/diagnostic_experiment_4_v1/full_cohort_evaluation_20261010"
+  },
+  "automated_tests": {
+    "test_experiment_4_3_fixtures": "5 passed",
+    "test_experiment_4_2_integrity": "13 passed",
+    "total_tests_passed": 18,
+    "failures": 0,
+    "git_diff_check_clean": true
+  },
+  "input_files": {
+    "sample_manifest.jsonl": {
+      "path": "results/diagnostic_structural_decompilation_v3/sample_manifest.jsonl",
+      "size_bytes": 87954,
+      "sha256": "011553c0725621b7dda73aad12254d100e6fc15f49a5f80f4524156eb4e25db7",
+      "exists": true
+    },
+    "eval_records_stage_c.jsonl": {
+      "path": "results/diagnostic_structural_decompilation_v3/eval_records_stage_c.jsonl",
+      "size_bytes": 312090,
+      "sha256": "e10ea38f7cc7cfa9a98d494851de8c41c322b5f148dfff653077193917933687",
+      "exists": true
+    },
+    "eval_records_exp42.jsonl": {
+      "path": "results/diagnostic_experiment_4_v1/full_cohort_threshold_20261010/eval_records.jsonl",
+      "size_bytes": 942161,
+      "sha256": "d8a42cc906bf7fa4aebafff6868345c20a0667f971dea4f2309e3e199a3079f0",
+      "exists": true
+    },
+    "gate2_stage_2b_records.jsonl": {
+      "path": "results/diagnostic_experiment_4_v1/gate_2_list_extraction_20261010/stage_2b_eval_records.jsonl",
+      "size_bytes": 46767,
+      "sha256": "417fab9df822674e128c052fae2ad5153a9b8f96faf6e9995760eec334fc9e4f",
+      "exists": true
+    },
+    "nq_dev.jsonl": {
+      "path": "backend/data/nq_subset/nq_dev.jsonl",
+      "size_bytes": 13651266,
+      "sha256": "14efc255a596433d6bf10dd853a1915474a5d3f6b47c593f77911ab4bb8eb491",
+      "exists": true
+    },
+    "diagnostic_list_extractor.py": {
+      "path": "scripts/diagnostic_list_extractor.py",
+      "size_bytes": 7936,
+      "sha256": "4dafe954f5fb04492a85943d26365acd9cb7e64bc3bf665fd7a60f2ab7e92e4a",
+      "exists": true
+    },
+    "eval_experiment_4_4_full_cohort.py": {
+      "path": "scripts/eval_experiment_4_4_full_cohort.py",
+      "size_bytes": 30052,
+      "sha256": "9d1c00f1cba6685a26774483d166a999127d03976daa34936f5617c1d594ea76",
+      "exists": true
+    }
+  },
+  "output_files": {
+    "eval_records.jsonl": {
+      "path": "results/diagnostic_experiment_4_v1/full_cohort_evaluation_20261010/eval_records.jsonl",
+      "size_bytes": 595210,
+      "sha256": "73df76085485fbead2b67fa6a783be3c10420edbf8d9afa9c42203d6737f2c47",
+      "exists": true
+    },
+    "aggregate_summary.json": {
+      "path": "results/diagnostic_experiment_4_v1/full_cohort_evaluation_20261010/aggregate_summary.json",
+      "size_bytes": 8063,
+      "sha256": "180acec1e14bac3f0b8b4ee9c462a46446b29aaf21c701f627adfd52a2c8469c",
+      "exists": true
+    },
+    "paired_comparisons.json": {
+      "path": "results/diagnostic_experiment_4_v1/full_cohort_evaluation_20261010/paired_comparisons.json",
+      "size_bytes": 4320,
+      "sha256": "8f9b7a112a0eed6c1de7d27c411cc43f5d580eab7e099c578c50b6c431502b42",
+      "exists": true
+    },
+    "regression_audit.jsonl": {
+      "path": "results/diagnostic_experiment_4_v1/full_cohort_evaluation_20261010/regression_audit.jsonl",
+      "size_bytes": 3354,
+      "sha256": "12365a4cdb608ec2bfdc70347571d2ecda38ce05a27c9adf6f05d831a299d40d",
+      "exists": true
+    },
+    "evaluation_report.md": {
+      "path": "results/diagnostic_experiment_4_v1/full_cohort_evaluation_20261010/evaluation_report.md",
+      "size_bytes": 11221,
+      "sha256": "0c7d14920f00452b0a6a4b631ba7516bbb1067211ab55fd4606b7a790595fbb1",
+      "exists": true
+    }
+  }
+}

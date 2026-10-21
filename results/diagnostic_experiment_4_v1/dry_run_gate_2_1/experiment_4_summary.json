@@ -1,0 +1,3216 @@
+{
+  "metadata": {
+    "experiment_id": "diagnostic_experiment_4_v1",
+    "date": "2026-10-10 08:40:50 UTC",
+    "total_cases": 58,
+    "dry_run": true
+  },
+  "condition_summaries": {
+    "cond_a": {
+      "status": "completed",
+      "attempted_count": 58,
+      "success_count": 58,
+      "failed_count": 0,
+      "unscorable_count": 0,
+      "dry_run_count": 0,
+      "scored_denominator": 58,
+      "exact_match_count": 47,
+      "exact_match_rate": 0.8103448275862069,
+      "containment_count": 47,
+      "containment_rate": 0.8103448275862069,
+      "mean_rouge_l": 0.8103448275862069,
+      "mean_context_estimated_tokens": 542.4137931034483,
+      "mean_full_prompt_model_tokens": null,
+      "mean_generated_tokens": 0.0,
+      "unsuccessful_case_ids": {
+        "failed": [],
+        "unscorable": []
+      }
+    },
+    "cond_b": {
+      "status": "completed",
+      "attempted_count": 58,
+      "success_count": 58,
+      "failed_count": 0,
+      "unscorable_count": 0,
+      "dry_run_count": 0,
+      "scored_denominator": 58,
+      "exact_match_count": 11,
+      "exact_match_rate": 0.1896551724137931,
+      "containment_count": 12,
+      "containment_rate": 0.20689655172413793,
+      "mean_rouge_l": 0.23563275862068966,
+      "mean_context_estimated_tokens": 106.67241379310344,
+      "mean_full_prompt_model_tokens": null,
+      "mean_generated_tokens": 0.0,
+      "unsuccessful_case_ids": {
+        "failed": [],
+        "unscorable": []
+      }
+    },
+    "cond_c": {
+      "status": "dry_run",
+      "attempted_count": 58,
+      "success_count": 0,
+      "failed_count": 0,
+      "unscorable_count": 0,
+      "dry_run_count": 58,
+      "scored_denominator": 0,
+      "exact_match_count": null,
+      "exact_match_rate": null,
+      "containment_count": null,
+      "containment_rate": null,
+      "mean_rouge_l": null,
+      "mean_context_estimated_tokens": 280.0,
+      "mean_full_prompt_model_tokens": null,
+      "mean_generated_tokens": null,
+      "unsuccessful_case_ids": {
+        "failed": [],
+        "unscorable": []
+      }
+    },
+    "cond_d": {
+      "status": "dry_run",
+      "attempted_count": 58,
+      "success_count": 0,
+      "failed_count": 0,
+      "unscorable_count": 0,
+      "dry_run_count": 58,
+      "scored_denominator": 0,
+      "exact_match_count": null,
+      "exact_match_rate": null,
+      "containment_count": null,
+      "containment_rate": null,
+      "mean_rouge_l": null,
+      "mean_context_estimated_tokens": 289.91379310344826,
+      "mean_full_prompt_model_tokens": null,
+      "mean_generated_tokens": null,
+      "unsuccessful_case_ids": {
+        "failed": [],
+        "unscorable": []
+      }
+    }
+  },
+  "condition_accuracies": {
+    "cond_a": {
+      "status": "completed",
+      "attempted_count": 58,
+      "success_count": 58,
+      "failed_count": 0,
+      "unscorable_count": 0,
+      "dry_run_count": 0,
+      "scored_denominator": 58,
+      "exact_match_count": 47,
+      "exact_match_rate": 0.8103448275862069,
+      "containment_count": 47,
+      "containment_rate": 0.8103448275862069,
+      "mean_rouge_l": 0.8103448275862069,
+      "mean_context_estimated_tokens": 542.4137931034483,
+      "mean_full_prompt_model_tokens": null,
+      "mean_generated_tokens": 0.0,
+      "unsuccessful_case_ids": {
+        "failed": [],
+        "unscorable": []
+      }
+    },
+    "cond_b": {
+      "status": "completed",
+      "attempted_count": 58,
+      "success_count": 58,
+      "failed_count": 0,
+      "unscorable_count": 0,
+      "dry_run_count": 0,
+      "scored_denominator": 58,
+      "exact_match_count": 11,
+      "exact_match_rate": 0.1896551724137931,
+      "containment_count": 12,
+      "containment_rate": 0.20689655172413793,
+      "mean_rouge_l": 0.23563275862068966,
+      "mean_context_estimated_tokens": 106.67241379310344,
+      "mean_full_prompt_model_tokens": null,
+      "mean_generated_tokens": 0.0,
+      "unsuccessful_case_ids": {
+        "failed": [],
+        "unscorable": []
+      }
+    },
+    "cond_c": {
+      "status": "dry_run",
+      "attempted_count": 58,
+      "success_count": 0,
+      "failed_count": 0,
+      "unscorable_count": 0,
+      "dry_run_count": 58,
+      "scored_denominator": 0,
+      "exact_match_count": null,
+      "exact_match_rate": null,
+      "containment_count": null,
+      "containment_rate": null,
+      "mean_rouge_l": null,
+      "mean_context_estimated_tokens": 280.0,
+      "mean_full_prompt_model_tokens": null,
+      "mean_generated_tokens": null,
+      "unsuccessful_case_ids": {
+        "failed": [],
+        "unscorable": []
+      }
+    },
+    "cond_d": {
+      "status": "dry_run",
+      "attempted_count": 58,
+      "success_count": 0,
+      "failed_count": 0,
+      "unscorable_count": 0,
+      "dry_run_count": 58,
+      "scored_denominator": 0,
+      "exact_match_count": null,
+      "exact_match_rate": null,
+      "containment_count": null,
+      "containment_rate": null,
+      "mean_rouge_l": null,
+      "mean_context_estimated_tokens": 289.91379310344826,
+      "mean_full_prompt_model_tokens": null,
+      "mean_generated_tokens": null,
+      "unsuccessful_case_ids": {
+        "failed": [],
+        "unscorable": []
+      }
+    }
+  },
+  "paired_comparisons": {
+    "exact_match": {
+      "c_vs_a": {
+        "status": "unavailable",
+        "attempted_pair_count": 58,
+        "valid_paired_denominator": 0,
+        "evaluated_case_ids": [],
+        "excluded_count": 58,
+        "excluded_case_ids": [
+          "009fc8bae30f48b18d2c317acf80b554",
+          "00d7c7cc7b534abeaf1f9dded1d3639b",
+          "01b62b5fd83f43c9b64aad4a286d8247",
+          "0502a3d70b734e4bbbd3f8f069c67463",
+          "0541c730c2414d71b55608a01a487ccd",
+          "0a4add08efa74fa2a356eec039d12f7d",
+          "0d26e7be35314b5ba13f883860d134aa",
+          "0d8ada7a8d664dfc8becb41a8f06393c",
+          "0ee2e39b07974445863101cf5b85d97f",
+          "122e005cbafc4d7abbaa854110fa0871",
+          "16caa32e50d342878340cacefe5a417a",
+          "16d3586cd85b4bce8f73e51aa44e7a7d",
+          "17d9c792e7924e1a859eb73cb3671f70",
+          "1b4913615b2f4d948fcfa3e4d5bf1e16",
+          "2900f09a9adf4358a19114af768fbd3e",
+          "36051ccaf844460c92d8ffbd288a890f",
+          "363edbaa51694fedbd2a264c881f23a1",
+          "3d3088e34ece49d8b9850f44ff05c029",
+          "3dc98383fd764b27a81875e289fd3ffd",
+          "3f0497f4a228459c8b2201e7f871a520",
+          "422fb6cb1e94484eb3d965376f8efa18",
+          "42d988894e4a4b3999d70225eeda47e2",
+          "4756b3c3129b4465a1ff05b8d13ff635",
+          "5702186b8f0f42d99bc16276fbdd693e",
+          "5868443c22ea4967b506165a6afc1c6e",
+          "58f870f4fcb14879970893e60ccb4276",
+          "59dfcccff93e42a1a18c883115e783bb",
+          "622fad3cf3ab49739736cf5198d3fbf4",
+          "675067ab932f4e31a870f9ff75ac5d5e",
+          "6ced13113ae24d9c98469f379db9b3d3",
+          "784e39fe07634ea3a4f175267457f480",
+          "85318a34e42548d6ad53c4a2492e0430",
+          "8b41e6511ab041aa990a3f1e85ec6a36",
+          "a172dc559a904564951a2edb4b8a8734",
+          "ab744abcb9ee47cf9dfbec0a49335aa6",
+          "ae89f4d5ba044940843751db7dd23f1f",
+          "b2c8d85ed1dc40f2bca88500700eaff7",
+          "b53d41119c8845939a7c270e659b85f9",
+          "b645629290bc4877a616593b9c1576b5",
+          "b786366cbb7242aea1e9f08fbeacad0d",
+          "b9b5f86a1927448881500ba2d69aac50",
+          "c2bad2c419ec4839a19839c0ba6f04f5",
+          "c530f07f4ff040f5925b9a3599d9fb19",
+          "cef8d1064f944fbfba179fbbd6b370cb",
+          "d05a839483a84474ad62e8006f64924b",
+          "d5de0aa213c743ffba528efd4e566e68",
+          "e34508a7e6fc4053b653599247f92e2c",
+          "e4731d77892946f2a878c9cbf18ae30f",
+          "e529e5ec29f3425a81745d19a344d621",
+          "e8f64c516d1c4589b780a4c7064c6a66",
+          "ef523d7765b0489691699758b03d34c7",
+          "f483eb869e3f4a3c81cef2760d774ca3",
+          "f62a04a8251b489395cea624ef3e8120",
+          "f63b92ac76664252b8872f8705370418",
+          "f6c035f6d6684b32804700ff7b7a14b0",
+          "fb02beed86c44e77a16ef30718095447",
+          "fd249e52bf4b4c6fb14ae69cbb7c7994",
+          "fd55f4dc4a43466da9a596385e3f622f"
+        ],
+        "exclusion_details": [
+          {
+            "case_id": "009fc8bae30f48b18d2c317acf80b554",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "00d7c7cc7b534abeaf1f9dded1d3639b",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "01b62b5fd83f43c9b64aad4a286d8247",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0502a3d70b734e4bbbd3f8f069c67463",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0541c730c2414d71b55608a01a487ccd",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0a4add08efa74fa2a356eec039d12f7d",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0d26e7be35314b5ba13f883860d134aa",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0d8ada7a8d664dfc8becb41a8f06393c",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0ee2e39b07974445863101cf5b85d97f",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "122e005cbafc4d7abbaa854110fa0871",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "16caa32e50d342878340cacefe5a417a",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "16d3586cd85b4bce8f73e51aa44e7a7d",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "17d9c792e7924e1a859eb73cb3671f70",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "1b4913615b2f4d948fcfa3e4d5bf1e16",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "2900f09a9adf4358a19114af768fbd3e",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "36051ccaf844460c92d8ffbd288a890f",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "363edbaa51694fedbd2a264c881f23a1",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3d3088e34ece49d8b9850f44ff05c029",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3dc98383fd764b27a81875e289fd3ffd",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3f0497f4a228459c8b2201e7f871a520",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "422fb6cb1e94484eb3d965376f8efa18",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "42d988894e4a4b3999d70225eeda47e2",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "4756b3c3129b4465a1ff05b8d13ff635",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "5702186b8f0f42d99bc16276fbdd693e",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "5868443c22ea4967b506165a6afc1c6e",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "58f870f4fcb14879970893e60ccb4276",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "59dfcccff93e42a1a18c883115e783bb",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "622fad3cf3ab49739736cf5198d3fbf4",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "675067ab932f4e31a870f9ff75ac5d5e",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "6ced13113ae24d9c98469f379db9b3d3",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "784e39fe07634ea3a4f175267457f480",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "85318a34e42548d6ad53c4a2492e0430",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "8b41e6511ab041aa990a3f1e85ec6a36",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "a172dc559a904564951a2edb4b8a8734",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ab744abcb9ee47cf9dfbec0a49335aa6",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ae89f4d5ba044940843751db7dd23f1f",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b2c8d85ed1dc40f2bca88500700eaff7",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b53d41119c8845939a7c270e659b85f9",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b645629290bc4877a616593b9c1576b5",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b786366cbb7242aea1e9f08fbeacad0d",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b9b5f86a1927448881500ba2d69aac50",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "c2bad2c419ec4839a19839c0ba6f04f5",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "c530f07f4ff040f5925b9a3599d9fb19",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "cef8d1064f944fbfba179fbbd6b370cb",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "d05a839483a84474ad62e8006f64924b",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "d5de0aa213c743ffba528efd4e566e68",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e34508a7e6fc4053b653599247f92e2c",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e4731d77892946f2a878c9cbf18ae30f",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e529e5ec29f3425a81745d19a344d621",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e8f64c516d1c4589b780a4c7064c6a66",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ef523d7765b0489691699758b03d34c7",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f483eb869e3f4a3c81cef2760d774ca3",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f62a04a8251b489395cea624ef3e8120",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f63b92ac76664252b8872f8705370418",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f6c035f6d6684b32804700ff7b7a14b0",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fb02beed86c44e77a16ef30718095447",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fd249e52bf4b4c6fb14ae69cbb7c7994",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fd55f4dc4a43466da9a596385e3f622f",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          }
+        ],
+        "mcnemar_exact": null,
+        "notes": "No valid pairs with successful scores for both conditions; metrics unavailable."
+      },
+      "c_vs_b": {
+        "status": "unavailable",
+        "attempted_pair_count": 58,
+        "valid_paired_denominator": 0,
+        "evaluated_case_ids": [],
+        "excluded_count": 58,
+        "excluded_case_ids": [
+          "009fc8bae30f48b18d2c317acf80b554",
+          "00d7c7cc7b534abeaf1f9dded1d3639b",
+          "01b62b5fd83f43c9b64aad4a286d8247",
+          "0502a3d70b734e4bbbd3f8f069c67463",
+          "0541c730c2414d71b55608a01a487ccd",
+          "0a4add08efa74fa2a356eec039d12f7d",
+          "0d26e7be35314b5ba13f883860d134aa",
+          "0d8ada7a8d664dfc8becb41a8f06393c",
+          "0ee2e39b07974445863101cf5b85d97f",
+          "122e005cbafc4d7abbaa854110fa0871",
+          "16caa32e50d342878340cacefe5a417a",
+          "16d3586cd85b4bce8f73e51aa44e7a7d",
+          "17d9c792e7924e1a859eb73cb3671f70",
+          "1b4913615b2f4d948fcfa3e4d5bf1e16",
+          "2900f09a9adf4358a19114af768fbd3e",
+          "36051ccaf844460c92d8ffbd288a890f",
+          "363edbaa51694fedbd2a264c881f23a1",
+          "3d3088e34ece49d8b9850f44ff05c029",
+          "3dc98383fd764b27a81875e289fd3ffd",
+          "3f0497f4a228459c8b2201e7f871a520",
+          "422fb6cb1e94484eb3d965376f8efa18",
+          "42d988894e4a4b3999d70225eeda47e2",
+          "4756b3c3129b4465a1ff05b8d13ff635",
+          "5702186b8f0f42d99bc16276fbdd693e",
+          "5868443c22ea4967b506165a6afc1c6e",
+          "58f870f4fcb14879970893e60ccb4276",
+          "59dfcccff93e42a1a18c883115e783bb",
+          "622fad3cf3ab49739736cf5198d3fbf4",
+          "675067ab932f4e31a870f9ff75ac5d5e",
+          "6ced13113ae24d9c98469f379db9b3d3",
+          "784e39fe07634ea3a4f175267457f480",
+          "85318a34e42548d6ad53c4a2492e0430",
+          "8b41e6511ab041aa990a3f1e85ec6a36",
+          "a172dc559a904564951a2edb4b8a8734",
+          "ab744abcb9ee47cf9dfbec0a49335aa6",
+          "ae89f4d5ba044940843751db7dd23f1f",
+          "b2c8d85ed1dc40f2bca88500700eaff7",
+          "b53d41119c8845939a7c270e659b85f9",
+          "b645629290bc4877a616593b9c1576b5",
+          "b786366cbb7242aea1e9f08fbeacad0d",
+          "b9b5f86a1927448881500ba2d69aac50",
+          "c2bad2c419ec4839a19839c0ba6f04f5",
+          "c530f07f4ff040f5925b9a3599d9fb19",
+          "cef8d1064f944fbfba179fbbd6b370cb",
+          "d05a839483a84474ad62e8006f64924b",
+          "d5de0aa213c743ffba528efd4e566e68",
+          "e34508a7e6fc4053b653599247f92e2c",
+          "e4731d77892946f2a878c9cbf18ae30f",
+          "e529e5ec29f3425a81745d19a344d621",
+          "e8f64c516d1c4589b780a4c7064c6a66",
+          "ef523d7765b0489691699758b03d34c7",
+          "f483eb869e3f4a3c81cef2760d774ca3",
+          "f62a04a8251b489395cea624ef3e8120",
+          "f63b92ac76664252b8872f8705370418",
+          "f6c035f6d6684b32804700ff7b7a14b0",
+          "fb02beed86c44e77a16ef30718095447",
+          "fd249e52bf4b4c6fb14ae69cbb7c7994",
+          "fd55f4dc4a43466da9a596385e3f622f"
+        ],
+        "exclusion_details": [
+          {
+            "case_id": "009fc8bae30f48b18d2c317acf80b554",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "00d7c7cc7b534abeaf1f9dded1d3639b",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "01b62b5fd83f43c9b64aad4a286d8247",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0502a3d70b734e4bbbd3f8f069c67463",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0541c730c2414d71b55608a01a487ccd",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0a4add08efa74fa2a356eec039d12f7d",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0d26e7be35314b5ba13f883860d134aa",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0d8ada7a8d664dfc8becb41a8f06393c",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0ee2e39b07974445863101cf5b85d97f",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "122e005cbafc4d7abbaa854110fa0871",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "16caa32e50d342878340cacefe5a417a",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "16d3586cd85b4bce8f73e51aa44e7a7d",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "17d9c792e7924e1a859eb73cb3671f70",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "1b4913615b2f4d948fcfa3e4d5bf1e16",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "2900f09a9adf4358a19114af768fbd3e",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "36051ccaf844460c92d8ffbd288a890f",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "363edbaa51694fedbd2a264c881f23a1",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3d3088e34ece49d8b9850f44ff05c029",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3dc98383fd764b27a81875e289fd3ffd",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3f0497f4a228459c8b2201e7f871a520",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "422fb6cb1e94484eb3d965376f8efa18",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "42d988894e4a4b3999d70225eeda47e2",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "4756b3c3129b4465a1ff05b8d13ff635",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "5702186b8f0f42d99bc16276fbdd693e",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "5868443c22ea4967b506165a6afc1c6e",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "58f870f4fcb14879970893e60ccb4276",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "59dfcccff93e42a1a18c883115e783bb",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "622fad3cf3ab49739736cf5198d3fbf4",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "675067ab932f4e31a870f9ff75ac5d5e",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "6ced13113ae24d9c98469f379db9b3d3",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "784e39fe07634ea3a4f175267457f480",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "85318a34e42548d6ad53c4a2492e0430",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "8b41e6511ab041aa990a3f1e85ec6a36",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "a172dc559a904564951a2edb4b8a8734",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ab744abcb9ee47cf9dfbec0a49335aa6",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ae89f4d5ba044940843751db7dd23f1f",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b2c8d85ed1dc40f2bca88500700eaff7",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b53d41119c8845939a7c270e659b85f9",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b645629290bc4877a616593b9c1576b5",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b786366cbb7242aea1e9f08fbeacad0d",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b9b5f86a1927448881500ba2d69aac50",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "c2bad2c419ec4839a19839c0ba6f04f5",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "c530f07f4ff040f5925b9a3599d9fb19",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "cef8d1064f944fbfba179fbbd6b370cb",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "d05a839483a84474ad62e8006f64924b",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "d5de0aa213c743ffba528efd4e566e68",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e34508a7e6fc4053b653599247f92e2c",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e4731d77892946f2a878c9cbf18ae30f",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e529e5ec29f3425a81745d19a344d621",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e8f64c516d1c4589b780a4c7064c6a66",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ef523d7765b0489691699758b03d34c7",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f483eb869e3f4a3c81cef2760d774ca3",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f62a04a8251b489395cea624ef3e8120",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f63b92ac76664252b8872f8705370418",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f6c035f6d6684b32804700ff7b7a14b0",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fb02beed86c44e77a16ef30718095447",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fd249e52bf4b4c6fb14ae69cbb7c7994",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fd55f4dc4a43466da9a596385e3f622f",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          }
+        ],
+        "mcnemar_exact": null,
+        "notes": "No valid pairs with successful scores for both conditions; metrics unavailable."
+      },
+      "d_vs_a": {
+        "status": "unavailable",
+        "attempted_pair_count": 58,
+        "valid_paired_denominator": 0,
+        "evaluated_case_ids": [],
+        "excluded_count": 58,
+        "excluded_case_ids": [
+          "009fc8bae30f48b18d2c317acf80b554",
+          "00d7c7cc7b534abeaf1f9dded1d3639b",
+          "01b62b5fd83f43c9b64aad4a286d8247",
+          "0502a3d70b734e4bbbd3f8f069c67463",
+          "0541c730c2414d71b55608a01a487ccd",
+          "0a4add08efa74fa2a356eec039d12f7d",
+          "0d26e7be35314b5ba13f883860d134aa",
+          "0d8ada7a8d664dfc8becb41a8f06393c",
+          "0ee2e39b07974445863101cf5b85d97f",
+          "122e005cbafc4d7abbaa854110fa0871",
+          "16caa32e50d342878340cacefe5a417a",
+          "16d3586cd85b4bce8f73e51aa44e7a7d",
+          "17d9c792e7924e1a859eb73cb3671f70",
+          "1b4913615b2f4d948fcfa3e4d5bf1e16",
+          "2900f09a9adf4358a19114af768fbd3e",
+          "36051ccaf844460c92d8ffbd288a890f",
+          "363edbaa51694fedbd2a264c881f23a1",
+          "3d3088e34ece49d8b9850f44ff05c029",
+          "3dc98383fd764b27a81875e289fd3ffd",
+          "3f0497f4a228459c8b2201e7f871a520",
+          "422fb6cb1e94484eb3d965376f8efa18",
+          "42d988894e4a4b3999d70225eeda47e2",
+          "4756b3c3129b4465a1ff05b8d13ff635",
+          "5702186b8f0f42d99bc16276fbdd693e",
+          "5868443c22ea4967b506165a6afc1c6e",
+          "58f870f4fcb14879970893e60ccb4276",
+          "59dfcccff93e42a1a18c883115e783bb",
+          "622fad3cf3ab49739736cf5198d3fbf4",
+          "675067ab932f4e31a870f9ff75ac5d5e",
+          "6ced13113ae24d9c98469f379db9b3d3",
+          "784e39fe07634ea3a4f175267457f480",
+          "85318a34e42548d6ad53c4a2492e0430",
+          "8b41e6511ab041aa990a3f1e85ec6a36",
+          "a172dc559a904564951a2edb4b8a8734",
+          "ab744abcb9ee47cf9dfbec0a49335aa6",
+          "ae89f4d5ba044940843751db7dd23f1f",
+          "b2c8d85ed1dc40f2bca88500700eaff7",
+          "b53d41119c8845939a7c270e659b85f9",
+          "b645629290bc4877a616593b9c1576b5",
+          "b786366cbb7242aea1e9f08fbeacad0d",
+          "b9b5f86a1927448881500ba2d69aac50",
+          "c2bad2c419ec4839a19839c0ba6f04f5",
+          "c530f07f4ff040f5925b9a3599d9fb19",
+          "cef8d1064f944fbfba179fbbd6b370cb",
+          "d05a839483a84474ad62e8006f64924b",
+          "d5de0aa213c743ffba528efd4e566e68",
+          "e34508a7e6fc4053b653599247f92e2c",
+          "e4731d77892946f2a878c9cbf18ae30f",
+          "e529e5ec29f3425a81745d19a344d621",
+          "e8f64c516d1c4589b780a4c7064c6a66",
+          "ef523d7765b0489691699758b03d34c7",
+          "f483eb869e3f4a3c81cef2760d774ca3",
+          "f62a04a8251b489395cea624ef3e8120",
+          "f63b92ac76664252b8872f8705370418",
+          "f6c035f6d6684b32804700ff7b7a14b0",
+          "fb02beed86c44e77a16ef30718095447",
+          "fd249e52bf4b4c6fb14ae69cbb7c7994",
+          "fd55f4dc4a43466da9a596385e3f622f"
+        ],
+        "exclusion_details": [
+          {
+            "case_id": "009fc8bae30f48b18d2c317acf80b554",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "00d7c7cc7b534abeaf1f9dded1d3639b",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "01b62b5fd83f43c9b64aad4a286d8247",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0502a3d70b734e4bbbd3f8f069c67463",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0541c730c2414d71b55608a01a487ccd",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0a4add08efa74fa2a356eec039d12f7d",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0d26e7be35314b5ba13f883860d134aa",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0d8ada7a8d664dfc8becb41a8f06393c",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0ee2e39b07974445863101cf5b85d97f",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "122e005cbafc4d7abbaa854110fa0871",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "16caa32e50d342878340cacefe5a417a",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "16d3586cd85b4bce8f73e51aa44e7a7d",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "17d9c792e7924e1a859eb73cb3671f70",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "1b4913615b2f4d948fcfa3e4d5bf1e16",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "2900f09a9adf4358a19114af768fbd3e",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "36051ccaf844460c92d8ffbd288a890f",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "363edbaa51694fedbd2a264c881f23a1",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3d3088e34ece49d8b9850f44ff05c029",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3dc98383fd764b27a81875e289fd3ffd",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3f0497f4a228459c8b2201e7f871a520",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "422fb6cb1e94484eb3d965376f8efa18",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "42d988894e4a4b3999d70225eeda47e2",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "4756b3c3129b4465a1ff05b8d13ff635",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "5702186b8f0f42d99bc16276fbdd693e",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "5868443c22ea4967b506165a6afc1c6e",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "58f870f4fcb14879970893e60ccb4276",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "59dfcccff93e42a1a18c883115e783bb",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "622fad3cf3ab49739736cf5198d3fbf4",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "675067ab932f4e31a870f9ff75ac5d5e",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "6ced13113ae24d9c98469f379db9b3d3",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "784e39fe07634ea3a4f175267457f480",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "85318a34e42548d6ad53c4a2492e0430",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "8b41e6511ab041aa990a3f1e85ec6a36",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "a172dc559a904564951a2edb4b8a8734",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ab744abcb9ee47cf9dfbec0a49335aa6",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ae89f4d5ba044940843751db7dd23f1f",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b2c8d85ed1dc40f2bca88500700eaff7",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b53d41119c8845939a7c270e659b85f9",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b645629290bc4877a616593b9c1576b5",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b786366cbb7242aea1e9f08fbeacad0d",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b9b5f86a1927448881500ba2d69aac50",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "c2bad2c419ec4839a19839c0ba6f04f5",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "c530f07f4ff040f5925b9a3599d9fb19",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "cef8d1064f944fbfba179fbbd6b370cb",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "d05a839483a84474ad62e8006f64924b",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "d5de0aa213c743ffba528efd4e566e68",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e34508a7e6fc4053b653599247f92e2c",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e4731d77892946f2a878c9cbf18ae30f",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e529e5ec29f3425a81745d19a344d621",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e8f64c516d1c4589b780a4c7064c6a66",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ef523d7765b0489691699758b03d34c7",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f483eb869e3f4a3c81cef2760d774ca3",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f62a04a8251b489395cea624ef3e8120",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f63b92ac76664252b8872f8705370418",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f6c035f6d6684b32804700ff7b7a14b0",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fb02beed86c44e77a16ef30718095447",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fd249e52bf4b4c6fb14ae69cbb7c7994",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fd55f4dc4a43466da9a596385e3f622f",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          }
+        ],
+        "mcnemar_exact": null,
+        "notes": "No valid pairs with successful scores for both conditions; metrics unavailable."
+      },
+      "d_vs_b": {
+        "status": "unavailable",
+        "attempted_pair_count": 58,
+        "valid_paired_denominator": 0,
+        "evaluated_case_ids": [],
+        "excluded_count": 58,
+        "excluded_case_ids": [
+          "009fc8bae30f48b18d2c317acf80b554",
+          "00d7c7cc7b534abeaf1f9dded1d3639b",
+          "01b62b5fd83f43c9b64aad4a286d8247",
+          "0502a3d70b734e4bbbd3f8f069c67463",
+          "0541c730c2414d71b55608a01a487ccd",
+          "0a4add08efa74fa2a356eec039d12f7d",
+          "0d26e7be35314b5ba13f883860d134aa",
+          "0d8ada7a8d664dfc8becb41a8f06393c",
+          "0ee2e39b07974445863101cf5b85d97f",
+          "122e005cbafc4d7abbaa854110fa0871",
+          "16caa32e50d342878340cacefe5a417a",
+          "16d3586cd85b4bce8f73e51aa44e7a7d",
+          "17d9c792e7924e1a859eb73cb3671f70",
+          "1b4913615b2f4d948fcfa3e4d5bf1e16",
+          "2900f09a9adf4358a19114af768fbd3e",
+          "36051ccaf844460c92d8ffbd288a890f",
+          "363edbaa51694fedbd2a264c881f23a1",
+          "3d3088e34ece49d8b9850f44ff05c029",
+          "3dc98383fd764b27a81875e289fd3ffd",
+          "3f0497f4a228459c8b2201e7f871a520",
+          "422fb6cb1e94484eb3d965376f8efa18",
+          "42d988894e4a4b3999d70225eeda47e2",
+          "4756b3c3129b4465a1ff05b8d13ff635",
+          "5702186b8f0f42d99bc16276fbdd693e",
+          "5868443c22ea4967b506165a6afc1c6e",
+          "58f870f4fcb14879970893e60ccb4276",
+          "59dfcccff93e42a1a18c883115e783bb",
+          "622fad3cf3ab49739736cf5198d3fbf4",
+          "675067ab932f4e31a870f9ff75ac5d5e",
+          "6ced13113ae24d9c98469f379db9b3d3",
+          "784e39fe07634ea3a4f175267457f480",
+          "85318a34e42548d6ad53c4a2492e0430",
+          "8b41e6511ab041aa990a3f1e85ec6a36",
+          "a172dc559a904564951a2edb4b8a8734",
+          "ab744abcb9ee47cf9dfbec0a49335aa6",
+          "ae89f4d5ba044940843751db7dd23f1f",
+          "b2c8d85ed1dc40f2bca88500700eaff7",
+          "b53d41119c8845939a7c270e659b85f9",
+          "b645629290bc4877a616593b9c1576b5",
+          "b786366cbb7242aea1e9f08fbeacad0d",
+          "b9b5f86a1927448881500ba2d69aac50",
+          "c2bad2c419ec4839a19839c0ba6f04f5",
+          "c530f07f4ff040f5925b9a3599d9fb19",
+          "cef8d1064f944fbfba179fbbd6b370cb",
+          "d05a839483a84474ad62e8006f64924b",
+          "d5de0aa213c743ffba528efd4e566e68",
+          "e34508a7e6fc4053b653599247f92e2c",
+          "e4731d77892946f2a878c9cbf18ae30f",
+          "e529e5ec29f3425a81745d19a344d621",
+          "e8f64c516d1c4589b780a4c7064c6a66",
+          "ef523d7765b0489691699758b03d34c7",
+          "f483eb869e3f4a3c81cef2760d774ca3",
+          "f62a04a8251b489395cea624ef3e8120",
+          "f63b92ac76664252b8872f8705370418",
+          "f6c035f6d6684b32804700ff7b7a14b0",
+          "fb02beed86c44e77a16ef30718095447",
+          "fd249e52bf4b4c6fb14ae69cbb7c7994",
+          "fd55f4dc4a43466da9a596385e3f622f"
+        ],
+        "exclusion_details": [
+          {
+            "case_id": "009fc8bae30f48b18d2c317acf80b554",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "00d7c7cc7b534abeaf1f9dded1d3639b",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "01b62b5fd83f43c9b64aad4a286d8247",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0502a3d70b734e4bbbd3f8f069c67463",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0541c730c2414d71b55608a01a487ccd",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0a4add08efa74fa2a356eec039d12f7d",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0d26e7be35314b5ba13f883860d134aa",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0d8ada7a8d664dfc8becb41a8f06393c",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0ee2e39b07974445863101cf5b85d97f",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "122e005cbafc4d7abbaa854110fa0871",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "16caa32e50d342878340cacefe5a417a",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "16d3586cd85b4bce8f73e51aa44e7a7d",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "17d9c792e7924e1a859eb73cb3671f70",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "1b4913615b2f4d948fcfa3e4d5bf1e16",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "2900f09a9adf4358a19114af768fbd3e",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "36051ccaf844460c92d8ffbd288a890f",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "363edbaa51694fedbd2a264c881f23a1",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3d3088e34ece49d8b9850f44ff05c029",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3dc98383fd764b27a81875e289fd3ffd",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3f0497f4a228459c8b2201e7f871a520",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "422fb6cb1e94484eb3d965376f8efa18",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "42d988894e4a4b3999d70225eeda47e2",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "4756b3c3129b4465a1ff05b8d13ff635",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "5702186b8f0f42d99bc16276fbdd693e",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "5868443c22ea4967b506165a6afc1c6e",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "58f870f4fcb14879970893e60ccb4276",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "59dfcccff93e42a1a18c883115e783bb",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "622fad3cf3ab49739736cf5198d3fbf4",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "675067ab932f4e31a870f9ff75ac5d5e",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "6ced13113ae24d9c98469f379db9b3d3",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "784e39fe07634ea3a4f175267457f480",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "85318a34e42548d6ad53c4a2492e0430",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "8b41e6511ab041aa990a3f1e85ec6a36",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "a172dc559a904564951a2edb4b8a8734",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ab744abcb9ee47cf9dfbec0a49335aa6",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ae89f4d5ba044940843751db7dd23f1f",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b2c8d85ed1dc40f2bca88500700eaff7",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b53d41119c8845939a7c270e659b85f9",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b645629290bc4877a616593b9c1576b5",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b786366cbb7242aea1e9f08fbeacad0d",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b9b5f86a1927448881500ba2d69aac50",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "c2bad2c419ec4839a19839c0ba6f04f5",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "c530f07f4ff040f5925b9a3599d9fb19",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "cef8d1064f944fbfba179fbbd6b370cb",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "d05a839483a84474ad62e8006f64924b",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "d5de0aa213c743ffba528efd4e566e68",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e34508a7e6fc4053b653599247f92e2c",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e4731d77892946f2a878c9cbf18ae30f",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e529e5ec29f3425a81745d19a344d621",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e8f64c516d1c4589b780a4c7064c6a66",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ef523d7765b0489691699758b03d34c7",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f483eb869e3f4a3c81cef2760d774ca3",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f62a04a8251b489395cea624ef3e8120",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f63b92ac76664252b8872f8705370418",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f6c035f6d6684b32804700ff7b7a14b0",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fb02beed86c44e77a16ef30718095447",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fd249e52bf4b4c6fb14ae69cbb7c7994",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fd55f4dc4a43466da9a596385e3f622f",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          }
+        ],
+        "mcnemar_exact": null,
+        "notes": "No valid pairs with successful scores for both conditions; metrics unavailable."
+      },
+      "d_vs_c": {
+        "status": "unavailable",
+        "attempted_pair_count": 58,
+        "valid_paired_denominator": 0,
+        "evaluated_case_ids": [],
+        "excluded_count": 58,
+        "excluded_case_ids": [
+          "009fc8bae30f48b18d2c317acf80b554",
+          "00d7c7cc7b534abeaf1f9dded1d3639b",
+          "01b62b5fd83f43c9b64aad4a286d8247",
+          "0502a3d70b734e4bbbd3f8f069c67463",
+          "0541c730c2414d71b55608a01a487ccd",
+          "0a4add08efa74fa2a356eec039d12f7d",
+          "0d26e7be35314b5ba13f883860d134aa",
+          "0d8ada7a8d664dfc8becb41a8f06393c",
+          "0ee2e39b07974445863101cf5b85d97f",
+          "122e005cbafc4d7abbaa854110fa0871",
+          "16caa32e50d342878340cacefe5a417a",
+          "16d3586cd85b4bce8f73e51aa44e7a7d",
+          "17d9c792e7924e1a859eb73cb3671f70",
+          "1b4913615b2f4d948fcfa3e4d5bf1e16",
+          "2900f09a9adf4358a19114af768fbd3e",
+          "36051ccaf844460c92d8ffbd288a890f",
+          "363edbaa51694fedbd2a264c881f23a1",
+          "3d3088e34ece49d8b9850f44ff05c029",
+          "3dc98383fd764b27a81875e289fd3ffd",
+          "3f0497f4a228459c8b2201e7f871a520",
+          "422fb6cb1e94484eb3d965376f8efa18",
+          "42d988894e4a4b3999d70225eeda47e2",
+          "4756b3c3129b4465a1ff05b8d13ff635",
+          "5702186b8f0f42d99bc16276fbdd693e",
+          "5868443c22ea4967b506165a6afc1c6e",
+          "58f870f4fcb14879970893e60ccb4276",
+          "59dfcccff93e42a1a18c883115e783bb",
+          "622fad3cf3ab49739736cf5198d3fbf4",
+          "675067ab932f4e31a870f9ff75ac5d5e",
+          "6ced13113ae24d9c98469f379db9b3d3",
+          "784e39fe07634ea3a4f175267457f480",
+          "85318a34e42548d6ad53c4a2492e0430",
+          "8b41e6511ab041aa990a3f1e85ec6a36",
+          "a172dc559a904564951a2edb4b8a8734",
+          "ab744abcb9ee47cf9dfbec0a49335aa6",
+          "ae89f4d5ba044940843751db7dd23f1f",
+          "b2c8d85ed1dc40f2bca88500700eaff7",
+          "b53d41119c8845939a7c270e659b85f9",
+          "b645629290bc4877a616593b9c1576b5",
+          "b786366cbb7242aea1e9f08fbeacad0d",
+          "b9b5f86a1927448881500ba2d69aac50",
+          "c2bad2c419ec4839a19839c0ba6f04f5",
+          "c530f07f4ff040f5925b9a3599d9fb19",
+          "cef8d1064f944fbfba179fbbd6b370cb",
+          "d05a839483a84474ad62e8006f64924b",
+          "d5de0aa213c743ffba528efd4e566e68",
+          "e34508a7e6fc4053b653599247f92e2c",
+          "e4731d77892946f2a878c9cbf18ae30f",
+          "e529e5ec29f3425a81745d19a344d621",
+          "e8f64c516d1c4589b780a4c7064c6a66",
+          "ef523d7765b0489691699758b03d34c7",
+          "f483eb869e3f4a3c81cef2760d774ca3",
+          "f62a04a8251b489395cea624ef3e8120",
+          "f63b92ac76664252b8872f8705370418",
+          "f6c035f6d6684b32804700ff7b7a14b0",
+          "fb02beed86c44e77a16ef30718095447",
+          "fd249e52bf4b4c6fb14ae69cbb7c7994",
+          "fd55f4dc4a43466da9a596385e3f622f"
+        ],
+        "exclusion_details": [
+          {
+            "case_id": "009fc8bae30f48b18d2c317acf80b554",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "00d7c7cc7b534abeaf1f9dded1d3639b",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "01b62b5fd83f43c9b64aad4a286d8247",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0502a3d70b734e4bbbd3f8f069c67463",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0541c730c2414d71b55608a01a487ccd",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0a4add08efa74fa2a356eec039d12f7d",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0d26e7be35314b5ba13f883860d134aa",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0d8ada7a8d664dfc8becb41a8f06393c",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0ee2e39b07974445863101cf5b85d97f",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "122e005cbafc4d7abbaa854110fa0871",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "16caa32e50d342878340cacefe5a417a",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "16d3586cd85b4bce8f73e51aa44e7a7d",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "17d9c792e7924e1a859eb73cb3671f70",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "1b4913615b2f4d948fcfa3e4d5bf1e16",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "2900f09a9adf4358a19114af768fbd3e",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "36051ccaf844460c92d8ffbd288a890f",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "363edbaa51694fedbd2a264c881f23a1",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3d3088e34ece49d8b9850f44ff05c029",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3dc98383fd764b27a81875e289fd3ffd",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3f0497f4a228459c8b2201e7f871a520",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "422fb6cb1e94484eb3d965376f8efa18",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "42d988894e4a4b3999d70225eeda47e2",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "4756b3c3129b4465a1ff05b8d13ff635",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "5702186b8f0f42d99bc16276fbdd693e",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "5868443c22ea4967b506165a6afc1c6e",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "58f870f4fcb14879970893e60ccb4276",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "59dfcccff93e42a1a18c883115e783bb",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "622fad3cf3ab49739736cf5198d3fbf4",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "675067ab932f4e31a870f9ff75ac5d5e",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "6ced13113ae24d9c98469f379db9b3d3",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "784e39fe07634ea3a4f175267457f480",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "85318a34e42548d6ad53c4a2492e0430",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "8b41e6511ab041aa990a3f1e85ec6a36",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "a172dc559a904564951a2edb4b8a8734",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ab744abcb9ee47cf9dfbec0a49335aa6",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ae89f4d5ba044940843751db7dd23f1f",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b2c8d85ed1dc40f2bca88500700eaff7",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b53d41119c8845939a7c270e659b85f9",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b645629290bc4877a616593b9c1576b5",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b786366cbb7242aea1e9f08fbeacad0d",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b9b5f86a1927448881500ba2d69aac50",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "c2bad2c419ec4839a19839c0ba6f04f5",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "c530f07f4ff040f5925b9a3599d9fb19",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "cef8d1064f944fbfba179fbbd6b370cb",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "d05a839483a84474ad62e8006f64924b",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "d5de0aa213c743ffba528efd4e566e68",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e34508a7e6fc4053b653599247f92e2c",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e4731d77892946f2a878c9cbf18ae30f",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e529e5ec29f3425a81745d19a344d621",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e8f64c516d1c4589b780a4c7064c6a66",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ef523d7765b0489691699758b03d34c7",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f483eb869e3f4a3c81cef2760d774ca3",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f62a04a8251b489395cea624ef3e8120",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f63b92ac76664252b8872f8705370418",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f6c035f6d6684b32804700ff7b7a14b0",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fb02beed86c44e77a16ef30718095447",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fd249e52bf4b4c6fb14ae69cbb7c7994",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fd55f4dc4a43466da9a596385e3f622f",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          }
+        ],
+        "mcnemar_exact": null,
+        "notes": "No valid pairs with successful scores for both conditions; metrics unavailable."
+      }
+    },
+    "containment": {
+      "c_vs_a": {
+        "status": "unavailable",
+        "attempted_pair_count": 58,
+        "valid_paired_denominator": 0,
+        "evaluated_case_ids": [],
+        "excluded_count": 58,
+        "excluded_case_ids": [
+          "009fc8bae30f48b18d2c317acf80b554",
+          "00d7c7cc7b534abeaf1f9dded1d3639b",
+          "01b62b5fd83f43c9b64aad4a286d8247",
+          "0502a3d70b734e4bbbd3f8f069c67463",
+          "0541c730c2414d71b55608a01a487ccd",
+          "0a4add08efa74fa2a356eec039d12f7d",
+          "0d26e7be35314b5ba13f883860d134aa",
+          "0d8ada7a8d664dfc8becb41a8f06393c",
+          "0ee2e39b07974445863101cf5b85d97f",
+          "122e005cbafc4d7abbaa854110fa0871",
+          "16caa32e50d342878340cacefe5a417a",
+          "16d3586cd85b4bce8f73e51aa44e7a7d",
+          "17d9c792e7924e1a859eb73cb3671f70",
+          "1b4913615b2f4d948fcfa3e4d5bf1e16",
+          "2900f09a9adf4358a19114af768fbd3e",
+          "36051ccaf844460c92d8ffbd288a890f",
+          "363edbaa51694fedbd2a264c881f23a1",
+          "3d3088e34ece49d8b9850f44ff05c029",
+          "3dc98383fd764b27a81875e289fd3ffd",
+          "3f0497f4a228459c8b2201e7f871a520",
+          "422fb6cb1e94484eb3d965376f8efa18",
+          "42d988894e4a4b3999d70225eeda47e2",
+          "4756b3c3129b4465a1ff05b8d13ff635",
+          "5702186b8f0f42d99bc16276fbdd693e",
+          "5868443c22ea4967b506165a6afc1c6e",
+          "58f870f4fcb14879970893e60ccb4276",
+          "59dfcccff93e42a1a18c883115e783bb",
+          "622fad3cf3ab49739736cf5198d3fbf4",
+          "675067ab932f4e31a870f9ff75ac5d5e",
+          "6ced13113ae24d9c98469f379db9b3d3",
+          "784e39fe07634ea3a4f175267457f480",
+          "85318a34e42548d6ad53c4a2492e0430",
+          "8b41e6511ab041aa990a3f1e85ec6a36",
+          "a172dc559a904564951a2edb4b8a8734",
+          "ab744abcb9ee47cf9dfbec0a49335aa6",
+          "ae89f4d5ba044940843751db7dd23f1f",
+          "b2c8d85ed1dc40f2bca88500700eaff7",
+          "b53d41119c8845939a7c270e659b85f9",
+          "b645629290bc4877a616593b9c1576b5",
+          "b786366cbb7242aea1e9f08fbeacad0d",
+          "b9b5f86a1927448881500ba2d69aac50",
+          "c2bad2c419ec4839a19839c0ba6f04f5",
+          "c530f07f4ff040f5925b9a3599d9fb19",
+          "cef8d1064f944fbfba179fbbd6b370cb",
+          "d05a839483a84474ad62e8006f64924b",
+          "d5de0aa213c743ffba528efd4e566e68",
+          "e34508a7e6fc4053b653599247f92e2c",
+          "e4731d77892946f2a878c9cbf18ae30f",
+          "e529e5ec29f3425a81745d19a344d621",
+          "e8f64c516d1c4589b780a4c7064c6a66",
+          "ef523d7765b0489691699758b03d34c7",
+          "f483eb869e3f4a3c81cef2760d774ca3",
+          "f62a04a8251b489395cea624ef3e8120",
+          "f63b92ac76664252b8872f8705370418",
+          "f6c035f6d6684b32804700ff7b7a14b0",
+          "fb02beed86c44e77a16ef30718095447",
+          "fd249e52bf4b4c6fb14ae69cbb7c7994",
+          "fd55f4dc4a43466da9a596385e3f622f"
+        ],
+        "exclusion_details": [
+          {
+            "case_id": "009fc8bae30f48b18d2c317acf80b554",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "00d7c7cc7b534abeaf1f9dded1d3639b",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "01b62b5fd83f43c9b64aad4a286d8247",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0502a3d70b734e4bbbd3f8f069c67463",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0541c730c2414d71b55608a01a487ccd",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0a4add08efa74fa2a356eec039d12f7d",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0d26e7be35314b5ba13f883860d134aa",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0d8ada7a8d664dfc8becb41a8f06393c",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0ee2e39b07974445863101cf5b85d97f",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "122e005cbafc4d7abbaa854110fa0871",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "16caa32e50d342878340cacefe5a417a",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "16d3586cd85b4bce8f73e51aa44e7a7d",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "17d9c792e7924e1a859eb73cb3671f70",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "1b4913615b2f4d948fcfa3e4d5bf1e16",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "2900f09a9adf4358a19114af768fbd3e",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "36051ccaf844460c92d8ffbd288a890f",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "363edbaa51694fedbd2a264c881f23a1",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3d3088e34ece49d8b9850f44ff05c029",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3dc98383fd764b27a81875e289fd3ffd",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3f0497f4a228459c8b2201e7f871a520",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "422fb6cb1e94484eb3d965376f8efa18",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "42d988894e4a4b3999d70225eeda47e2",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "4756b3c3129b4465a1ff05b8d13ff635",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "5702186b8f0f42d99bc16276fbdd693e",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "5868443c22ea4967b506165a6afc1c6e",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "58f870f4fcb14879970893e60ccb4276",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "59dfcccff93e42a1a18c883115e783bb",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "622fad3cf3ab49739736cf5198d3fbf4",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "675067ab932f4e31a870f9ff75ac5d5e",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "6ced13113ae24d9c98469f379db9b3d3",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "784e39fe07634ea3a4f175267457f480",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "85318a34e42548d6ad53c4a2492e0430",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "8b41e6511ab041aa990a3f1e85ec6a36",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "a172dc559a904564951a2edb4b8a8734",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ab744abcb9ee47cf9dfbec0a49335aa6",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ae89f4d5ba044940843751db7dd23f1f",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b2c8d85ed1dc40f2bca88500700eaff7",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b53d41119c8845939a7c270e659b85f9",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b645629290bc4877a616593b9c1576b5",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b786366cbb7242aea1e9f08fbeacad0d",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b9b5f86a1927448881500ba2d69aac50",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "c2bad2c419ec4839a19839c0ba6f04f5",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "c530f07f4ff040f5925b9a3599d9fb19",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "cef8d1064f944fbfba179fbbd6b370cb",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "d05a839483a84474ad62e8006f64924b",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "d5de0aa213c743ffba528efd4e566e68",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e34508a7e6fc4053b653599247f92e2c",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e4731d77892946f2a878c9cbf18ae30f",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e529e5ec29f3425a81745d19a344d621",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e8f64c516d1c4589b780a4c7064c6a66",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ef523d7765b0489691699758b03d34c7",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f483eb869e3f4a3c81cef2760d774ca3",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f62a04a8251b489395cea624ef3e8120",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f63b92ac76664252b8872f8705370418",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f6c035f6d6684b32804700ff7b7a14b0",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fb02beed86c44e77a16ef30718095447",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fd249e52bf4b4c6fb14ae69cbb7c7994",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fd55f4dc4a43466da9a596385e3f622f",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          }
+        ],
+        "mcnemar_exact": null,
+        "notes": "No valid pairs with successful scores for both conditions; metrics unavailable."
+      },
+      "c_vs_b": {
+        "status": "unavailable",
+        "attempted_pair_count": 58,
+        "valid_paired_denominator": 0,
+        "evaluated_case_ids": [],
+        "excluded_count": 58,
+        "excluded_case_ids": [
+          "009fc8bae30f48b18d2c317acf80b554",
+          "00d7c7cc7b534abeaf1f9dded1d3639b",
+          "01b62b5fd83f43c9b64aad4a286d8247",
+          "0502a3d70b734e4bbbd3f8f069c67463",
+          "0541c730c2414d71b55608a01a487ccd",
+          "0a4add08efa74fa2a356eec039d12f7d",
+          "0d26e7be35314b5ba13f883860d134aa",
+          "0d8ada7a8d664dfc8becb41a8f06393c",
+          "0ee2e39b07974445863101cf5b85d97f",
+          "122e005cbafc4d7abbaa854110fa0871",
+          "16caa32e50d342878340cacefe5a417a",
+          "16d3586cd85b4bce8f73e51aa44e7a7d",
+          "17d9c792e7924e1a859eb73cb3671f70",
+          "1b4913615b2f4d948fcfa3e4d5bf1e16",
+          "2900f09a9adf4358a19114af768fbd3e",
+          "36051ccaf844460c92d8ffbd288a890f",
+          "363edbaa51694fedbd2a264c881f23a1",
+          "3d3088e34ece49d8b9850f44ff05c029",
+          "3dc98383fd764b27a81875e289fd3ffd",
+          "3f0497f4a228459c8b2201e7f871a520",
+          "422fb6cb1e94484eb3d965376f8efa18",
+          "42d988894e4a4b3999d70225eeda47e2",
+          "4756b3c3129b4465a1ff05b8d13ff635",
+          "5702186b8f0f42d99bc16276fbdd693e",
+          "5868443c22ea4967b506165a6afc1c6e",
+          "58f870f4fcb14879970893e60ccb4276",
+          "59dfcccff93e42a1a18c883115e783bb",
+          "622fad3cf3ab49739736cf5198d3fbf4",
+          "675067ab932f4e31a870f9ff75ac5d5e",
+          "6ced13113ae24d9c98469f379db9b3d3",
+          "784e39fe07634ea3a4f175267457f480",
+          "85318a34e42548d6ad53c4a2492e0430",
+          "8b41e6511ab041aa990a3f1e85ec6a36",
+          "a172dc559a904564951a2edb4b8a8734",
+          "ab744abcb9ee47cf9dfbec0a49335aa6",
+          "ae89f4d5ba044940843751db7dd23f1f",
+          "b2c8d85ed1dc40f2bca88500700eaff7",
+          "b53d41119c8845939a7c270e659b85f9",
+          "b645629290bc4877a616593b9c1576b5",
+          "b786366cbb7242aea1e9f08fbeacad0d",
+          "b9b5f86a1927448881500ba2d69aac50",
+          "c2bad2c419ec4839a19839c0ba6f04f5",
+          "c530f07f4ff040f5925b9a3599d9fb19",
+          "cef8d1064f944fbfba179fbbd6b370cb",
+          "d05a839483a84474ad62e8006f64924b",
+          "d5de0aa213c743ffba528efd4e566e68",
+          "e34508a7e6fc4053b653599247f92e2c",
+          "e4731d77892946f2a878c9cbf18ae30f",
+          "e529e5ec29f3425a81745d19a344d621",
+          "e8f64c516d1c4589b780a4c7064c6a66",
+          "ef523d7765b0489691699758b03d34c7",
+          "f483eb869e3f4a3c81cef2760d774ca3",
+          "f62a04a8251b489395cea624ef3e8120",
+          "f63b92ac76664252b8872f8705370418",
+          "f6c035f6d6684b32804700ff7b7a14b0",
+          "fb02beed86c44e77a16ef30718095447",
+          "fd249e52bf4b4c6fb14ae69cbb7c7994",
+          "fd55f4dc4a43466da9a596385e3f622f"
+        ],
+        "exclusion_details": [
+          {
+            "case_id": "009fc8bae30f48b18d2c317acf80b554",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "00d7c7cc7b534abeaf1f9dded1d3639b",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "01b62b5fd83f43c9b64aad4a286d8247",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0502a3d70b734e4bbbd3f8f069c67463",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0541c730c2414d71b55608a01a487ccd",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0a4add08efa74fa2a356eec039d12f7d",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0d26e7be35314b5ba13f883860d134aa",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0d8ada7a8d664dfc8becb41a8f06393c",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0ee2e39b07974445863101cf5b85d97f",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "122e005cbafc4d7abbaa854110fa0871",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "16caa32e50d342878340cacefe5a417a",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "16d3586cd85b4bce8f73e51aa44e7a7d",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "17d9c792e7924e1a859eb73cb3671f70",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "1b4913615b2f4d948fcfa3e4d5bf1e16",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "2900f09a9adf4358a19114af768fbd3e",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "36051ccaf844460c92d8ffbd288a890f",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "363edbaa51694fedbd2a264c881f23a1",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3d3088e34ece49d8b9850f44ff05c029",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3dc98383fd764b27a81875e289fd3ffd",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3f0497f4a228459c8b2201e7f871a520",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "422fb6cb1e94484eb3d965376f8efa18",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "42d988894e4a4b3999d70225eeda47e2",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "4756b3c3129b4465a1ff05b8d13ff635",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "5702186b8f0f42d99bc16276fbdd693e",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "5868443c22ea4967b506165a6afc1c6e",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "58f870f4fcb14879970893e60ccb4276",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "59dfcccff93e42a1a18c883115e783bb",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "622fad3cf3ab49739736cf5198d3fbf4",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "675067ab932f4e31a870f9ff75ac5d5e",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "6ced13113ae24d9c98469f379db9b3d3",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "784e39fe07634ea3a4f175267457f480",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "85318a34e42548d6ad53c4a2492e0430",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "8b41e6511ab041aa990a3f1e85ec6a36",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "a172dc559a904564951a2edb4b8a8734",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ab744abcb9ee47cf9dfbec0a49335aa6",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ae89f4d5ba044940843751db7dd23f1f",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b2c8d85ed1dc40f2bca88500700eaff7",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b53d41119c8845939a7c270e659b85f9",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b645629290bc4877a616593b9c1576b5",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b786366cbb7242aea1e9f08fbeacad0d",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b9b5f86a1927448881500ba2d69aac50",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "c2bad2c419ec4839a19839c0ba6f04f5",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "c530f07f4ff040f5925b9a3599d9fb19",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "cef8d1064f944fbfba179fbbd6b370cb",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "d05a839483a84474ad62e8006f64924b",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "d5de0aa213c743ffba528efd4e566e68",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e34508a7e6fc4053b653599247f92e2c",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e4731d77892946f2a878c9cbf18ae30f",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e529e5ec29f3425a81745d19a344d621",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e8f64c516d1c4589b780a4c7064c6a66",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ef523d7765b0489691699758b03d34c7",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f483eb869e3f4a3c81cef2760d774ca3",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f62a04a8251b489395cea624ef3e8120",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f63b92ac76664252b8872f8705370418",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f6c035f6d6684b32804700ff7b7a14b0",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fb02beed86c44e77a16ef30718095447",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fd249e52bf4b4c6fb14ae69cbb7c7994",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fd55f4dc4a43466da9a596385e3f622f",
+            "reason": "cond_c status='dry_run' (no valid score)"
+          }
+        ],
+        "mcnemar_exact": null,
+        "notes": "No valid pairs with successful scores for both conditions; metrics unavailable."
+      },
+      "d_vs_a": {
+        "status": "unavailable",
+        "attempted_pair_count": 58,
+        "valid_paired_denominator": 0,
+        "evaluated_case_ids": [],
+        "excluded_count": 58,
+        "excluded_case_ids": [
+          "009fc8bae30f48b18d2c317acf80b554",
+          "00d7c7cc7b534abeaf1f9dded1d3639b",
+          "01b62b5fd83f43c9b64aad4a286d8247",
+          "0502a3d70b734e4bbbd3f8f069c67463",
+          "0541c730c2414d71b55608a01a487ccd",
+          "0a4add08efa74fa2a356eec039d12f7d",
+          "0d26e7be35314b5ba13f883860d134aa",
+          "0d8ada7a8d664dfc8becb41a8f06393c",
+          "0ee2e39b07974445863101cf5b85d97f",
+          "122e005cbafc4d7abbaa854110fa0871",
+          "16caa32e50d342878340cacefe5a417a",
+          "16d3586cd85b4bce8f73e51aa44e7a7d",
+          "17d9c792e7924e1a859eb73cb3671f70",
+          "1b4913615b2f4d948fcfa3e4d5bf1e16",
+          "2900f09a9adf4358a19114af768fbd3e",
+          "36051ccaf844460c92d8ffbd288a890f",
+          "363edbaa51694fedbd2a264c881f23a1",
+          "3d3088e34ece49d8b9850f44ff05c029",
+          "3dc98383fd764b27a81875e289fd3ffd",
+          "3f0497f4a228459c8b2201e7f871a520",
+          "422fb6cb1e94484eb3d965376f8efa18",
+          "42d988894e4a4b3999d70225eeda47e2",
+          "4756b3c3129b4465a1ff05b8d13ff635",
+          "5702186b8f0f42d99bc16276fbdd693e",
+          "5868443c22ea4967b506165a6afc1c6e",
+          "58f870f4fcb14879970893e60ccb4276",
+          "59dfcccff93e42a1a18c883115e783bb",
+          "622fad3cf3ab49739736cf5198d3fbf4",
+          "675067ab932f4e31a870f9ff75ac5d5e",
+          "6ced13113ae24d9c98469f379db9b3d3",
+          "784e39fe07634ea3a4f175267457f480",
+          "85318a34e42548d6ad53c4a2492e0430",
+          "8b41e6511ab041aa990a3f1e85ec6a36",
+          "a172dc559a904564951a2edb4b8a8734",
+          "ab744abcb9ee47cf9dfbec0a49335aa6",
+          "ae89f4d5ba044940843751db7dd23f1f",
+          "b2c8d85ed1dc40f2bca88500700eaff7",
+          "b53d41119c8845939a7c270e659b85f9",
+          "b645629290bc4877a616593b9c1576b5",
+          "b786366cbb7242aea1e9f08fbeacad0d",
+          "b9b5f86a1927448881500ba2d69aac50",
+          "c2bad2c419ec4839a19839c0ba6f04f5",
+          "c530f07f4ff040f5925b9a3599d9fb19",
+          "cef8d1064f944fbfba179fbbd6b370cb",
+          "d05a839483a84474ad62e8006f64924b",
+          "d5de0aa213c743ffba528efd4e566e68",
+          "e34508a7e6fc4053b653599247f92e2c",
+          "e4731d77892946f2a878c9cbf18ae30f",
+          "e529e5ec29f3425a81745d19a344d621",
+          "e8f64c516d1c4589b780a4c7064c6a66",
+          "ef523d7765b0489691699758b03d34c7",
+          "f483eb869e3f4a3c81cef2760d774ca3",
+          "f62a04a8251b489395cea624ef3e8120",
+          "f63b92ac76664252b8872f8705370418",
+          "f6c035f6d6684b32804700ff7b7a14b0",
+          "fb02beed86c44e77a16ef30718095447",
+          "fd249e52bf4b4c6fb14ae69cbb7c7994",
+          "fd55f4dc4a43466da9a596385e3f622f"
+        ],
+        "exclusion_details": [
+          {
+            "case_id": "009fc8bae30f48b18d2c317acf80b554",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "00d7c7cc7b534abeaf1f9dded1d3639b",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "01b62b5fd83f43c9b64aad4a286d8247",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0502a3d70b734e4bbbd3f8f069c67463",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0541c730c2414d71b55608a01a487ccd",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0a4add08efa74fa2a356eec039d12f7d",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0d26e7be35314b5ba13f883860d134aa",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0d8ada7a8d664dfc8becb41a8f06393c",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0ee2e39b07974445863101cf5b85d97f",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "122e005cbafc4d7abbaa854110fa0871",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "16caa32e50d342878340cacefe5a417a",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "16d3586cd85b4bce8f73e51aa44e7a7d",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "17d9c792e7924e1a859eb73cb3671f70",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "1b4913615b2f4d948fcfa3e4d5bf1e16",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "2900f09a9adf4358a19114af768fbd3e",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "36051ccaf844460c92d8ffbd288a890f",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "363edbaa51694fedbd2a264c881f23a1",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3d3088e34ece49d8b9850f44ff05c029",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3dc98383fd764b27a81875e289fd3ffd",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3f0497f4a228459c8b2201e7f871a520",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "422fb6cb1e94484eb3d965376f8efa18",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "42d988894e4a4b3999d70225eeda47e2",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "4756b3c3129b4465a1ff05b8d13ff635",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "5702186b8f0f42d99bc16276fbdd693e",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "5868443c22ea4967b506165a6afc1c6e",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "58f870f4fcb14879970893e60ccb4276",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "59dfcccff93e42a1a18c883115e783bb",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "622fad3cf3ab49739736cf5198d3fbf4",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "675067ab932f4e31a870f9ff75ac5d5e",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "6ced13113ae24d9c98469f379db9b3d3",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "784e39fe07634ea3a4f175267457f480",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "85318a34e42548d6ad53c4a2492e0430",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "8b41e6511ab041aa990a3f1e85ec6a36",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "a172dc559a904564951a2edb4b8a8734",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ab744abcb9ee47cf9dfbec0a49335aa6",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ae89f4d5ba044940843751db7dd23f1f",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b2c8d85ed1dc40f2bca88500700eaff7",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b53d41119c8845939a7c270e659b85f9",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b645629290bc4877a616593b9c1576b5",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b786366cbb7242aea1e9f08fbeacad0d",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b9b5f86a1927448881500ba2d69aac50",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "c2bad2c419ec4839a19839c0ba6f04f5",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "c530f07f4ff040f5925b9a3599d9fb19",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "cef8d1064f944fbfba179fbbd6b370cb",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "d05a839483a84474ad62e8006f64924b",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "d5de0aa213c743ffba528efd4e566e68",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e34508a7e6fc4053b653599247f92e2c",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e4731d77892946f2a878c9cbf18ae30f",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e529e5ec29f3425a81745d19a344d621",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e8f64c516d1c4589b780a4c7064c6a66",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ef523d7765b0489691699758b03d34c7",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f483eb869e3f4a3c81cef2760d774ca3",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f62a04a8251b489395cea624ef3e8120",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f63b92ac76664252b8872f8705370418",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f6c035f6d6684b32804700ff7b7a14b0",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fb02beed86c44e77a16ef30718095447",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fd249e52bf4b4c6fb14ae69cbb7c7994",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fd55f4dc4a43466da9a596385e3f622f",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          }
+        ],
+        "mcnemar_exact": null,
+        "notes": "No valid pairs with successful scores for both conditions; metrics unavailable."
+      },
+      "d_vs_b": {
+        "status": "unavailable",
+        "attempted_pair_count": 58,
+        "valid_paired_denominator": 0,
+        "evaluated_case_ids": [],
+        "excluded_count": 58,
+        "excluded_case_ids": [
+          "009fc8bae30f48b18d2c317acf80b554",
+          "00d7c7cc7b534abeaf1f9dded1d3639b",
+          "01b62b5fd83f43c9b64aad4a286d8247",
+          "0502a3d70b734e4bbbd3f8f069c67463",
+          "0541c730c2414d71b55608a01a487ccd",
+          "0a4add08efa74fa2a356eec039d12f7d",
+          "0d26e7be35314b5ba13f883860d134aa",
+          "0d8ada7a8d664dfc8becb41a8f06393c",
+          "0ee2e39b07974445863101cf5b85d97f",
+          "122e005cbafc4d7abbaa854110fa0871",
+          "16caa32e50d342878340cacefe5a417a",
+          "16d3586cd85b4bce8f73e51aa44e7a7d",
+          "17d9c792e7924e1a859eb73cb3671f70",
+          "1b4913615b2f4d948fcfa3e4d5bf1e16",
+          "2900f09a9adf4358a19114af768fbd3e",
+          "36051ccaf844460c92d8ffbd288a890f",
+          "363edbaa51694fedbd2a264c881f23a1",
+          "3d3088e34ece49d8b9850f44ff05c029",
+          "3dc98383fd764b27a81875e289fd3ffd",
+          "3f0497f4a228459c8b2201e7f871a520",
+          "422fb6cb1e94484eb3d965376f8efa18",
+          "42d988894e4a4b3999d70225eeda47e2",
+          "4756b3c3129b4465a1ff05b8d13ff635",
+          "5702186b8f0f42d99bc16276fbdd693e",
+          "5868443c22ea4967b506165a6afc1c6e",
+          "58f870f4fcb14879970893e60ccb4276",
+          "59dfcccff93e42a1a18c883115e783bb",
+          "622fad3cf3ab49739736cf5198d3fbf4",
+          "675067ab932f4e31a870f9ff75ac5d5e",
+          "6ced13113ae24d9c98469f379db9b3d3",
+          "784e39fe07634ea3a4f175267457f480",
+          "85318a34e42548d6ad53c4a2492e0430",
+          "8b41e6511ab041aa990a3f1e85ec6a36",
+          "a172dc559a904564951a2edb4b8a8734",
+          "ab744abcb9ee47cf9dfbec0a49335aa6",
+          "ae89f4d5ba044940843751db7dd23f1f",
+          "b2c8d85ed1dc40f2bca88500700eaff7",
+          "b53d41119c8845939a7c270e659b85f9",
+          "b645629290bc4877a616593b9c1576b5",
+          "b786366cbb7242aea1e9f08fbeacad0d",
+          "b9b5f86a1927448881500ba2d69aac50",
+          "c2bad2c419ec4839a19839c0ba6f04f5",
+          "c530f07f4ff040f5925b9a3599d9fb19",
+          "cef8d1064f944fbfba179fbbd6b370cb",
+          "d05a839483a84474ad62e8006f64924b",
+          "d5de0aa213c743ffba528efd4e566e68",
+          "e34508a7e6fc4053b653599247f92e2c",
+          "e4731d77892946f2a878c9cbf18ae30f",
+          "e529e5ec29f3425a81745d19a344d621",
+          "e8f64c516d1c4589b780a4c7064c6a66",
+          "ef523d7765b0489691699758b03d34c7",
+          "f483eb869e3f4a3c81cef2760d774ca3",
+          "f62a04a8251b489395cea624ef3e8120",
+          "f63b92ac76664252b8872f8705370418",
+          "f6c035f6d6684b32804700ff7b7a14b0",
+          "fb02beed86c44e77a16ef30718095447",
+          "fd249e52bf4b4c6fb14ae69cbb7c7994",
+          "fd55f4dc4a43466da9a596385e3f622f"
+        ],
+        "exclusion_details": [
+          {
+            "case_id": "009fc8bae30f48b18d2c317acf80b554",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "00d7c7cc7b534abeaf1f9dded1d3639b",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "01b62b5fd83f43c9b64aad4a286d8247",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0502a3d70b734e4bbbd3f8f069c67463",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0541c730c2414d71b55608a01a487ccd",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0a4add08efa74fa2a356eec039d12f7d",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0d26e7be35314b5ba13f883860d134aa",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0d8ada7a8d664dfc8becb41a8f06393c",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0ee2e39b07974445863101cf5b85d97f",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "122e005cbafc4d7abbaa854110fa0871",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "16caa32e50d342878340cacefe5a417a",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "16d3586cd85b4bce8f73e51aa44e7a7d",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "17d9c792e7924e1a859eb73cb3671f70",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "1b4913615b2f4d948fcfa3e4d5bf1e16",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "2900f09a9adf4358a19114af768fbd3e",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "36051ccaf844460c92d8ffbd288a890f",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "363edbaa51694fedbd2a264c881f23a1",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3d3088e34ece49d8b9850f44ff05c029",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3dc98383fd764b27a81875e289fd3ffd",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3f0497f4a228459c8b2201e7f871a520",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "422fb6cb1e94484eb3d965376f8efa18",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "42d988894e4a4b3999d70225eeda47e2",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "4756b3c3129b4465a1ff05b8d13ff635",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "5702186b8f0f42d99bc16276fbdd693e",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "5868443c22ea4967b506165a6afc1c6e",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "58f870f4fcb14879970893e60ccb4276",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "59dfcccff93e42a1a18c883115e783bb",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "622fad3cf3ab49739736cf5198d3fbf4",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "675067ab932f4e31a870f9ff75ac5d5e",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "6ced13113ae24d9c98469f379db9b3d3",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "784e39fe07634ea3a4f175267457f480",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "85318a34e42548d6ad53c4a2492e0430",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "8b41e6511ab041aa990a3f1e85ec6a36",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "a172dc559a904564951a2edb4b8a8734",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ab744abcb9ee47cf9dfbec0a49335aa6",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ae89f4d5ba044940843751db7dd23f1f",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b2c8d85ed1dc40f2bca88500700eaff7",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b53d41119c8845939a7c270e659b85f9",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b645629290bc4877a616593b9c1576b5",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b786366cbb7242aea1e9f08fbeacad0d",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b9b5f86a1927448881500ba2d69aac50",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "c2bad2c419ec4839a19839c0ba6f04f5",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "c530f07f4ff040f5925b9a3599d9fb19",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "cef8d1064f944fbfba179fbbd6b370cb",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "d05a839483a84474ad62e8006f64924b",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "d5de0aa213c743ffba528efd4e566e68",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e34508a7e6fc4053b653599247f92e2c",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e4731d77892946f2a878c9cbf18ae30f",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e529e5ec29f3425a81745d19a344d621",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e8f64c516d1c4589b780a4c7064c6a66",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ef523d7765b0489691699758b03d34c7",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f483eb869e3f4a3c81cef2760d774ca3",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f62a04a8251b489395cea624ef3e8120",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f63b92ac76664252b8872f8705370418",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f6c035f6d6684b32804700ff7b7a14b0",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fb02beed86c44e77a16ef30718095447",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fd249e52bf4b4c6fb14ae69cbb7c7994",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fd55f4dc4a43466da9a596385e3f622f",
+            "reason": "cond_d status='dry_run' (no valid score)"
+          }
+        ],
+        "mcnemar_exact": null,
+        "notes": "No valid pairs with successful scores for both conditions; metrics unavailable."
+      },
+      "d_vs_c": {
+        "status": "unavailable",
+        "attempted_pair_count": 58,
+        "valid_paired_denominator": 0,
+        "evaluated_case_ids": [],
+        "excluded_count": 58,
+        "excluded_case_ids": [
+          "009fc8bae30f48b18d2c317acf80b554",
+          "00d7c7cc7b534abeaf1f9dded1d3639b",
+          "01b62b5fd83f43c9b64aad4a286d8247",
+          "0502a3d70b734e4bbbd3f8f069c67463",
+          "0541c730c2414d71b55608a01a487ccd",
+          "0a4add08efa74fa2a356eec039d12f7d",
+          "0d26e7be35314b5ba13f883860d134aa",
+          "0d8ada7a8d664dfc8becb41a8f06393c",
+          "0ee2e39b07974445863101cf5b85d97f",
+          "122e005cbafc4d7abbaa854110fa0871",
+          "16caa32e50d342878340cacefe5a417a",
+          "16d3586cd85b4bce8f73e51aa44e7a7d",
+          "17d9c792e7924e1a859eb73cb3671f70",
+          "1b4913615b2f4d948fcfa3e4d5bf1e16",
+          "2900f09a9adf4358a19114af768fbd3e",
+          "36051ccaf844460c92d8ffbd288a890f",
+          "363edbaa51694fedbd2a264c881f23a1",
+          "3d3088e34ece49d8b9850f44ff05c029",
+          "3dc98383fd764b27a81875e289fd3ffd",
+          "3f0497f4a228459c8b2201e7f871a520",
+          "422fb6cb1e94484eb3d965376f8efa18",
+          "42d988894e4a4b3999d70225eeda47e2",
+          "4756b3c3129b4465a1ff05b8d13ff635",
+          "5702186b8f0f42d99bc16276fbdd693e",
+          "5868443c22ea4967b506165a6afc1c6e",
+          "58f870f4fcb14879970893e60ccb4276",
+          "59dfcccff93e42a1a18c883115e783bb",
+          "622fad3cf3ab49739736cf5198d3fbf4",
+          "675067ab932f4e31a870f9ff75ac5d5e",
+          "6ced13113ae24d9c98469f379db9b3d3",
+          "784e39fe07634ea3a4f175267457f480",
+          "85318a34e42548d6ad53c4a2492e0430",
+          "8b41e6511ab041aa990a3f1e85ec6a36",
+          "a172dc559a904564951a2edb4b8a8734",
+          "ab744abcb9ee47cf9dfbec0a49335aa6",
+          "ae89f4d5ba044940843751db7dd23f1f",
+          "b2c8d85ed1dc40f2bca88500700eaff7",
+          "b53d41119c8845939a7c270e659b85f9",
+          "b645629290bc4877a616593b9c1576b5",
+          "b786366cbb7242aea1e9f08fbeacad0d",
+          "b9b5f86a1927448881500ba2d69aac50",
+          "c2bad2c419ec4839a19839c0ba6f04f5",
+          "c530f07f4ff040f5925b9a3599d9fb19",
+          "cef8d1064f944fbfba179fbbd6b370cb",
+          "d05a839483a84474ad62e8006f64924b",
+          "d5de0aa213c743ffba528efd4e566e68",
+          "e34508a7e6fc4053b653599247f92e2c",
+          "e4731d77892946f2a878c9cbf18ae30f",
+          "e529e5ec29f3425a81745d19a344d621",
+          "e8f64c516d1c4589b780a4c7064c6a66",
+          "ef523d7765b0489691699758b03d34c7",
+          "f483eb869e3f4a3c81cef2760d774ca3",
+          "f62a04a8251b489395cea624ef3e8120",
+          "f63b92ac76664252b8872f8705370418",
+          "f6c035f6d6684b32804700ff7b7a14b0",
+          "fb02beed86c44e77a16ef30718095447",
+          "fd249e52bf4b4c6fb14ae69cbb7c7994",
+          "fd55f4dc4a43466da9a596385e3f622f"
+        ],
+        "exclusion_details": [
+          {
+            "case_id": "009fc8bae30f48b18d2c317acf80b554",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "00d7c7cc7b534abeaf1f9dded1d3639b",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "01b62b5fd83f43c9b64aad4a286d8247",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0502a3d70b734e4bbbd3f8f069c67463",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0541c730c2414d71b55608a01a487ccd",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0a4add08efa74fa2a356eec039d12f7d",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0d26e7be35314b5ba13f883860d134aa",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0d8ada7a8d664dfc8becb41a8f06393c",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "0ee2e39b07974445863101cf5b85d97f",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "122e005cbafc4d7abbaa854110fa0871",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "16caa32e50d342878340cacefe5a417a",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "16d3586cd85b4bce8f73e51aa44e7a7d",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "17d9c792e7924e1a859eb73cb3671f70",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "1b4913615b2f4d948fcfa3e4d5bf1e16",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "2900f09a9adf4358a19114af768fbd3e",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "36051ccaf844460c92d8ffbd288a890f",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "363edbaa51694fedbd2a264c881f23a1",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3d3088e34ece49d8b9850f44ff05c029",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3dc98383fd764b27a81875e289fd3ffd",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "3f0497f4a228459c8b2201e7f871a520",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "422fb6cb1e94484eb3d965376f8efa18",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "42d988894e4a4b3999d70225eeda47e2",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "4756b3c3129b4465a1ff05b8d13ff635",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "5702186b8f0f42d99bc16276fbdd693e",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "5868443c22ea4967b506165a6afc1c6e",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "58f870f4fcb14879970893e60ccb4276",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "59dfcccff93e42a1a18c883115e783bb",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "622fad3cf3ab49739736cf5198d3fbf4",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "675067ab932f4e31a870f9ff75ac5d5e",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "6ced13113ae24d9c98469f379db9b3d3",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "784e39fe07634ea3a4f175267457f480",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "85318a34e42548d6ad53c4a2492e0430",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "8b41e6511ab041aa990a3f1e85ec6a36",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "a172dc559a904564951a2edb4b8a8734",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ab744abcb9ee47cf9dfbec0a49335aa6",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ae89f4d5ba044940843751db7dd23f1f",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b2c8d85ed1dc40f2bca88500700eaff7",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b53d41119c8845939a7c270e659b85f9",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b645629290bc4877a616593b9c1576b5",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b786366cbb7242aea1e9f08fbeacad0d",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "b9b5f86a1927448881500ba2d69aac50",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "c2bad2c419ec4839a19839c0ba6f04f5",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "c530f07f4ff040f5925b9a3599d9fb19",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "cef8d1064f944fbfba179fbbd6b370cb",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "d05a839483a84474ad62e8006f64924b",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "d5de0aa213c743ffba528efd4e566e68",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e34508a7e6fc4053b653599247f92e2c",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e4731d77892946f2a878c9cbf18ae30f",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e529e5ec29f3425a81745d19a344d621",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "e8f64c516d1c4589b780a4c7064c6a66",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "ef523d7765b0489691699758b03d34c7",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f483eb869e3f4a3c81cef2760d774ca3",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f62a04a8251b489395cea624ef3e8120",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f63b92ac76664252b8872f8705370418",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "f6c035f6d6684b32804700ff7b7a14b0",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fb02beed86c44e77a16ef30718095447",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fd249e52bf4b4c6fb14ae69cbb7c7994",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          },
+          {
+            "case_id": "fd55f4dc4a43466da9a596385e3f622f",
+            "reason": "cond_d status='dry_run' (no valid score); cond_c status='dry_run' (no valid score)"
+          }
+        ],
+        "mcnemar_exact": null,
+        "notes": "No valid pairs with successful scores for both conditions; metrics unavailable."
+      }
+    }
+  }
+}

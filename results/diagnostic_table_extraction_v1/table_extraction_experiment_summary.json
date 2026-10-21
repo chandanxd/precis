@@ -1,0 +1,193 @@
+{
+  "timestamp": "2026-10-09 14:25:00 UTC",
+  "experiment_duration_sec": 609.97,
+  "configuration": {
+    "model": "qwen2.5-coder:7b",
+    "temperature": 0.0,
+    "top_p": 0.9,
+    "max_tokens": 512,
+    "seed": 42,
+    "context_ceiling": 2048,
+    "prompt_style": "concise"
+  },
+  "preflight": {
+    "passed": true,
+    "tests": {
+      "1_header_cell_alignment": {
+        "passed": true,
+        "facts_count": 6,
+        "details": [
+          "Alice | records | Team: Hawks, Points: 25",
+          "Alice | has Team | Hawks",
+          "Alice | has Points | 25",
+          "Bob | records | Points: 10, Year: 2020",
+          "Bob | has Points | 10",
+          "Bob | has Year | 2020"
+        ]
+      },
+      "2_absent_headers_infobox": {
+        "passed": true,
+        "facts_count": 2,
+        "details": [
+          "Motto Labor Omnia Vincit Established 1890 | has Motto | Labor Omnia Vincit",
+          "Motto Labor Omnia Vincit Established 1890 | has Established | 1890"
+        ]
+      },
+      "3_nested_markup_and_fragments": {
+        "passed": true,
+        "facts_count": 2,
+        "details": [
+          "John Doe (Captain) | records | Country: Canada",
+          "John Doe (Captain) | has Country | Canada"
+        ]
+      },
+      "4_entity_column_selection": {
+        "passed": true,
+        "facts_count": 3,
+        "details": [
+          "Pilot | records | Rank: 1, Rating: 9.5",
+          "Pilot | has Rank | 1",
+          "Pilot | has Rating | 9.5"
+        ]
+      },
+      "5_list_item_patterns": {
+        "passed": true,
+        "facts_count": 4,
+        "details": [
+          "Mowgli | is | A human boy raised by wolves .",
+          "Batman | is portrayed by | Christian Bale",
+          "Batman | is | The Dark Knight",
+          "Green Bay Packers | participated in | I , II , XXXI , XLV"
+        ]
+      },
+      "6_deduplication_guardrails": {
+        "passed": true,
+        "facts_count": 2
+      },
+      "7_budget_caps_enforcement": {
+        "passed": true,
+        "facts_count": 15
+      },
+      "8_cohort_a_documents_preflight": {
+        "passed": true,
+        "cases": [
+          {
+            "sample_id": "1aaee123c19e49e2af80d5e53d1f76ce",
+            "description": "baby elephant list",
+            "gold_answer": "Hathi Jr .",
+            "facts_extracted": 1,
+            "recovered": true
+          },
+          {
+            "sample_id": "d79cf47218e54495ba21ea59ca54fc57",
+            "description": "rugby statistics table",
+            "gold_answer": "Daisuke Ohata",
+            "facts_extracted": 30,
+            "recovered": true
+          },
+          {
+            "sample_id": "2ec7c62e2fe547f0802d8cf34e5e9be0",
+            "description": "yo gabba gabba cast credits",
+            "gold_answer": "DJ Lance Rock",
+            "facts_extracted": 13,
+            "recovered": true
+          },
+          {
+            "sample_id": "9dd3961d209a41abac49a36413371d6c",
+            "description": "super bowls enumeration",
+            "gold_answer": "New England Patriots",
+            "facts_extracted": 1,
+            "recovered": true
+          },
+          {
+            "sample_id": "11cabb55e53047449cd8304480660c0b",
+            "description": "university infobox",
+            "gold_answer": "51,331",
+            "facts_extracted": 27,
+            "recovered": true
+          },
+          {
+            "sample_id": "78b30a922137434fbb2170da0e0d79ae",
+            "description": "greys anatomy episode schedule",
+            "gold_answer": "March 1 , 2018",
+            "facts_extracted": 30,
+            "recovered": true
+          }
+        ]
+      }
+    }
+  },
+  "cohort_a_historical_failures": {
+    "raw_total": 23,
+    "dedup_total": 15,
+    "table_list_raw_count": 12,
+    "table_list_dedup_count": 6,
+    "table_list_raw_metrics": {
+      "baseline_em": 1,
+      "prototype_em": 6,
+      "baseline_containment": 1,
+      "prototype_containment": 6,
+      "extracted_recovered": 12,
+      "association_preserved": 12,
+      "packed_recovered": 11
+    },
+    "table_list_dedup_metrics": {
+      "baseline_em": 1,
+      "prototype_em": 4,
+      "baseline_containment": 1,
+      "prototype_containment": 4,
+      "extracted_recovered": 6,
+      "association_preserved": 6,
+      "packed_recovered": 5
+    }
+  },
+  "cohort_b_regression_guardrails": {
+    "num_samples": 50,
+    "seed": 42,
+    "historical_standard_comparison": {
+      "baseline_em_positive_count": 15,
+      "em_regression_count": 2,
+      "em_regression_rate_on_em_positive": 0.13333333333333333,
+      "baseline_containment_positive_count": 50,
+      "containment_regression_count": 11,
+      "containment_regression_rate_on_all": 0.22,
+      "containment_guardrail_passed": false
+    },
+    "synchronous_concise_comparison": {
+      "baseline_em_positive_count": 34,
+      "em_regression_count": 0,
+      "em_regression_rate_on_em_positive": 0.0,
+      "baseline_containment_positive_count": 40,
+      "containment_regression_count": 1,
+      "containment_regression_rate_on_positive": 0.025,
+      "containment_guardrail_passed": true
+    },
+    "context_overhead": {
+      "avg_baseline_tokens": 262.84,
+      "avg_prototype_tokens": 303.82,
+      "token_growth_percentage": 15.59,
+      "context_guardrail_passed": false
+    }
+  },
+  "cohort_c_heldout_paired_generalization": {
+    "num_samples": 100,
+    "baseline_em_rate": 0.35,
+    "prototype_em_rate": 0.38,
+    "em_delta": 0.03,
+    "mcnemar_em": {
+      "b_wins": 4,
+      "c_losses": 1,
+      "p_value": 0.375
+    },
+    "baseline_containment_rate": 0.4,
+    "prototype_containment_rate": 0.43,
+    "containment_delta": 0.03,
+    "mcnemar_containment": {
+      "b_wins": 4,
+      "c_losses": 1,
+      "p_value": 0.375
+    },
+    "avg_baseline_rouge_l": 0.445237,
+    "avg_prototype_rouge_l": 0.479533
+  }
+}

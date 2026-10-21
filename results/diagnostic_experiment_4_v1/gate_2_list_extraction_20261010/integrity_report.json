@@ -1,0 +1,101 @@
+{
+  "experiment_id": "diagnostic_experiment_4_3_gate2",
+  "timestamp": "2026-10-10T17:15:00+05:30",
+  "status": "PASS",
+  "constraints_and_safeguards": {
+    "production_code_untouched": true,
+    "production_dir": "backend/src/precis/",
+    "zero_production_diff_verified": true,
+    "token_ceiling_tokens": 2048,
+    "max_observed_context_tokens": 1037,
+    "token_ceiling_violations": 0,
+    "cohort_size": 31,
+    "cohort_derivation_criteria": "failure_classification.revised_gate_1_category.startswith(\"EXTRACTION_OMISSION_LIST\") from failure_inventory.jsonl",
+    "generation_inferences_attempted": 31,
+    "generation_inferences_completed": 31,
+    "failed_or_unscorable_inferences": 0,
+    "unauthorized_inference_outside_cohort": 0
+  },
+  "automated_tests": {
+    "test_experiment_4_3_fixtures": "5 passed",
+    "test_experiment_4_2_integrity": "13 passed",
+    "total_tests_passed": 18,
+    "failures": 0
+  },
+  "input_file_integrity": {
+    "sample_manifest.jsonl": {
+      "path": "results/diagnostic_structural_decompilation_v3/sample_manifest.jsonl",
+      "size_bytes": 87954,
+      "sha256": "011553c0725621b7dda73aad12254d100e6fc15f49a5f80f4524156eb4e25db7",
+      "exists": true
+    },
+    "eval_records_stage_c.jsonl": {
+      "path": "results/diagnostic_structural_decompilation_v3/eval_records_stage_c.jsonl",
+      "size_bytes": 312090,
+      "sha256": "e10ea38f7cc7cfa9a98d494851de8c41c322b5f148dfff653077193917933687",
+      "exists": true
+    },
+    "nq_dev.jsonl": {
+      "path": "backend/data/nq_subset/nq_dev.jsonl",
+      "size_bytes": 13651266,
+      "sha256": "14efc255a596433d6bf10dd853a1915474a5d3f6b47c593f77911ab4bb8eb491",
+      "exists": true
+    },
+    "eval_records_exp42.jsonl": {
+      "path": "results/diagnostic_experiment_4_v1/full_cohort_threshold_20261010/eval_records.jsonl",
+      "size_bytes": 942161,
+      "sha256": "d8a42cc906bf7fa4aebafff6868345c20a0667f971dea4f2309e3e199a3079f0",
+      "exists": true
+    },
+    "failure_inventory_gate1.jsonl": {
+      "path": "results/diagnostic_experiment_4_v1/failure_attribution_20261010/failure_inventory.jsonl",
+      "size_bytes": 166695,
+      "sha256": "748037a0a0d718b684f1021487476f2b2fd3692103aac44c8b556255b84ef08c",
+      "exists": true
+    },
+    "diagnostic_list_extractor.py": {
+      "path": "scripts/diagnostic_list_extractor.py",
+      "size_bytes": 7936,
+      "sha256": "4dafe954f5fb04492a85943d26365acd9cb7e64bc3bf665fd7a60f2ab7e92e4a",
+      "exists": true
+    },
+    "eval_experiment_4_3_gate2_runner.py": {
+      "path": "scripts/eval_experiment_4_3_gate2_runner.py",
+      "size_bytes": 22657,
+      "sha256": "96e75e6af01706e148146d31747c53b652daa78f1ef92cc8a6fa8226bb57290b",
+      "exists": true
+    },
+    "test_experiment_4_3_fixtures.py": {
+      "path": "scripts/test_experiment_4_3_fixtures.py",
+      "size_bytes": 5211,
+      "sha256": "d94dfd00d58265cf090a3f791042d0213c4b4fc8aafae157f73387451dc3d8a3",
+      "exists": true
+    }
+  },
+  "output_file_integrity": {
+    "stage_2a_evidence_recovery.jsonl": {
+      "path": "results/diagnostic_experiment_4_v1/gate_2_list_extraction_20261010/stage_2a_evidence_recovery.jsonl",
+      "size_bytes": 24598,
+      "sha256": "a46e77c34cff56e5ef5de7f0eb0d6b7b2335c570aaeb1d1c740f276ac3438ee2",
+      "exists": true
+    },
+    "stage_2b_eval_records.jsonl": {
+      "path": "results/diagnostic_experiment_4_v1/gate_2_list_extraction_20261010/stage_2b_eval_records.jsonl",
+      "size_bytes": 46767,
+      "sha256": "417fab9df822674e128c052fae2ad5153a9b8f96faf6e9995760eec334fc9e4f",
+      "exists": true
+    },
+    "paired_comparison_summary.json": {
+      "path": "results/diagnostic_experiment_4_v1/gate_2_list_extraction_20261010/paired_comparison_summary.json",
+      "size_bytes": 1218,
+      "sha256": "481677f15f2753b52c64358412602ed72740ed905436c99c74844e626d2e34de",
+      "exists": true
+    },
+    "regression_audit.jsonl": {
+      "path": "results/diagnostic_experiment_4_v1/gate_2_list_extraction_20261010/regression_audit.jsonl",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exists": true
+    }
+  }
+}

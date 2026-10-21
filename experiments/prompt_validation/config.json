@@ -1,0 +1,145 @@
+{
+  "experiment_name": "precis_confirmatory_answer_formatting",
+  "experiment_version": "1.0.0",
+  "created_at": "2026-10-09T13:46:00+05:30",
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+    "vram_total_mib": 8188,
+    "driver_version": "535.183.01",
+    "cuda_version": "12.2",
+    "host_os": "Linux x86_64",
+    "runtime": "Ollama 0.35.1"
+  },
+  "models": {
+    "reference": {
+      "tag": "qwen2.5-coder:7b",
+      "parameters_b": 7.0,
+      "quantization": "Q4_K_M",
+      "digest": "dae161e27b0e90dd1856c8bb3209201fd6736d8eb66298e75ed87571486f4364"
+    },
+    "candidate": {
+      "tag": "qwen3.5:4b",
+      "parameters_b": 4.0,
+      "quantization": "Q4_K_M",
+      "digest": "d8b0f5e9760cd1682034f292d7ef72ec46f432149be0df7574bf2d6e92e38c04"
+    }
+  },
+  "decoding": {
+    "api_endpoint": "/api/chat",
+    "temperature": 0.0,
+    "top_p": 0.9,
+    "seed": 42,
+    "num_predict": 512,
+    "think": false
+  },
+  "prompts": {
+    "standard": {
+      "template_name": "STANDARD_PROMPT_TEMPLATE",
+      "sha256": "dc584bb87b846fc60945b3c351ee8c405a980a1147aa63114eec67b3e2b3f4a5"
+    },
+    "concise": {
+      "template_name": "CONCISE_PROMPT_TEMPLATE",
+      "sha256": "3dc0137b82902e56840b6a27df6afeffe4b72cec027a06e08f69c24b734fc426"
+    }
+  },
+  "retrieval": {
+    "naive_rag": {
+      "chunk_size": 512,
+      "overlap": 128,
+      "top_k": 5
+    },
+    "precis_v3": {
+      "token_ceiling": 2048,
+      "extractor": "OpenIE SVOA triple extraction + coreference resolution",
+      "deduplication": "Semantic Density Heuristic (SDH) with all-MiniLM-L6-v2",
+      "packing": "Query-adaptive pack-score ordering (SDH x query similarity)"
+    }
+  },
+  "metrics": {
+    "exact_match": "Standard exact word/token match post-normalization",
+    "containment": "Word-boundary regex substring match post-normalization",
+    "rouge_l": "rouge-score (rougeL fmeasure)",
+    "bert_score": {
+      "model": "microsoft/deberta-large-mnli",
+      "device": "cpu",
+      "batch_size": 1
+    },
+    "minilm_cosine": {
+      "model": "sentence-transformers/all-MiniLM-L6-v2",
+      "metric": "cosine_similarity"
+    }
+  },
+  "hypotheses": {
+    "primary": {
+      "id": "H1",
+      "description": "Concise prompt increases Précis EM for qwen3.5:4b compared with standard prompt.",
+      "test": "McNemar exact binomial test (one-sided greater)",
+      "alpha": 0.05,
+      "containment_guardrail": {
+        "max_containment_drop": 0.25,
+        "min_absolute_containment": 0.40
+      }
+    },
+    "secondary_prompt_family": {
+      "correction_method": "Holm-Bonferroni",
+      "family_alpha": 0.05,
+      "tests": [
+        {
+          "id": "H2a",
+          "description": "Concise prompt improves Naive RAG EM for qwen3.5:4b.",
+          "direction": "greater"
+        },
+        {
+          "id": "H2b",
+          "description": "Concise prompt improves Précis EM for qwen2.5-coder:7b.",
+          "direction": "greater"
+        },
+        {
+          "id": "H2c",
+          "description": "Concise prompt improves Naive RAG EM for qwen2.5-coder:7b.",
+          "direction": "greater"
+        }
+      ]
+    },
+    "interaction": {
+      "id": "H3",
+      "primary_target": "qwen3.5:4b",
+      "secondary_target": "qwen2.5-coder:7b",
+      "estimand": "(EM_concise_precis - EM_standard_precis) - (EM_concise_naive - EM_standard_naive)",
+      "bootstrap": {
+        "resampling_unit": "question_cluster",
+        "n_resamples": 10000,
+        "seed": 42,
+        "ci_method": "percentile_95"
+      }
+    },
+    "cross_model_family": {
+      "id": "H4",
+      "description": "Cross-model comparison (qwen3.5:4b vs qwen2.5-coder:7b) across 4 retrieval x prompt conditions.",
+      "correction_method": "Holm-Bonferroni",
+      "family_alpha": 0.05,
+      "test": "McNemar exact binomial test (two-sided)",
+      "conditions": [
+        "naive_standard",
+        "naive_concise",
+        "precis_standard",
+        "precis_concise"
+      ]
+    }
+  },
+  "error_taxonomy": {
+    "transition_statuses": [
+      "Prompt-Correction",
+      "Prompt-Degradation",
+      "Persistent-Error",
+      "Persistent-Success"
+    ],
+    "failure_modes": [
+      "Conversational Mismatch",
+      "Incomplete Entity",
+      "Hallucination",
+      "Evidence Insufficiency",
+      "Other"
+    ]
+  }
+}

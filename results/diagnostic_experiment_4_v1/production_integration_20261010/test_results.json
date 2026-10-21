@@ -1,0 +1,66 @@
+{
+  "experiment_id": "diagnostic_experiment_4_5_production_integration",
+  "timestamp": "2026-10-10T13:28:00Z",
+  "verdict": "IMPLEMENTATION READY FOR DISABLED-MODE REVIEW",
+  "feature_flag": {
+    "name": "PRECIS_ENABLE_LIST_EXTRACTION",
+    "default_state": false,
+    "strict_parsing": true,
+    "tests_passed": 17
+  },
+  "test_suites": {
+    "structural_integration": {
+      "path": "backend/tests/test_structural_integration.py",
+      "total": 47,
+      "passed": 47,
+      "failed": 0,
+      "skipped": 0,
+      "categories": {
+        "feature_flag_configuration": 17,
+        "disabled_mode_compatibility": 1,
+        "context_budget_accounting": 8,
+        "table_list_deduplication": 3,
+        "regression_safeguards": 3,
+        "html_edge_cases": 15
+      }
+    },
+    "backend_full_suite": {
+      "path": "backend/tests/",
+      "total": 388,
+      "passed": 388,
+      "failed": 0,
+      "skipped": 0
+    },
+    "diagnostic_scripts_suite": {
+      "paths": [
+        "scripts/test_experiment_4_2_integrity.py",
+        "scripts/test_experiment_4_3_fixtures.py",
+        "scripts/test_experiment_4_4_audit_extractor.py"
+      ],
+      "total": 33,
+      "passed": 33,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "total_tests_executed": 468,
+  "total_tests_passed": 468,
+  "total_tests_failed": 0,
+  "invariants_verified": {
+    "default_disabled": true,
+    "disabled_mode_byte_identity": true,
+    "header_separator_budget_deduction": true,
+    "hard_ceiling_enforced": true,
+    "max_context_ceiling_violation_observed": 0,
+    "conservative_table_list_dedup_active": true,
+    "regression_safeguards_active": {
+      "case_3f5983b2": true,
+      "case_ef634417": true,
+      "case_8f1f9bd9": true
+    },
+    "live_inference_calls": 0,
+    "network_calls": 0,
+    "git_commits_created": 0,
+    "git_working_tree_preserved": true
+  }
+}

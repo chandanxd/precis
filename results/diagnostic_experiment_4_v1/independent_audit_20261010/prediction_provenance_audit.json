@@ -1,0 +1,9 @@
+{
+  "total_records": 200,
+  "gate2_reused_count": 31,
+  "newly_generated_count": 169,
+  "condition_d_matches_exp4_2_count": 200,
+  "gate2_prediction_exact_matches_count": 31,
+  "score_recomputation_mismatches": [],
+  "provenance_anomalies": []
+}

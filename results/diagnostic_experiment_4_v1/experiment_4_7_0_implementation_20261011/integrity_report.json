@@ -1,0 +1,50 @@
+{
+  "audit_metadata": {
+    "report_identifier": "integrity_report_exp_4_7_0_implementation",
+    "date": "2026-10-11",
+    "scope": "Experiment 4.7.0 Intervention 1 Implementation Verification",
+    "read_only_boundaries_respected": true
+  },
+  "file_hashes": {
+    "results/diagnostic_experiment_4_v1/experiment_4_7_0_readiness_20261011/implementation_spec.md": "3f7bb30e476cada996b50a0b8d97808343b2f1a5eff5aa3b6c3f04ad9fbd0221",
+    "results/diagnostic_experiment_4_v1/experiment_4_7_0_readiness_20261011/acceptance_test_plan.md": "ef996d8c90e213e4702902884434615f0e0e2d9ea8261ba7ec9c78ae172fea17",
+    "results/diagnostic_experiment_4_v1/experiment_4_7_0_readiness_20261011/case_impact_matrix.json": "4e82398ea89658ac19fe361b856f879ea7288eed391a96a5cf222ac2d4c2cb7d",
+    "results/diagnostic_experiment_4_v1/experiment_4_6_regression_diagnosis_20261011/regression_diagnosis.md": "6b2b5babeba18934d4bcae7358edb259ec797a9653fe91975934179832e8e3b3",
+    "results/diagnostic_experiment_4_v1/experiment_4_6_regression_diagnosis_20261011/root_cause_matrix.json": "ebb7d8a9927b2716d33397d58279035f27cdb54a1d2f31634ad3fc0fea070a0e",
+    "results/diagnostic_experiment_4_v1/experiment_4_6_regression_diagnosis_20261011/remediation_proposal.md": "7c92201ad0cab1300cd061f05265a520ca5f981a5b6d6aa224c8baf8725f815b",
+    "results/diagnostic_experiment_4_v1/gate_5_confirmatory_evaluation_20261010/eval_records.jsonl": "edfeec16d87cdf5f168ceb7f8c947a875a0f237dc1c6074ca9ad22e28f600011",
+    "results/diagnostic_experiment_4_v1/gate_5_independent_audit_20261011/independent_audit_report.md": "1bf0b0bac425330b0800329ab52d499b576852306f1f936202024bba19890963",
+    "backend/src/precis/pipeline/structural.py": "10f16ce3f08fc00693d723c0a6e3e03e1a46a585b47d41e2feb110f6b9fb1ee4",
+    "backend/tests/test_structural_priority_packing.py": "eead787a93f4f6a12e0535c32f7355455befb0992da84aafba88b2e8573a9cd4",
+    "backend/src/precis/pipeline/orchestrator.py": "e6706cc08cf68c6bae9f4d1928793fbc25d39208e7a3c7c90e7cf8b439d80803",
+    "backend/src/precis/pipeline/packer.py": "046e029cf0b7d8f08116d1a4da603ff1a648a54286b8767d07f006f8080dc7a1",
+    "backend/src/precis/graph/store.py": "6db9d6d48d25f2f6f703054e488da10196666a47c0e3da4d7e7c68beb49dcb07",
+    "backend/main.py": "fcb0f64a5a6e8f2e0a26c9b4589bb4c575e6fc9bd58385deca5ac1270478b329"
+  },
+  "verification_checks": {
+    "only_authorized_source_modified": true,
+    "authorized_source_file": "backend/src/precis/pipeline/structural.py",
+    "authorized_new_test_file": "backend/tests/test_structural_priority_packing.py",
+    "ingestion_subsystems_modified": false,
+    "database_schema_modified": false,
+    "vector_retrieval_modified": false,
+    "prompt_templates_modified": false,
+    "evaluation_scoring_modified": false,
+    "default_feature_flag_status": "PRECIS_ENABLE_LIST_EXTRACTION default is False (verified by TestFeatureFlagConfiguration::test_default_is_disabled)",
+    "frozen_evaluation_records_modified": false,
+    "historical_artifacts_modified": false,
+    "model_inference_executed": false,
+    "ollama_service_called": false,
+    "git_history_preserved": true
+  },
+  "test_summary": {
+    "new_acceptance_tests_run": 14,
+    "new_acceptance_tests_passed": 14,
+    "existing_regression_tests_run": 77,
+    "existing_regression_tests_passed": 77,
+    "total_tests_passed": 91,
+    "failures": 0,
+    "skipped": 0
+  },
+  "verdict": "READY FOR INFERENCE AUTHORIZATION"
+}

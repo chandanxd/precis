@@ -1,0 +1,68 @@
+{
+  "cohort_name": "stage_c_confirmatory_summary",
+  "config_fingerprint": "78b2eaaba81f631a389e10db86d8f099d82332ccf7375011ff8cd99f52566815",
+  "confirmatory_outcome": "PASS",
+  "stratum_1_table_bearing": {
+    "n_samples": 200,
+    "cond_a": {
+      "em": 0.32,
+      "containment": 0.435,
+      "avg_tokens": 618.825
+    },
+    "cond_b": {
+      "em": 0.14,
+      "containment": 0.195,
+      "avg_tokens": 155.435,
+      "overhead_vs_a": -0.7488223649658627,
+      "em_wins": 11,
+      "em_losses": 47,
+      "mcnemar_p_unadjusted": 2.0315945360449565e-06,
+      "wilcoxon_token_p": 2.760642924964595e-27
+    },
+    "cond_c": {
+      "em": 0.14,
+      "containment": 0.195,
+      "avg_tokens": 160.28,
+      "overhead_vs_a": -0.7409930109481679,
+      "em_wins": 11,
+      "em_losses": 47,
+      "mcnemar_p_unadjusted": 2.0315945360449565e-06,
+      "wilcoxon_token_p": 8.307700588133664e-27
+    }
+  },
+  "stratum_2_prose_only": {
+    "n_samples": 100,
+    "cond_a": {
+      "em": 0.41,
+      "containment": 0.51,
+      "avg_tokens": 299.4
+    },
+    "cond_b": {
+      "em": 0.42,
+      "containment": 0.52,
+      "avg_tokens": 299.4,
+      "overhead_vs_a": 0.0,
+      "em_wins": 1,
+      "em_losses": 0,
+      "mcnemar_p_unadjusted": 1.0,
+      "wilcoxon_token_p": 1.0
+    },
+    "cond_c": {
+      "em": 0.42,
+      "containment": 0.52,
+      "avg_tokens": 299.4,
+      "overhead_vs_a": 0.0,
+      "em_wins": 1,
+      "em_losses": 0,
+      "mcnemar_p_unadjusted": 1.0,
+      "wilcoxon_token_p": 1.0
+    },
+    "upstream_invariance_all_passed": true,
+    "upstream_invariance_passed_count": 100,
+    "upstream_invariance_total_count": 100
+  },
+  "holm_bonferroni_primary_tests": {
+    "B_vs_A": {
+      "raw_p": 2.0315945360449565e-06,
+      "holm_threshold": 0.025,
+      "significant": 

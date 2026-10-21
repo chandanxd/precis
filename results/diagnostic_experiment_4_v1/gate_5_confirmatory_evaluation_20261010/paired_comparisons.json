@@ -1,0 +1,242 @@
+{
+  "f_vs_d": {
+    "exact_match": {
+      "base_correct": 99,
+      "base_rate": 49.5,
+      "cand_correct": 105,
+      "cand_rate": 52.5,
+      "contingency_table": {
+        "both_correct": 86,
+        "losses": 13,
+        "wins": 19,
+        "both_incorrect": 82
+      },
+      "wins": 19,
+      "losses": 13,
+      "ties": 168,
+      "net_wins": 6,
+      "net_percentage_points": 3.0,
+      "ci_95_pct": [
+        -2.53,
+        8.53
+      ],
+      "mcnemar_p_value": 0.37708558747544885,
+      "statistically_significant_05": false
+    },
+    "containment": {
+      "base_correct": 122,
+      "base_rate": 61.0,
+      "cand_correct": 131,
+      "cand_rate": 65.5,
+      "contingency_table": {
+        "both_correct": 109,
+        "losses": 13,
+        "wins": 22,
+        "both_incorrect": 56
+      },
+      "wins": 22,
+      "losses": 13,
+      "ties": 165,
+      "net_wins": 9,
+      "net_percentage_points": 4.5,
+      "ci_95_pct": [
+        -1.26,
+        10.26
+      ],
+      "mcnemar_p_value": 0.175465248990804,
+      "statistically_significant_05": false
+    }
+  },
+  "f_vs_e": {
+    "exact_match": {
+      "base_correct": 108,
+      "base_rate": 54.0,
+      "cand_correct": 105,
+      "cand_rate": 52.5,
+      "contingency_table": {
+        "both_correct": 94,
+        "losses": 14,
+        "wins": 11,
+        "both_incorrect": 81
+      },
+      "wins": 11,
+      "losses": 14,
+      "ties": 175,
+      "net_wins": -3,
+      "net_percentage_points": -1.5,
+      "ci_95_pct": [
+        -6.4,
+        3.4
+      ],
+      "mcnemar_p_value": 0.6900379657745361,
+      "statistically_significant_05": false
+    },
+    "containment": {
+      "base_correct": 137,
+      "base_rate": 68.5,
+      "cand_correct": 131,
+      "cand_rate": 65.5,
+      "contingency_table": {
+        "both_correct": 122,
+        "losses": 15,
+        "wins": 9,
+        "both_incorrect": 54
+      },
+      "wins": 9,
+      "losses": 15,
+      "ties": 176,
+      "net_wins": -6,
+      "net_percentage_points": -3.0,
+      "ci_95_pct": [
+        -7.78,
+        1.78
+      ],
+      "mcnemar_p_value": 0.30745625495910645,
+      "statistically_significant_05": false
+    }
+  },
+  "f_vs_a": {
+    "exact_match": {
+      "base_correct": 64,
+      "base_rate": 32.0,
+      "cand_correct": 105,
+      "cand_rate": 52.5,
+      "contingency_table": {
+        "both_correct": 53,
+        "losses": 11,
+        "wins": 52,
+        "both_incorrect": 84
+      },
+      "wins": 52,
+      "losses": 11,
+      "ties": 137,
+      "net_wins": 41,
+      "net_percentage_points": 20.5,
+      "ci_95_pct": [
+        13.26,
+        27.74
+      ],
+      "mcnemar_p_value": 1.673499118726163e-07,
+      "statistically_significant_05": true
+    },
+    "containment": {
+      "base_correct": 87,
+      "base_rate": 43.5,
+      "cand_correct": 131,
+      "cand_rate": 65.5,
+      "contingency_table": {
+        "both_correct": 75,
+        "losses": 12,
+        "wins": 56,
+        "both_incorrect": 57
+      },
+      "wins": 56,
+      "losses": 12,
+      "ties": 132,
+      "net_wins": 44,
+      "net_percentage_points": 22.0,
+      "ci_95_pct": [
+        14.52,
+        29.48
+      ],
+      "mcnemar_p_value": 6.209495737562187e-08,
+      "statistically_significant_05": true
+    }
+  },
+  "f_vs_c": {
+    "exact_match": {
+      "base_correct": 61,
+      "base_rate": 30.5,
+      "cand_correct": 105,
+      "cand_rate": 52.5,
+      "contingency_table": {
+        "both_correct": 56,
+        "losses": 5,
+        "wins": 49,
+        "both_incorrect": 90
+      },
+      "wins": 49,
+      "losses": 5,
+      "ties": 146,
+      "net_wins": 44,
+      "net_percentage_points": 22.0,
+      "ci_95_pct": [
+        15.48,
+        28.52
+      ],
+      "mcnemar_p_value": 3.8913883226854296e-10,
+      "statistically_significant_05": true
+    },
+    "containment": {
+      "base_correct": 79,
+      "base_rate": 39.5,
+      "cand_correct": 131,
+      "cand_rate": 65.5,
+      "contingency_table": {
+        "both_correct": 74,
+        "losses": 5,
+        "wins": 57,
+        "both_incorrect": 64
+      },
+      "wins": 57,
+      "losses": 5,
+      "ties": 138,
+      "net_wins": 52,
+      "net_percentage_points": 26.0,
+      "ci_95_pct": [
+        19.18,
+        32.82
+      ],
+      "mcnemar_p_value": 3.0655256978706635e-12,
+      "statistically_significant_05": true
+    }
+  },
+  "f_vs_b": {
+    "exact_match": {
+      "base_correct": 28,
+      "base_rate": 14.0,
+      "cand_correct": 105,
+      "cand_rate": 52.5,
+      "contingency_table": {
+        "both_correct": 23,
+        "losses": 5,
+        "wins": 82,
+        "both_incorrect": 90
+      },
+      "wins": 82,
+      "losses": 5,
+      "ties": 113,
+      "net_wins": 77,
+      "net_percentage_points": 38.5,
+      "ci_95_pct": [
+        31.08,
+        45.92
+      ],
+      "mcnemar_p_value": 5.077541690652894e-19,
+      "statistically_significant_05": true
+    },
+    "containment": {
+      "base_correct": 39,
+      "base_rate": 19.5,
+      "cand_correct": 131,
+      "cand_rate": 65.5,
+      "contingency_table": {
+        "both_correct": 33,
+        "losses": 6,
+        "wins": 98,
+        "both_incorrect": 63
+      },
+      "wins": 98,
+      "losses": 6,
+      "ties": 96,
+      "net_wins": 92,
+      "net_percentage_points": 46.0,
+      "ci_95_pct": [
+        38.3,
+        53.7
+      ],
+      "mcnemar_p_value": 1.5916548600905782e-22,
+      "statistically_significant_05": true
+    }
+  }
+}

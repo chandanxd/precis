@@ -1,0 +1,308 @@
+{
+  "experiment_id": "diagnostic_experiment_4_4_full_cohort",
+  "cohort_size": 200,
+  "reused_gate2_count": 31,
+  "newly_generated_count": 169,
+  "primary_analysis_rates": {
+    "cond_a": {
+      "exact_match_count": 64,
+      "exact_match_rate": 32.0,
+      "containment_count": 87,
+      "containment_rate": 43.5
+    },
+    "cond_b": {
+      "exact_match_count": 28,
+      "exact_match_rate": 14.0,
+      "containment_count": 39,
+      "containment_rate": 19.5
+    },
+    "cond_c": {
+      "exact_match_count": 61,
+      "exact_match_rate": 30.5,
+      "containment_count": 79,
+      "containment_rate": 39.5
+    },
+    "cond_d": {
+      "exact_match_count": 99,
+      "exact_match_rate": 49.5,
+      "containment_count": 122,
+      "containment_rate": 61.0
+    },
+    "cond_e": {
+      "exact_match_count": 108,
+      "exact_match_rate": 54.0,
+      "containment_count": 137,
+      "containment_rate": 68.5
+    }
+  },
+  "diagnostic_strata": {
+    "stratum_1_stage_c_regressions_47": {
+      "cond_a": {
+        "exact_match_count": 47,
+        "exact_match_rate": 100.0,
+        "containment_count": 47,
+        "containment_rate": 100.0
+      },
+      "cond_b": {
+        "exact_match_count": 0,
+        "exact_match_rate": 0.0,
+        "containment_count": 1,
+        "containment_rate": 2.13
+      },
+      "cond_c": {
+        "exact_match_count": 21,
+        "exact_match_rate": 44.68,
+        "containment_count": 22,
+        "containment_rate": 46.81
+      },
+      "cond_d": {
+        "exact_match_count": 37,
+        "exact_match_rate": 78.72,
+        "containment_count": 38,
+        "containment_rate": 80.85
+      },
+      "cond_e": {
+        "exact_match_count": 41,
+        "exact_match_rate": 87.23,
+        "containment_count": 42,
+        "containment_rate": 89.36
+      }
+    },
+    "stratum_2_stage_c_recoveries_11": {
+      "cond_a": {
+        "exact_match_count": 0,
+        "exact_match_rate": 0.0,
+        "containment_count": 0,
+        "containment_rate": 0.0
+      },
+      "cond_b": {
+        "exact_match_count": 11,
+        "exact_match_rate": 100.0,
+        "containment_count": 11,
+        "containment_rate": 100.0
+      },
+      "cond_c": {
+        "exact_match_count": 8,
+        "exact_match_rate": 72.73,
+        "containment_count": 8,
+        "containment_rate": 72.73
+      },
+      "cond_d": {
+        "exact_match_count": 8,
+        "exact_match_rate": 72.73,
+        "containment_count": 8,
+        "containment_rate": 72.73
+      },
+      "cond_e": {
+        "exact_match_count": 8,
+        "exact_match_rate": 72.73,
+        "containment_count": 8,
+        "containment_rate": 72.73
+      }
+    },
+    "stratum_3_remaining_142": {
+      "cond_a": {
+        "exact_match_count": 17,
+        "exact_match_rate": 11.97,
+        "containment_count": 40,
+        "containment_rate": 28.17
+      },
+      "cond_b": {
+        "exact_match_count": 17,
+        "exact_match_rate": 11.97,
+        "containment_count": 27,
+        "containment_rate": 19.01
+      },
+      "cond_c": {
+        "exact_match_count": 32,
+        "exact_match_rate": 22.54,
+        "containment_count": 49,
+        "containment_rate": 34.51
+      },
+      "cond_d": {
+        "exact_match_count": 54,
+        "exact_match_rate": 38.03,
+        "containment_count": 76,
+        "containment_rate": 53.52
+      },
+      "cond_e": {
+        "exact_match_count": 59,
+        "exact_match_rate": 41.55,
+        "containment_count": 87,
+        "containment_rate": 61.27
+      }
+    },
+    "diagnostic_gate2_list_subset_31": {
+      "cond_a": {
+        "exact_match_count": 7,
+        "exact_match_rate": 22.58,
+        "containment_count": 13,
+        "containment_rate": 41.94
+      },
+      "cond_b": {
+        "exact_match_count": 5,
+        "exact_match_rate": 16.13,
+        "containment_count": 7,
+        "containment_rate": 22.58
+      },
+      "cond_c": {
+        "exact_match_count": 0,
+        "exact_match_rate": 0.0,
+        "containment_count": 0,
+        "containment_rate": 0.0
+      },
+      "cond_d": {
+        "exact_match_count": 0,
+        "exact_match_rate": 0.0,
+        "containment_count": 0,
+        "containment_rate": 0.0
+      },
+      "cond_e": {
+        "exact_match_count": 11,
+        "exact_match_rate": 35.48,
+        "containment_count": 16,
+        "containment_rate": 51.61
+      }
+    }
+  },
+  "sensitivity_analysis_excluding_ambiguous": {
+    "cohort_size": 199,
+    "excluded_case_id": "895b5134173847ff8837c187a367cde0",
+    "rates": {
+      "cond_a": {
+        "exact_match_count": 64,
+        "exact_match_rate": 32.16,
+        "containment_count": 87,
+        "containment_rate": 43.72
+      },
+      "cond_b": {
+        "exact_match_count": 28,
+        "exact_match_rate": 14.07,
+        "containment_count": 39,
+        "containment_rate": 19.6
+      },
+      "cond_c": {
+        "exact_match_count": 61,
+        "exact_match_rate": 30.65,
+        "containment_count": 79,
+        "containment_rate": 39.7
+      },
+      "cond_d": {
+        "exact_match_count": 99,
+        "exact_match_rate": 49.75,
+        "containment_count": 122,
+        "containment_rate": 61.31
+      },
+      "cond_e": {
+        "exact_match_count": 108,
+        "exact_match_rate": 54.27,
+        "containment_count": 137,
+        "containment_rate": 68.84
+      }
+    },
+    "paired_comparisons": {
+      "e_vs_d": {
+        "exact_match": {
+          "base_correct": 99,
+          "base_rate": 49.75,
+          "cand_correct": 108,
+          "cand_rate": 54.27,
+          "contingency_table": {
+            "both_correct": 96,
+            "losses": 3,
+            "wins": 12,
+            "both_incorrect": 88
+          },
+          "wins": 12,
+          "losses": 3,
+          "ties": 184,
+          "net_wins": 9,
+          "net_percentage_points": 4.52,
+          "ci_95_pct": [
+            0.76,
+            8.29
+          ],
+          "mcnemar_p_value": 0.03515625,
+          "statistically_significant_05": true
+        },
+        "containment": {
+          "base_correct": 122,
+          "base_rate": 61.31,
+          "cand_correct": 137,
+          "cand_rate": 68.84,
+          "contingency_table": {
+            "both_correct": 120,
+            "losses": 2,
+            "wins": 17,
+            "both_incorrect": 60
+          },
+          "wins": 17,
+          "losses": 2,
+          "ties": 180,
+          "net_wins": 15,
+          "net_percentage_points": 7.54,
+          "ci_95_pct": [
+            3.37,
+            11.7
+          ],
+          "mcnemar_p_value": 0.000728607177734375,
+          "statistically_significant_05": true
+        }
+      },
+      "e_vs_a": {
+        "exact_match": {
+          "base_correct": 64,
+          "base_rate": 32.16,
+          "cand_correct": 108,
+          "cand_rate": 54.27,
+          "contingency_table": {
+            "both_correct": 56,
+            "losses": 8,
+            "wins": 52,
+            "both_incorrect": 83
+          },
+          "wins": 52,
+          "losses": 8,
+          "ties": 139,
+          "net_wins": 44,
+          "net_percentage_points": 22.11,
+          "ci_95_pct": [
+            15.13,
+            29.09
+          ],
+          "mcnemar_p_value": 5.205691473372798e-09,
+          "statistically_significant_05": true
+        },
+        "containment": {
+          "base_correct": 87,
+          "base_rate": 43.72,
+          "cand_correct": 137,
+          "cand_rate": 68.84,
+          "contingency_table": {
+            "both_correct": 76,
+            "losses": 11,
+            "wins": 61,
+            "both_incorrect": 51
+          },
+          "wins": 61,
+          "losses": 11,
+          "ties": 127,
+          "net_wins": 50,
+          "net_percentage_points": 25.13,
+          "ci_95_pct": [
+            17.53,
+            32.72
+          ],
+          "mcnemar_p_value": 1.5488945360571046e-09,
+          "statistically_significant_05": true
+        }
+      }
+    }
+  },
+  "regression_summary": {
+    "losses_against_condition_d": 3,
+    "losses_against_condition_a": 8,
+    "wins_against_condition_d": 12,
+    "wins_against_condition_a": 52
+  }
+}

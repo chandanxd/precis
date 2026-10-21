@@ -1,0 +1,147 @@
+{
+  "timestamp": "2026-10-09 14:45:00 UTC",
+  "audit_version": "v1.0",
+  "source_artifacts": {
+    "summary_json": "results/diagnostic_table_extraction_v1/table_extraction_experiment_summary.json",
+    "preflight_json": "results/diagnostic_table_extraction_v1/preflight_results.json",
+    "cohort_a_jsonl": "results/diagnostic_table_extraction_v1/cohort_a_evidence_audit.jsonl",
+    "cohort_b_jsonl": "results/diagnostic_table_extraction_v1/cohort_b_regression_audit.jsonl",
+    "cohort_c_jsonl": "results/diagnostic_table_extraction_v1/cohort_c_paired_evaluation.jsonl",
+    "prototype_script": "scripts/eval_table_extraction_prototype.py"
+  },
+  "verified_metrics": {
+    "cohort_a": {
+      "raw_records": 23,
+      "unique_clusters": 15,
+      "non_table_list_clusters": 9,
+      "table_list_clusters": 6,
+      "table_list_metrics": {
+        "extracted_recovery_rate": 1.0,
+        "extracted_recovery_count": "6/6",
+        "association_preserved_rate": 1.0,
+        "association_preserved_count": "6/6",
+        "packed_recovery_rate": 0.8333,
+        "packed_recovery_count": "5/6",
+        "baseline_exact_match": "1/6",
+        "prototype_exact_match": "4/6",
+        "baseline_containment": "1/6",
+        "prototype_containment": "4/6",
+        "exact_match_delta": "+3 (+50.0 pp)"
+      },
+      "unpacked_cluster": {
+        "cluster_id": "cluster_11",
+        "sample_id": "2ec7c62e2fe547f0802d8cf34e5e9be0",
+        "question": "who plays the characters in yo gabba gabba",
+        "reason": "Extracted into candidate facts but demoted during knapsack packing"
+      },
+      "downstream_qa_failures_with_evidence": [
+        {
+          "cluster_id": "cluster_10",
+          "sample_id": "d79cf47218e54495ba21ea59ca54fc57",
+          "question": "who has scored the most tries in rugby union",
+          "failure_mode": "Packed 32 facts; model failed multi-row numerical reasoning, selecting Bryan Habana (67) over Daisuke Ohata (69)"
+        },
+        {
+          "cluster_id": "cluster_11",
+          "sample_id": "2ec7c62e2fe547f0802d8cf34e5e9be0",
+          "question": "who plays the characters in yo gabba gabba",
+          "failure_mode": "Evidence not packed into context; model predicted 'Lance Robertson' which failed exact span match for 'DJ Lance Rock -- ( Portrayed by Lance Robertson )'"
+        }
+      ]
+    },
+    "cohort_b": {
+      "sample_size": 50,
+      "sampling_source": "141 baseline-correct cases from enhanced_failure_analysis_v3_rerun (seed 42)",
+      "dual_baseline_inconsistency": {
+        "historical_standard_comparison": {
+          "baseline_em_positive": 15,
+          "baseline_containment_positive": 50,
+          "em_regressions": 2,
+          "em_regression_rate": 0.1333,
+          "containment_regressions": 11,
+          "containment_regression_rate": 0.22,
+          "guardrail_status": "FAILED"
+        },
+        "synchronous_concise_comparison": {
+          "baseline_em_positive": 34,
+          "baseline_containment_positive": 40,
+          "em_regressions": 0,
+          "em_regression_rate": 0.0,
+          "containment_regressions": 1,
+          "containment_regression_rate": 0.025,
+          "guardrail_status": "PASSED"
+        }
+      },
+      "identified_containment_regression": {
+        "sample_id": "bad74caad55343f9ad68de7cd705689a",
+        "question": "name three large lakes other than the great lakes in the united states",
+        "gold_answer": "Great Salt Lake",
+        "baseline_answer": "Great Salt Lake, Lake of the Woods, Iliamna Lake",
+        "prototype_answer": "Lake Superior, Lake Huron, Lake Michigan",
+        "mechanism": "Table extraction injected 30 Great Lakes facts; unranked table flooding violated prompt negative constraint ('other than')"
+      },
+      "context_overhead": {
+        "avg_baseline_tokens": 262.84,
+        "avg_prototype_tokens": 303.82,
+        "token_growth_pct": 15.59,
+        "approved_guardrail_pct": 15.0,
+        "status": "FAILED (15.59% > 15.0%)"
+      }
+    },
+    "cohort_c": {
+      "sample_size": 100,
+      "source": "experiments/prompt_validation/sample_manifest.jsonl",
+      "exact_match": {
+        "baseline": 0.35,
+        "prototype": 0.38,
+        "delta": 0.03,
+        "b_wins": 4,
+        "c_losses": 1,
+        "mcnemar_exact_p_value": 0.375,
+        "statistical_inference": "INCONCLUSIVE (p >= 0.05)"
+      },
+      "containment": {
+        "baseline": 0.40,
+        "prototype": 0.43,
+        "delta": 0.03,
+        "b_wins": 4,
+        "c_losses": 1,
+        "mcnemar_exact_p_value": 0.375,
+        "statistical_inference": "INCONCLUSIVE (p >= 0.05)"
+      },
+      "context_overhead": {
+        "avg_baseline_tokens": 303.37,
+        "avg_prototype_tokens": 469.47,
+        "token_growth_pct": 54.75,
+        "reporting_inconsistency": "Summary JSON omitted Cohort C context growth (+54.75%), highlighting only Cohort B (+15.59%)"
+      },
+      "identified_em_and_containment_regression": {
+        "sample_id": "51c8273468a74ec68c54e9dbfa6c7203",
+        "question": "when does the flash season 4 episode 3 air",
+        "gold_answer": "October 24 , 2017",
+        "baseline_answer": "October 24, 2017",
+        "prototype_answer": "October 10, 2017",
+        "mechanism": "TV schedule table injected 23 episode facts up to 2048 ceiling; model selected Episode 1 air date instead of Episode 3"
+      }
+    }
+  },
+  "protocol_deviations": {
+    "extraction_budget_caps": {
+      "approved_per_table_rows": 10,
+      "approved_per_table_facts": 15,
+      "implemented_per_table_rows": 25,
+      "implemented_per_table_facts": 30,
+      "implemented_per_document_facts": 45,
+      "empirical_explanation": "Under approved caps (10 rows, 15 facts), only 4/6 Cohort A cases recover evidence (University Infobox and Grey's Anatomy fail). Expanding to 25 rows and 30 facts was required to recover evidence in 6/6 cases.",
+      "code_evidence": "Preflight test 7 explicitly asserted max_rows=10, max_facts=15, while main extraction functions hardcoded max_rows=25, max_facts=30.",
+      "timeline_limitations": "Script and results are untracked in Git; exact edit timestamps cannot be established from version control."
+    },
+    "context_overhead_guardrail": {
+      "approved_guardrail": "15%",
+      "report_target": "10%",
+      "cohort_b_actual": "15.59%",
+      "cohort_c_actual": "54.75%",
+      "reconciliation": "Prototype exceeded both the approved 15% guardrail and the 10% ceiling. Summary report noted failure on Cohort B but failed to report the massive 54.75% expansion on Cohort C."
+    }
+  }
+}

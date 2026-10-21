@@ -1,0 +1,25 @@
+{
+  "dataset_path": "/home/chandan/Projects/major-project/precis/backend/data/nq_subset/nq_dev.jsonl",
+  "total_raw_records": 12836,
+  "marginal_matches": {
+    "canonical_id": 200,
+    "canonical_q": 220,
+    "canonical_doc": 235,
+    "prior_id": 201,
+    "prior_q": 372,
+    "prior_doc": 350
+  },
+  "sequential_exclusions": {
+    "empty_doc_or_question": 0,
+    "canonical_v3_id": 200,
+    "canonical_v3_question": 20,
+    "canonical_v3_doc_hash": 18,
+    "prior_experiment_id": 100,
+    "prior_experiment_question": 166,
+    "prior_experiment_doc_hash": 10,
+    "within_pool_duplicate_question": 8099,
+    "within_pool_duplicate_doc_hash": 319,
+    "total_excluded": 8932
+  },
+  "strictly_eligible_records": 3904
+}

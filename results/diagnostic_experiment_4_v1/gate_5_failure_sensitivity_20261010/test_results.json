@@ -1,0 +1,116 @@
+{
+  "audit_target": "Experiment 4.5.8 Gate 5 Failure-Sensitivity Verification",
+  "timestamp": "2026-10-10T23:38:00+05:30",
+  "verdict": "READY FOR GATE 5 AUTHORIZATION",
+  "total_unique_tests_collected": 481,
+  "total_unique_tests_passed": 481,
+  "total_failed": 0,
+  "total_skipped": 0,
+  "pass_rate_percent": 100.0,
+  "duplicate_node_ids": 0,
+  "suites": [
+    {
+      "suite_name": "Full Backend Application Suite",
+      "path": "backend/tests/",
+      "command": "./backend/venv/bin/pytest backend/tests/",
+      "collected": 418,
+      "passed": 418,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 204.0,
+      "exit_code": 0
+    },
+    {
+      "suite_name": "Hardened Persistence & Failure-Injection Suite",
+      "path": "scripts/test_experiment_4_5_persistence_audit.py",
+      "command": "./backend/venv/bin/pytest scripts/test_experiment_4_5_persistence_audit.py -v",
+      "collected": 30,
+      "passed": 30,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 110.93,
+      "exit_code": 0
+    },
+    {
+      "suite_name": "Diagnostic 4.2 Integrity Suite",
+      "path": "scripts/test_experiment_4_2_integrity.py",
+      "command": "./backend/venv/bin/pytest scripts/test_experiment_4_2_integrity.py -v",
+      "collected": 13,
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 3.99,
+      "exit_code": 0
+    },
+    {
+      "suite_name": "Diagnostic 4.3 Fixtures Suite",
+      "path": "scripts/test_experiment_4_3_fixtures.py",
+      "command": "./backend/venv/bin/pytest scripts/test_experiment_4_3_fixtures.py -v",
+      "collected": 5,
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 0.02,
+      "exit_code": 0
+    },
+    {
+      "suite_name": "Diagnostic 4.4 Extractor Suite",
+      "path": "scripts/test_experiment_4_4_audit_extractor.py",
+      "command": "./backend/venv/bin/pytest scripts/test_experiment_4_4_audit_extractor.py -v",
+      "collected": 15,
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 3.93,
+      "exit_code": 0
+    }
+  ],
+  "failure_injection_probes": {
+    "test_d1_rest_structural_drop": {
+      "node_id": "scripts/test_experiment_4_5_persistence_audit.py::TestAuditRestAndWebSocketHandlers::test_failure_injection_rest_structural_drop_test_d1",
+      "status": "PASSED",
+      "simulated_regression": "Structural candidates dropped during query (store.query_similar_structural returns empty list)",
+      "http_status_code": 200,
+      "generator_called": true,
+      "assertion_error_raised": true,
+      "error_message_matched": "Distinctive sentinel ... missing from generator context",
+      "confirmed_not_http_or_mock_failure": true
+    },
+    "test_d2_websocket_structural_drop": {
+      "node_id": "scripts/test_experiment_4_5_persistence_audit.py::TestAuditRestAndWebSocketHandlers::test_failure_injection_websocket_structural_drop_test_d2",
+      "status": "PASSED",
+      "simulated_regression": "Structural candidates dropped during query (store.query_similar_structural returns empty list)",
+      "protocol_stages_completed": [
+        4,
+        5
+      ],
+      "token_stream_completed": true,
+      "done_payload_received": true,
+      "generator_called": true,
+      "assertion_error_raised": true,
+      "error_message_matched": "Distinctive sentinel ... missing from WS generator context",
+      "confirmed_not_protocol_timeout_or_disconnect": true
+    },
+    "test_d3_provenance_metadata_mismatch": {
+      "node_id": "scripts/test_experiment_4_5_persistence_audit.py::TestAuditRestAndWebSocketHandlers::test_failure_injection_provenance_metadata_mismatch_test_d3",
+      "status": "PASSED",
+      "simulated_regression": "Retrieved candidate item has corrupted/misattributed source_doc (corrupted_or_wrong_source.html)",
+      "retrieval_returned_candidates": true,
+      "assertion_error_raised": true,
+      "error_message_matched": "Candidate provenance mismatch: expected 'doc_alpha.html', got 'corrupted_or_wrong_source.html'"
+    },
+    "test_d4_provenance_scoped_leakage": {
+      "node_id": "scripts/test_experiment_4_5_persistence_audit.py::TestAuditRestAndWebSocketHandlers::test_failure_injection_provenance_scoped_leakage_test_d4",
+      "status": "PASSED",
+      "simulated_regression": "Scoped retrieval query for doc_alpha.html leaks candidates from prohibited doc_beta.html",
+      "assertion_error_raised": true,
+      "error_message_matched": "Prohibited document 'doc_beta.html' leaked into scoped results"
+    }
+  },
+  "shared_assertion_helpers": [
+    "assert_rest_structural_delivery",
+    "assert_websocket_structural_delivery",
+    "assert_retrieval_candidate_provenance",
+    "assert_scoped_retrieval_isolation"
+  ]
+}

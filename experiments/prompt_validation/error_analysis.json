@@ -1,0 +1,69 @@
+{
+  "sample_size": 30,
+  "sampling_seed": 42,
+  "sampling_method": "Fixed-seed random sample of 30 distinct questions from 100-sample confirmatory cohort",
+  "review_type": "First reviewer (single, blinded to prompt condition; per-output labels were not stored). Independent blind second rater: language-model subagent, 2026-10-17 (second_audit/). Human second rater: pending.",
+  "transition_distribution": {
+    "Prompt-Correction": {
+      "count": 12,
+      "percentage": 40.0,
+      "description": "Standard prompt failed exact match; Concise prompt achieved exact match."
+    },
+    "Prompt-Degradation": {
+      "count": 0,
+      "percentage": 0.0,
+      "description": "Standard prompt achieved exact match; Concise prompt failed exact match."
+    },
+    "Persistent-Error": {
+      "count": 17,
+      "percentage": 56.7,
+      "description": "Both prompt conditions failed exact match."
+    },
+    "Persistent-Success": {
+      "count": 1,
+      "percentage": 3.3,
+      "description": "Both prompt conditions achieved exact match."
+    }
+  },
+  "failure_mode_breakdown_persistent_errors": {
+    "total_persistent_errors": 17,
+    "categories": {
+      "Evidence Insufficiency": {
+        "count": 6,
+        "percentage": 35.3,
+        "description": "Evidence context lacked gold answer entity (model appropriately output 'Insufficient information').",
+        "verification": "first-reviewer count, unverified; item identifiers removed"
+      },
+      "Incomplete or Extended Entity": {
+        "count": 5,
+        "percentage": 29.4,
+        "description": "Model extracted correct entity along with additional valid list items or slightly different prepositional phrasing.",
+        "verification": "first-reviewer count, unverified; item identifiers removed"
+      },
+      "Factually Ungrounded / Misaligned Context": {
+        "count": 6,
+        "percentage": 35.3,
+        "description": "Model extracted adjacent entity or conflated dates/entities from context.",
+        "verification": "first-reviewer count, unverified; item identifiers removed"
+      }
+    }
+  },
+  "prompt_correction_mechanism": {
+    "total_corrected": 12,
+    "categories": {
+      "Conversational Preamble Stripped": {
+        "count": 7,
+        "percentage": 58.3,
+        "description": "Gold entity was present in standard output, but full-sentence framing caused EM failure. Concise prompt emitted isolated entity.",
+        "verification": "recomputed from raw outputs 2026-10-17"
+      },
+      "Refusal Overcome by Direct Prompting": {
+        "count": 5,
+        "percentage": 41.7,
+        "description": "Standard prompt conservatively refused; concise prompt directly extracted valid entity.",
+        "verification": "recomputed from raw outputs 2026-10-17"
+      }
+    }
+  },
+  "integrity_note": "Corrected 2026-10-17. The per-item sample_ids previously listed under failure_mode_breakdown_persistent_errors could not be verified: 14 of the 17 identifiers do not occur in the Natural Questions development file and 16 of 17 are not among the 30 reviewed cases, so the lists were removed (original kept in error_analysis.original.json). The category counts of that breakdown are the first reviewer's unverified totals; the blind second rater's counts differ (see second_audit/comparison.json). The prompt-correction mechanism was recomputed from the raw outputs of the 12 corrected cases: 7 standard-prompt outputs wrapped the correct entity in a sentence and 5 were refusals (the earlier 8 / 4 was not supported)."
+}

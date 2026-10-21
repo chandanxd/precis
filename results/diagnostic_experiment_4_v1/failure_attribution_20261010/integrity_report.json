@@ -1,0 +1,113 @@
+{
+  "gate": "Gate 1 (Failure Attribution & Targeted Diagnostic Preparation)",
+  "experiment_id": "diagnostic_experiment_4_3_failure_attribution",
+  "date": "2026-10-10",
+  "production_code_safety": {
+    "backend_src_precis_modified": false,
+    "production_prompts_modified": false,
+    "production_models_modified": false,
+    "live_model_inference_run": false
+  },
+  "frozen_input_verifications": {
+    "sample_manifest.jsonl": {
+      "path": "results/diagnostic_structural_decompilation_v3/sample_manifest.jsonl",
+      "expected_sha256": "011553c0725621b7dda73aad12254d100e6fc15f49a5f80f4524156eb4e25db7",
+      "actual_sha256": "011553c0725621b7dda73aad12254d100e6fc15f49a5f80f4524156eb4e25db7",
+      "status": "MATCH"
+    },
+    "eval_records_stage_c.jsonl": {
+      "path": "results/diagnostic_structural_decompilation_v3/eval_records_stage_c.jsonl",
+      "expected_sha256": "e10ea38f7cc7cfa9a98d494851de8c41c322b5f148dfff653077193917933687",
+      "actual_sha256": "e10ea38f7cc7cfa9a98d494851de8c41c322b5f148dfff653077193917933687",
+      "status": "MATCH"
+    },
+    "nq_dev.jsonl": {
+      "path": "backend/data/nq_subset/nq_dev.jsonl",
+      "expected_sha256": "14efc255a596433d6bf10dd853a1915474a5d3f6b47c593f77911ab4bb8eb491",
+      "actual_sha256": "14efc255a596433d6bf10dd853a1915474a5d3f6b47c593f77911ab4bb8eb491",
+      "status": "MATCH"
+    },
+    "eval_records.jsonl": {
+      "path": "results/diagnostic_experiment_4_v1/full_cohort_threshold_20261010/eval_records.jsonl",
+      "expected_sha256": "d8a42cc906bf7fa4aebafff6868345c20a0667f971dea4f2309e3e199a3079f0",
+      "actual_sha256": "d8a42cc906bf7fa4aebafff6868345c20a0667f971dea4f2309e3e199a3079f0",
+      "status": "MATCH"
+    },
+    "eval_experiment_4_2_threshold.py": {
+      "path": "scripts/eval_experiment_4_2_threshold.py",
+      "expected_sha256": "2ebabbcfb247721935366f69999fd798c9fcd6105cbf44e5967435a582fac606",
+      "actual_sha256": "2ebabbcfb247721935366f69999fd798c9fcd6105cbf44e5967435a582fac606",
+      "status": "MATCH"
+    },
+    "test_experiment_4_2_integrity.py": {
+      "path": "scripts/test_experiment_4_2_integrity.py",
+      "expected_sha256": "f01840d94d02de61c099c2e67f448ef7c18254ec1931e341f101df6afbf38487",
+      "actual_sha256": "f01840d94d02de61c099c2e67f448ef7c18254ec1931e341f101df6afbf38487",
+      "status": "MATCH"
+    }
+  },
+  "newly_created_artifacts": {
+    "failure_inventory.jsonl": {
+      "path": "results/diagnostic_experiment_4_v1/failure_attribution_20261010/failure_inventory.jsonl",
+      "sha256": "748037a0a0d718b684f1021487476f2b2fd3692103aac44c8b556255b84ef08c",
+      "size_bytes": 166695
+    },
+    "failure_taxonomy_summary.json": {
+      "path": "results/diagnostic_experiment_4_v1/failure_attribution_20261010/failure_taxonomy_summary.json",
+      "sha256": "14993426362e14b9dbb4785156ea85da9bdcfc5ee5d44ceabaab54b5afb32d67",
+      "size_bytes": 1980
+    },
+    "fixture_01_key_value_list.html": {
+      "path": "results/diagnostic_experiment_4_v1/failure_attribution_20261010/extraction_fixtures/fixture_01_key_value_list.html",
+      "sha256": "125f3ee8b51686fe1851efc53d10e9a8254254e5b6cc35cc994a97b1146e17dc",
+      "size_bytes": 462
+    },
+    "fixture_02_nested_list.html": {
+      "path": "results/diagnostic_experiment_4_v1/failure_attribution_20261010/extraction_fixtures/fixture_02_nested_list.html",
+      "sha256": "8f7d3db05d0e4847c8a53f6c7100469522ecc020d2d4d3c824ece296bdfe7c50",
+      "size_bytes": 608
+    },
+    "fixture_03_ordered_list.html": {
+      "path": "results/diagnostic_experiment_4_v1/failure_attribution_20261010/extraction_fixtures/fixture_03_ordered_list.html",
+      "sha256": "e092a0b11f2d6c97ef6c501ea300b0be20607701169072043cbdd0521226198e",
+      "size_bytes": 328
+    },
+    "fixture_04_malformed_list.html": {
+      "path": "results/diagnostic_experiment_4_v1/failure_attribution_20261010/extraction_fixtures/fixture_04_malformed_list.html",
+      "sha256": "1077ba2977bbe6d9d20b1a3cd8f4d02be7588eace88cdd76dd2d64ef3fc8d9dc",
+      "size_bytes": 358
+    },
+    "fixture_05_negative_distractor_list.html": {
+      "path": "results/diagnostic_experiment_4_v1/failure_attribution_20261010/extraction_fixtures/fixture_05_negative_distractor_list.html",
+      "sha256": "46a081635fca39ffe0f5701ad0a57a8072b4b09c478412573da35e9fc9d0c82e",
+      "size_bytes": 786
+    },
+    "diagnostic_list_extractor.py": {
+      "path": "scripts/diagnostic_list_extractor.py",
+      "sha256": "4dafe954f5fb04492a85943d26365acd9cb7e64bc3bf665fd7a60f2ab7e92e4a",
+      "size_bytes": 7936
+    },
+    "test_experiment_4_3_fixtures.py": {
+      "path": "scripts/test_experiment_4_3_fixtures.py",
+      "sha256": "d94dfd00d58265cf090a3f791042d0213c4b4fc8aafae157f73387451dc3d8a3",
+      "size_bytes": 5211
+    }
+  },
+  "test_suite_results": {
+    "scripts/test_experiment_4_3_fixtures.py": {
+      "total_tests": 5,
+      "passed": 5,
+      "failed": 0,
+      "duration_sec": 0.02
+    },
+    "scripts/test_experiment_4_2_integrity.py": {
+      "total_tests": 13,
+      "passed": 13,
+      "failed": 0,
+      "duration_sec": 4.02
+    }
+  },
+  "git_checks": {
+    "git_diff_check_passed": true
+  }
+}

@@ -1,0 +1,183 @@
+{
+  "experiment": "Experiment 4.5.2: Persistent Structural Evidence and End-to-End Integration",
+  "timestamp": "2026-10-10T15:42:18Z",
+  "status": "PASSED",
+  "environment": {
+    "os": "linux",
+    "python": "3.12.3",
+    "pytest": "9.1.1",
+    "embedding_model": "all-MiniLM-L6-v2",
+    "embedding_dimensions": 384,
+    "chromadb_distance": "cosine",
+    "default_flag": "PRECIS_ENABLE_LIST_EXTRACTION=false"
+  },
+  "test_suites": {
+    "full_backend_suite": {
+      "path": "backend/tests/",
+      "total": 418,
+      "passed": 418,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 195.22,
+      "exit_code": 0
+    },
+    "structural_persistence_suite": {
+      "path": "backend/tests/test_structural_persistence.py",
+      "total": 21,
+      "passed": 21,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 110.62,
+      "exit_code": 0
+    },
+    "production_wiring_suite": {
+      "path": "backend/tests/test_production_wiring.py",
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 15.3,
+      "exit_code": 0
+    },
+    "structural_integration_suite": {
+      "path": "backend/tests/test_structural_integration.py",
+      "total": 47,
+      "passed": 47,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 12.1,
+      "exit_code": 0
+    },
+    "diagnostic_cohort_integrity": {
+      "path": "scripts/test_experiment_4_2_integrity.py",
+      "total": 13,
+      "passed": 13,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 2.1,
+      "exit_code": 0
+    },
+    "diagnostic_fixtures": {
+      "path": "scripts/test_experiment_4_3_fixtures.py",
+      "total": 5,
+      "passed": 5,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 0.8,
+      "exit_code": 0
+    },
+    "diagnostic_audit_extractor": {
+      "path": "scripts/test_experiment_4_4_audit_extractor.py",
+      "total": 15,
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 2.4,
+      "exit_code": 0
+    }
+  },
+  "verification_requirements_matrix": [
+    {
+      "id": 1,
+      "description": "PRECIS_ENABLE_LIST_EXTRACTION=false by default",
+      "status": "VERIFIED",
+      "test": "test_disabled_by_default"
+    },
+    {
+      "id": 2,
+      "description": "Explicit override precedence",
+      "status": "VERIFIED",
+      "test": "test_explicit_override_precedence"
+    },
+    {
+      "id": 3,
+      "description": "Ingestion-time structural extraction and persistence",
+      "status": "VERIFIED",
+      "test": "test_ingestion_time_persistence"
+    },
+    {
+      "id": 4,
+      "description": "Query-time retrieval from store without raw_document",
+      "status": "VERIFIED",
+      "test": "test_query_retrieval_without_raw_document"
+    },
+    {
+      "id": 5,
+      "description": "Multi-document isolation (records from doc A do not appear in doc B)",
+      "status": "VERIFIED",
+      "test": "test_multi_document_isolation"
+    },
+    {
+      "id": 6,
+      "description": "Deduplication against retrieved facts and existing tables",
+      "status": "VERIFIED",
+      "test": "test_deduplication_against_retrieved_facts"
+    },
+    {
+      "id": 7,
+      "description": "HTML edge cases (malformed HTML, empty tags, nested lists)",
+      "status": "VERIFIED",
+      "test": "test_unclosed_tags_and_deep_nesting"
+    },
+    {
+      "id": 8,
+      "description": "Hard token ceiling enforcement across varied budgets (100-2048)",
+      "status": "VERIFIED",
+      "test": "test_hard_token_ceiling_enforcement"
+    },
+    {
+      "id": 9,
+      "description": "REST ingestion and query end-to-end",
+      "status": "VERIFIED",
+      "test": "test_rest_ingestion_and_query_end_to_end"
+    },
+    {
+      "id": 10,
+      "description": "WebSocket ingestion and query end-to-end",
+      "status": "VERIFIED",
+      "test": "test_websocket_ingestion_and_query_end_to_end"
+    },
+    {
+      "id": 11,
+      "description": "Document re-ingestion (upsert replaces previous records)",
+      "status": "VERIFIED",
+      "test": "test_document_reingestion_lifecycle"
+    },
+    {
+      "id": 12,
+      "description": "Document deletion (deletes structural records alongside facts)",
+      "status": "VERIFIED",
+      "test": "test_document_deletion_lifecycle"
+    },
+    {
+      "id": 13,
+      "description": "Store clear (clears structural collection alongside fact collection)",
+      "status": "VERIFIED",
+      "test": "test_store_clear_lifecycle"
+    },
+    {
+      "id": 14,
+      "description": "Regression case 3f5983b2: Namibian Minister evidence preserved",
+      "status": "VERIFIED",
+      "test": "test_regression_3f5983b2_namibian_minister"
+    },
+    {
+      "id": 15,
+      "description": "Regression case ef634417: Scorpions songs evidence preserved and deduped",
+      "status": "VERIFIED",
+      "test": "test_regression_ef634417_scorpions_song"
+    },
+    {
+      "id": 16,
+      "description": "Regression case 8f1f9bd9: Thomas definition evidence preserved",
+      "status": "VERIFIED",
+      "test": "test_regression_8f1f9bd9_thomas_definition"
+    },
+    {
+      "id": 17,
+      "description": "Deterministic validation with zero external dependencies",
+      "status": "VERIFIED",
+      "test": "test_deterministic_offline_pipeline"
+    }
+  ]
+}

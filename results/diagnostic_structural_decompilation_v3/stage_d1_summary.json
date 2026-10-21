@@ -1,0 +1,638 @@
+{
+  "metadata": {
+    "probe_name": "Diagnostic Probe D.1: Oracle Context Sufficiency and Retrieval Recall",
+    "cohort": "confirmatory_table_list_stratum_200",
+    "date": "2026-10-10 06:06:05 UTC",
+    "total_cases": 200,
+    "input_hashes": {
+      "manifest": "011553c0725621b7dda73aad12254d100e6fc15f49a5f80f4524156eb4e25db7",
+      "stage_c_records": "e10ea38f7cc7cfa9a98d494851de8c41c322b5f148dfff653077193917933687",
+      "harness": "ad56761db55fc9693526fe5c51d0db58c482c288525838d0b93fd240c21ac0e4",
+      "dataset": "14efc255a596433d6bf10dd853a1915474a5d3f6b47c593f77911ab4bb8eb491",
+      "stage_d_audit": "8d3e21144f8cd6662a071de278745aac8542cf5f61f149a4796f8a3cfd9c7321",
+      "stage_d_report": "870ae3d735bbffb43d04410f5296163d3f53e9432914025c188b64525babd11e"
+    }
+  },
+  "evidence_audit_summary": {
+    "total_cases_evaluated": 200,
+    "exact_match_source_supported": 200,
+    "ambiguous_cases": 0,
+    "unsupported_cases": 0,
+    "source_support_rate": 1.0
+  },
+  "replay_fidelity_validation": {
+    "baseline_config": "thresh_2.0_rows_5",
+    "cases_evaluated": 200,
+    "token_matches": 200,
+    "struct_fact_matches": 200,
+    "discrepancies_count": 0,
+    "discrepancies": []
+  },
+  "reference_baselines": {
+    "condition_a_baseline_concise": {
+      "mean_tokens": 618.83,
+      "exact_match": 0.32,
+      "containment": 0.435
+    },
+    "condition_b_structural_decompilation_baseline": {
+      "config_id": "thresh_2.0_rows_5",
+      "mean_tokens": 155.44,
+      "exact_match": 0.14,
+      "containment": 0.195
+    }
+  },
+  "configurations": {
+    "thresh_2.0_rows_5": {
+      "config_id": "thresh_2.0_rows_5",
+      "table_threshold": 2.0,
+      "row_budget": 5,
+      "is_baseline_configuration": true,
+      "cases_evaluated": 200,
+      "cases_with_answer_evidence_selected": 62,
+      "cases_with_answer_evidence_in_packed_context": 62,
+      "answer_evidence_recall_all_cases": 0.31,
+      "answer_evidence_recall_supported_cases": 0.31,
+      "table_selection_recall": 0.525,
+      "row_selection_recall": 0.21,
+      "list_item_recall": 0.085,
+      "tokens_mean": 155.44,
+      "tokens_median": 65,
+      "tokens_p95": 612,
+      "zero_packed_context_count": 71,
+      "exceeded_token_ceiling_count": 0,
+      "evidence_selected_but_unpacked_count": 0,
+      "cohort_breakdowns": {
+        "p1_regressions": {
+          "total": 47,
+          "evidence_in_context_count": 3,
+          "recall": 0.0638
+        },
+        "p2_recoveries": {
+          "total": 11,
+          "evidence_in_context_count": 11,
+          "recall": 1.0
+        },
+        "remaining_cases": {
+          "total": 142,
+          "evidence_in_context_count": 48,
+          "recall": 0.338
+        }
+      }
+    },
+    "thresh_2.0_rows_10": {
+      "config_id": "thresh_2.0_rows_10",
+      "table_threshold": 2.0,
+      "row_budget": 10,
+      "is_baseline_configuration": false,
+      "cases_evaluated": 200,
+      "cases_with_answer_evidence_selected": 66,
+      "cases_with_answer_evidence_in_packed_context": 66,
+      "answer_evidence_recall_all_cases": 0.33,
+      "answer_evidence_recall_supported_cases": 0.33,
+      "table_selection_recall": 0.525,
+      "row_selection_recall": 0.225,
+      "list_item_recall": 0.09,
+      "tokens_mean": 185.77,
+      "tokens_median": 65,
+      "tokens_p95": 710,
+      "zero_packed_context_count": 71,
+      "exceeded_token_ceiling_count": 0,
+      "evidence_selected_but_unpacked_count": 0,
+      "cohort_breakdowns": {
+        "p1_regressions": {
+          "total": 47,
+          "evidence_in_context_count": 4,
+          "recall": 0.0851
+        },
+        "p2_recoveries": {
+          "total": 11,
+          "evidence_in_context_count": 11,
+          "recall": 1.0
+        },
+        "remaining_cases": {
+          "total": 142,
+          "evidence_in_context_count": 51,
+          "recall": 0.3592
+        }
+      }
+    },
+    "thresh_2.0_rows_15": {
+      "config_id": "thresh_2.0_rows_15",
+      "table_threshold": 2.0,
+      "row_budget": 15,
+      "is_baseline_configuration": false,
+      "cases_evaluated": 200,
+      "cases_with_answer_evidence_selected": 67,
+      "cases_with_answer_evidence_in_packed_context": 67,
+      "answer_evidence_recall_all_cases": 0.335,
+      "answer_evidence_recall_supported_cases": 0.335,
+      "table_selection_recall": 0.525,
+      "row_selection_recall": 0.23,
+      "list_item_recall": 0.09,
+      "tokens_mean": 199.6,
+      "tokens_median": 65,
+      "tokens_p95": 936,
+      "zero_packed_context_count": 71,
+      "exceeded_token_ceiling_count": 0,
+      "evidence_selected_but_unpacked_count": 0,
+      "cohort_breakdowns": {
+        "p1_regressions": {
+          "total": 47,
+          "evidence_in_context_count": 5,
+          "recall": 0.1064
+        },
+        "p2_recoveries": {
+          "total": 11,
+          "evidence_in_context_count": 11,
+          "recall": 1.0
+        },
+        "remaining_cases": {
+          "total": 142,
+          "evidence_in_context_count": 51,
+          "recall": 0.3592
+        }
+      }
+    },
+    "thresh_2.0_rows_all": {
+      "config_id": "thresh_2.0_rows_all",
+      "table_threshold": 2.0,
+      "row_budget": "all",
+      "is_baseline_configuration": false,
+      "cases_evaluated": 200,
+      "cases_with_answer_evidence_selected": 66,
+      "cases_with_answer_evidence_in_packed_context": 66,
+      "answer_evidence_recall_all_cases": 0.33,
+      "answer_evidence_recall_supported_cases": 0.33,
+      "table_selection_recall": 0.525,
+      "row_selection_recall": 0.23,
+      "list_item_recall": 0.085,
+      "tokens_mean": 212.91,
+      "tokens_median": 65,
+      "tokens_p95": 1126,
+      "zero_packed_context_count": 71,
+      "exceeded_token_ceiling_count": 0,
+      "evidence_selected_but_unpacked_count": 0,
+      "cohort_breakdowns": {
+        "p1_regressions": {
+          "total": 47,
+          "evidence_in_context_count": 5,
+          "recall": 0.1064
+        },
+        "p2_recoveries": {
+          "total": 11,
+          "evidence_in_context_count": 11,
+          "recall": 1.0
+        },
+        "remaining_cases": {
+          "total": 142,
+          "evidence_in_context_count": 50,
+          "recall": 0.3521
+        }
+      }
+    },
+    "thresh_1.5_rows_5": {
+      "config_id": "thresh_1.5_rows_5",
+      "table_threshold": 1.5,
+      "row_budget": 5,
+      "is_baseline_configuration": false,
+      "cases_evaluated": 200,
+      "cases_with_answer_evidence_selected": 62,
+      "cases_with_answer_evidence_in_packed_context": 62,
+      "answer_evidence_recall_all_cases": 0.31,
+      "answer_evidence_recall_supported_cases": 0.31,
+      "table_selection_recall": 0.525,
+      "row_selection_recall": 0.21,
+      "list_item_recall": 0.085,
+      "tokens_mean": 155.44,
+      "tokens_median": 65,
+      "tokens_p95": 612,
+      "zero_packed_context_count": 71,
+      "exceeded_token_ceiling_count": 0,
+      "evidence_selected_but_unpacked_count": 0,
+      "cohort_breakdowns": {
+        "p1_regressions": {
+          "total": 47,
+          "evidence_in_context_count": 3,
+          "recall": 0.0638
+        },
+        "p2_recoveries": {
+          "total": 11,
+          "evidence_in_context_count": 11,
+          "recall": 1.0
+        },
+        "remaining_cases": {
+          "total": 142,
+          "evidence_in_context_count": 48,
+          "recall": 0.338
+        }
+      }
+    },
+    "thresh_1.5_rows_10": {
+      "config_id": "thresh_1.5_rows_10",
+      "table_threshold": 1.5,
+      "row_budget": 10,
+      "is_baseline_configuration": false,
+      "cases_evaluated": 200,
+      "cases_with_answer_evidence_selected": 66,
+      "cases_with_answer_evidence_in_packed_context": 66,
+      "answer_evidence_recall_all_cases": 0.33,
+      "answer_evidence_recall_supported_cases": 0.33,
+      "table_selection_recall": 0.525,
+      "row_selection_recall": 0.225,
+      "list_item_recall": 0.09,
+      "tokens_mean": 185.77,
+      "tokens_median": 65,
+      "tokens_p95": 710,
+      "zero_packed_context_count": 71,
+      "exceeded_token_ceiling_count": 0,
+      "evidence_selected_but_unpacked_count": 0,
+      "cohort_breakdowns": {
+        "p1_regressions": {
+          "total": 47,
+          "evidence_in_context_count": 4,
+          "recall": 0.0851
+        },
+        "p2_recoveries": {
+          "total": 11,
+          "evidence_in_context_count": 11,
+          "recall": 1.0
+        },
+        "remaining_cases": {
+          "total": 142,
+          "evidence_in_context_count": 51,
+          "recall": 0.3592
+        }
+      }
+    },
+    "thresh_1.5_rows_15": {
+      "config_id": "thresh_1.5_rows_15",
+      "table_threshold": 1.5,
+      "row_budget": 15,
+      "is_baseline_configuration": false,
+      "cases_evaluated": 200,
+      "cases_with_answer_evidence_selected": 67,
+      "cases_with_answer_evidence_in_packed_context": 67,
+      "answer_evidence_recall_all_cases": 0.335,
+      "answer_evidence_recall_supported_cases": 0.335,
+      "table_selection_recall": 0.525,
+      "row_selection_recall": 0.23,
+      "list_item_recall": 0.09,
+      "tokens_mean": 199.6,
+      "tokens_median": 65,
+      "tokens_p95": 936,
+      "zero_packed_context_count": 71,
+      "exceeded_token_ceiling_count": 0,
+      "evidence_selected_but_unpacked_count": 0,
+      "cohort_breakdowns": {
+        "p1_regressions": {
+          "total": 47,
+          "evidence_in_context_count": 5,
+          "recall": 0.1064
+        },
+        "p2_recoveries": {
+          "total": 11,
+          "evidence_in_context_count": 11,
+          "recall": 1.0
+        },
+        "remaining_cases": {
+          "total": 142,
+          "evidence_in_context_count": 51,
+          "recall": 0.3592
+        }
+      }
+    },
+    "thresh_1.5_rows_all": {
+      "config_id": "thresh_1.5_rows_all",
+      "table_threshold": 1.5,
+      "row_budget": "all",
+      "is_baseline_configuration": false,
+      "cases_evaluated": 200,
+      "cases_with_answer_evidence_selected": 66,
+      "cases_with_answer_evidence_in_packed_context": 66,
+      "answer_evidence_recall_all_cases": 0.33,
+      "answer_evidence_recall_supported_cases": 0.33,
+      "table_selection_recall": 0.525,
+      "row_selection_recall": 0.23,
+      "list_item_recall": 0.085,
+      "tokens_mean": 212.91,
+      "tokens_median": 65,
+      "tokens_p95": 1126,
+      "zero_packed_context_count": 71,
+      "exceeded_token_ceiling_count": 0,
+      "evidence_selected_but_unpacked_count": 0,
+      "cohort_breakdowns": {
+        "p1_regressions": {
+          "total": 47,
+          "evidence_in_context_count": 5,
+          "recall": 0.1064
+        },
+        "p2_recoveries": {
+          "total": 11,
+          "evidence_in_context_count": 11,
+          "recall": 1.0
+        },
+        "remaining_cases": {
+          "total": 142,
+          "evidence_in_context_count": 50,
+          "recall": 0.3521
+        }
+      }
+    },
+    "thresh_1.0_rows_5": {
+      "config_id": "thresh_1.0_rows_5",
+      "table_threshold": 1.0,
+      "row_budget": 5,
+      "is_baseline_configuration": false,
+      "cases_evaluated": 200,
+      "cases_with_answer_evidence_selected": 96,
+      "cases_with_answer_evidence_in_packed_context": 96,
+      "answer_evidence_recall_all_cases": 0.48,
+      "answer_evidence_recall_supported_cases": 0.48,
+      "table_selection_recall": 0.775,
+      "row_selection_recall": 0.36,
+      "list_item_recall": 0.085,
+      "tokens_mean": 196.38,
+      "tokens_median": 130,
+      "tokens_p95": 620,
+      "zero_packed_context_count": 21,
+      "exceeded_token_ceiling_count": 0,
+      "evidence_selected_but_unpacked_count": 0,
+      "cohort_breakdowns": {
+        "p1_regressions": {
+          "total": 47,
+          "evidence_in_context_count": 9,
+          "recall": 0.1915
+        },
+        "p2_recoveries": {
+          "total": 11,
+          "evidence_in_context_count": 11,
+          "recall": 1.0
+        },
+        "remaining_cases": {
+          "total": 142,
+          "evidence_in_context_count": 76,
+          "recall": 0.5352
+        }
+      }
+    },
+    "thresh_1.0_rows_10": {
+      "config_id": "thresh_1.0_rows_10",
+      "table_threshold": 1.0,
+      "row_budget": 10,
+      "is_baseline_configuration": false,
+      "cases_evaluated": 200,
+      "cases_with_answer_evidence_selected": 103,
+      "cases_with_answer_evidence_in_packed_context": 103,
+      "answer_evidence_recall_all_cases": 0.515,
+      "answer_evidence_recall_supported_cases": 0.515,
+      "table_selection_recall": 0.775,
+      "row_selection_recall": 0.39,
+      "list_item_recall": 0.09,
+      "tokens_mean": 238.15,
+      "tokens_median": 138,
+      "tokens_p95": 710,
+      "zero_packed_context_count": 21,
+      "exceeded_token_ceiling_count": 0,
+      "evidence_selected_but_unpacked_count": 0,
+      "cohort_breakdowns": {
+        "p1_regressions": {
+          "total": 47,
+          "evidence_in_context_count": 10,
+          "recall": 0.2128
+        },
+        "p2_recoveries": {
+          "total": 11,
+          "evidence_in_context_count": 11,
+          "recall": 1.0
+        },
+        "remaining_cases": {
+          "total": 142,
+          "evidence_in_context_count": 82,
+          "recall": 0.5775
+        }
+      }
+    },
+    "thresh_1.0_rows_15": {
+      "config_id": "thresh_1.0_rows_15",
+      "table_threshold": 1.0,
+      "row_budget": 15,
+      "is_baseline_configuration": false,
+      "cases_evaluated": 200,
+      "cases_with_answer_evidence_selected": 104,
+      "cases_with_answer_evidence_in_packed_context": 104,
+      "answer_evidence_recall_all_cases": 0.52,
+      "answer_evidence_recall_supported_cases": 0.52,
+      "table_selection_recall": 0.775,
+      "row_selection_recall": 0.395,
+      "list_item_recall": 0.09,
+      "tokens_mean": 254.02,
+      "tokens_median": 138,
+      "tokens_p95": 936,
+      "zero_packed_context_count": 21,
+      "exceeded_token_ceiling_count": 0,
+      "evidence_selected_but_unpacked_count": 0,
+      "cohort_breakdowns": {
+        "p1_regressions": {
+          "total": 47,
+          "evidence_in_context_count": 11,
+          "recall": 0.234
+        },
+        "p2_recoveries": {
+          "total": 11,
+          "evidence_in_context_count": 11,
+          "recall": 1.0
+        },
+        "remaining_cases": {
+          "total": 142,
+          "evidence_in_context_count": 82,
+          "recall": 0.5775
+        }
+      }
+    },
+    "thresh_1.0_rows_all": {
+      "config_id": "thresh_1.0_rows_all",
+      "table_threshold": 1.0,
+      "row_budget": "all",
+      "is_baseline_configuration": false,
+      "cases_evaluated": 200,
+      "cases_with_answer_evidence_selected": 103,
+      "cases_with_answer_evidence_in_packed_context": 103,
+      "answer_evidence_recall_all_cases": 0.515,
+      "answer_evidence_recall_supported_cases": 0.515,
+      "table_selection_recall": 0.775,
+      "row_selection_recall": 0.395,
+      "list_item_recall": 0.085,
+      "tokens_mean": 267.32,
+      "tokens_median": 138,
+      "tokens_p95": 1126,
+      "zero_packed_context_count": 21,
+      "exceeded_token_ceiling_count": 0,
+      "evidence_selected_but_unpacked_count": 0,
+      "cohort_breakdowns": {
+        "p1_regressions": {
+          "total": 47,
+          "evidence_in_context_count": 11,
+          "recall": 0.234
+        },
+        "p2_recoveries": {
+          "total": 11,
+          "evidence_in_context_count": 11,
+          "recall": 1.0
+        },
+        "remaining_cases": {
+          "total": 142,
+          "evidence_in_context_count": 81,
+          "recall": 0.5704
+        }
+      }
+    },
+    "thresh_0.0_rows_5": {
+      "config_id": "thresh_0.0_rows_5",
+      "table_threshold": 0.0,
+      "row_budget": 5,
+      "is_baseline_configuration": false,
+      "cases_evaluated": 200,
+      "cases_with_answer_evidence_selected": 102,
+      "cases_with_answer_evidence_in_packed_context": 102,
+      "answer_evidence_recall_all_cases": 0.51,
+      "answer_evidence_recall_supported_cases": 0.51,
+      "table_selection_recall": 0.82,
+      "row_selection_recall": 0.39,
+      "list_item_recall": 0.085,
+      "tokens_mean": 201.29,
+      "tokens_median": 138,
+      "tokens_p95": 620,
+      "zero_packed_context_count": 12,
+      "exceeded_token_ceiling_count": 0,
+      "evidence_selected_but_unpacked_count": 0,
+      "cohort_breakdowns": {
+        "p1_regressions": {
+          "total": 47,
+          "evidence_in_context_count": 14,
+          "recall": 0.2979
+        },
+        "p2_recoveries": {
+          "total": 11,
+          "evidence_in_context_count": 11,
+          "recall": 1.0
+        },
+        "remaining_cases": {
+          "total": 142,
+          "evidence_in_context_count": 77,
+          "recall": 0.5423
+        }
+      }
+    },
+    "thresh_0.0_rows_10": {
+      "config_id": "thresh_0.0_rows_10",
+      "table_threshold": 0.0,
+      "row_budget": 10,
+      "is_baseline_configuration": false,
+      "cases_evaluated": 200,
+      "cases_with_answer_evidence_selected": 112,
+      "cases_with_answer_evidence_in_packed_context": 112,
+      "answer_evidence_recall_all_cases": 0.56,
+      "answer_evidence_recall_supported_cases": 0.56,
+      "table_selection_recall": 0.82,
+      "row_selection_recall": 0.435,
+      "list_item_recall": 0.09,
+      "tokens_mean": 247.01,
+      "tokens_median": 148,
+      "tokens_p95": 710,
+      "zero_packed_context_count": 12,
+      "exceeded_token_ceiling_count": 0,
+      "evidence_selected_but_unpacked_count": 0,
+      "cohort_breakdowns": {
+        "p1_regressions": {
+          "total": 47,
+          "evidence_in_context_count": 17,
+          "recall": 0.3617
+        },
+        "p2_recoveries": {
+          "total": 11,
+          "evidence_in_context_count": 11,
+          "recall": 1.0
+        },
+        "remaining_cases": {
+          "total": 142,
+          "evidence_in_context_count": 84,
+          "recall": 0.5915
+        }
+      }
+    },
+    "thresh_0.0_rows_15": {
+      "config_id": "thresh_0.0_rows_15",
+      "table_threshold": 0.0,
+      "row_budget": 15,
+      "is_baseline_configuration": false,
+      "cases_evaluated": 200,
+      "cases_with_answer_evidence_selected": 113,
+      "cases_with_answer_evidence_in_packed_context": 113,
+      "answer_evidence_recall_all_cases": 0.565,
+      "answer_evidence_recall_supported_cases": 0.565,
+      "table_selection_recall": 0.82,
+      "row_selection_recall": 0.44,
+      "list_item_recall": 0.09,
+      "tokens_mean": 266.27,
+      "tokens_median": 148,
+      "tokens_p95": 936,
+      "zero_packed_context_count": 12,
+      "exceeded_token_ceiling_count": 0,
+      "evidence_selected_but_unpacked_count": 0,
+      "cohort_breakdowns": {
+        "p1_regressions": {
+          "total": 47,
+          "evidence_in_context_count": 18,
+          "recall": 0.383
+        },
+        "p2_recoveries": {
+          "total": 11,
+          "evidence_in_context_count": 11,
+          "recall": 1.0
+        },
+        "remaining_cases": {
+          "total": 142,
+          "evidence_in_context_count": 84,
+          "recall": 0.5915
+        }
+      }
+    },
+    "thresh_0.0_rows_all": {
+      "config_id": "thresh_0.0_rows_all",
+      "table_threshold": 0.0,
+      "row_budget": "all",
+      "is_baseline_configuration": false,
+      "cases_evaluated": 200,
+      "cases_with_answer_evidence_selected": 112,
+      "cases_with_answer_evidence_in_packed_context": 112,
+      "answer_evidence_recall_all_cases": 0.56,
+      "answer_evidence_recall_supported_cases": 0.56,
+      "table_selection_recall": 0.82,
+      "row_selection_recall": 0.44,
+      "list_item_recall": 0.085,
+      "tokens_mean": 286.3,
+      "tokens_median": 148,
+      "tokens_p95": 1181,
+      "zero_packed_context_count": 12,
+      "exceeded_token_ceiling_count": 0,
+      "evidence_selected_but_unpacked_count": 0,
+      "cohort_breakdowns": {
+        "p1_regressions": {
+          "total": 47,
+          "evidence_in_context_count": 18,
+          "recall": 0.383
+        },
+        "p2_recoveries": {
+          "total": 11,
+          "evidence_in_context_count": 11,
+          "recall": 1.0
+        },
+        "remaining_cases": {
+          "total": 142,
+          "evidence_in_context_count": 83,
+          "recall": 0.5845
+        }
+      }
+    }
+  }
+}

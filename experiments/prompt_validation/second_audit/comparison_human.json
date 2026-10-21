@@ -1,0 +1,133 @@
+{
+ "n": 60,
+ "human_counts": {
+  "Evidence Insufficiency": 12,
+  "Conversational Mismatch": 17,
+  "Pass": 13,
+  "Other": 12,
+  "Hallucination": 3,
+  "Incomplete Entity": 3
+ },
+ "human_by_prompt": {
+  "standard": {
+   "Evidence Insufficiency": 9,
+   "Conversational Mismatch": 13,
+   "Other": 7,
+   "Pass": 1
+  },
+  "concise": {
+   "Evidence Insufficiency": 3,
+   "Pass": 12,
+   "Other": 5,
+   "Hallucination": 3,
+   "Conversational Mismatch": 4,
+   "Incomplete Entity": 3
+  }
+ },
+ "human_pass_vs_exact_match": {
+  "pass_and_em": 13,
+  "pass_not_em": 0,
+  "em_not_pass": 1
+ },
+ "human_pass_but_not_em_cases": [],
+ "human_vs_llm": {
+  "agreement": 0.6166666666666667,
+  "kappa": 0.5133991537376588
+ },
+ "human_vs_llm_crosstab": [
+  [
+   [
+    "Evidence Insufficiency",
+    "Other"
+   ],
+   8
+  ],
+  [
+   [
+    "Other",
+    "Evidence Insufficiency"
+   ],
+   6
+  ],
+  [
+   [
+    "Other",
+    "Conversational Mismatch"
+   ],
+   2
+  ],
+  [
+   [
+    "Hallucination",
+    "Other"
+   ],
+   2
+  ],
+  [
+   [
+    "Conversational Mismatch",
+    "Incomplete Entity"
+   ],
+   2
+  ],
+  [
+   [
+    "Conversational Mismatch",
+    "Evidence Insufficiency"
+   ],
+   1
+  ],
+  [
+   [
+    "Incomplete Entity",
+    "Other"
+   ],
+   1
+  ],
+  [
+   [
+    "Conversational Mismatch",
+    "Pass"
+   ],
+   1
+  ]
+ ],
+ "error_items_only": {
+  "n": 46,
+  "agreement": 0.5217391304347826,
+  "kappa": 0.34667527437056167,
+  "agreed_labels": 24
+ },
+ "human_corrections_standard_labels": {
+  "Conversational Mismatch": 7,
+  "Other": 2,
+  "Evidence Insufficiency": 3
+ },
+ "folded_ES_Other": {
+  "agreement": 0.85,
+  "agreed_labels": 51,
+  "kappa": 0.786053882725832
+ },
+ "exact_agreed_labels": 37,
+ "table7_total": {
+  "Evidence Insufficiency": 19,
+  "Conversational Mismatch": 17,
+  "Hallucination": 6,
+  "Incomplete Entity": 4,
+  "Pass(Other exact-match pass)": 14
+ },
+ "llm_counts": {
+  "Evidence Insufficiency": 11,
+  "Conversational Mismatch": 15,
+  "Pass": 14,
+  "Other": 15,
+  "Incomplete Entity": 4,
+  "Hallucination": 1
+ },
+ "human_borderline_flags": {
+  "no": 54,
+  "yes": 1,
+  "ni": 3,
+  "": 2
+ }
+}

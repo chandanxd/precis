@@ -1,0 +1,39 @@
+{
+  "cohort_size": 31,
+  "cohort_description": "Targeted diagnostic cohort of 31 verified extraction omission cases from Gate 1",
+  "condition_a_reference": {
+    "condition_id": "cond_d_exp42_reference",
+    "exact_match_count": 0,
+    "exact_match_rate": 0.0,
+    "containment_count": 0,
+    "containment_rate": 0.0
+  },
+  "condition_b_candidate": {
+    "condition_id": "cond_b_list_extraction_candidate",
+    "exact_match_count": 11,
+    "exact_match_rate": 0.3548,
+    "containment_count": 16,
+    "containment_rate": 0.5161
+  },
+  "paired_comparison_exact_match": {
+    "cond_b_wins": 11,
+    "cond_b_losses": 0,
+    "ties": 20,
+    "net_wins": 11,
+    "percentage_point_diff": 35.48,
+    "mcnemar_exact_p_value": 0.0009765625,
+    "odds_ratio": "inf",
+    "statistically_significant_05": true,
+    "small_sample_limitation": "Targeted diagnostic pilot (N=31) selected on baseline failure; results demonstrate recoverable upside but are not an unbiased general population estimate."
+  },
+  "paired_comparison_containment": {
+    "cond_b_wins": 16,
+    "cond_b_losses": 0,
+    "net_wins": 16,
+    "percentage_point_diff": 51.61
+  },
+  "regressions": {
+    "regression_count": 0,
+    "regression_case_ids": []
+  }
+}

@@ -1,0 +1,101 @@
+item,question,reference_answer,candidate_answer,label_B(CORRECT/INCORRECT/HARD),notes_B
+1,who owns and operates the panama canal today,in 1999 the canal was taken over by the Panamanian government and is now managed and operated by the government - owned Panama Canal Authority,"The Panama Canal Authority, a government-owned entity.",CORRECT,
+2,what movie is count on me by bruno mars in,A Turtle 's Tale : Sammy 's Adventures,Diary of a Wimpy Kid,INCORRECT,Different movie.
+3,when did audio video and the film industry begin,in the mid - to late 1920s,Insufficient information,INCORRECT,Abstains / no answer given.
+4,who was the actor who played grizzly adams,Daniel Francis `` Dan '' Haggerty,"Daniel Francis ""Dan"" Haggerty played the title role in The Life and Times of Grizzly Adams.",CORRECT,
+5,where did the name kaiser permanente come from,"Permanente Creek , which flowed past Henry Kaiser 's first cement plant on Black Mountain in Cupertino , California","The name Permanente came from Permanente Creek, which flowed past Henry Kaiser's first cement plant on Black Mountain in Cupertino, California.",CORRECT,
+6,what language is the olympic anthem sang in,Greek,English and Greek,HARD,Contains Greek but adds English; partly wrong.
+7,when did michael jordan get his last ring,1998,1998,CORRECT,
+8,how oxygenated blood returns to the heart from the lungs,pulmonary circulation,pulmonary veins,HARD,"'Pulmonary veins' is anatomically right, but reference says 'pulmonary circulation'."
+9,who hosted they think it 's all over,Des Lynam,"Des Lynam, Nick Hancock, and Lee Mack.",HARD,"Reference host Des Lynam is included, plus two other hosts of the show."
+10,where does the pulmonary trunk receive blood from,the right side of the heart,Insufficient information,INCORRECT,Abstains / no answer given.
+11,when does the nba season end this year,"April 11 , 2018","April 11, 2018",CORRECT,
+12,what was the final episode of quantum leap,`` Mirror Image '',"The provided facts do not contain enough information to answer the question. Fact 5 states that ""something"" (unspecified) is a central focus of the show's finale episode, but it does not identify what that something is or name the final episode itself.",INCORRECT,Abstains / no answer given.
+13,when did michael jordan get his last ring,1998,1998,CORRECT,
+14,name of volcano that erupted in iceland in 2010,Eyjafjallajökull,Insufficient information,INCORRECT,Abstains / no answer given.
+15,where does the movie proof of life take place,The Republic of Tecala,"The movie Proof of Life takes place in the Republic of Tecala, which is a fictional South American country.",CORRECT,
+16,when does the flash season 4 episode 3 air,"October 24 , 2017",Insufficient information,INCORRECT,Abstains / no answer given.
+17,who won in the brown vs board of education case,defendants,"Oliver Brown, et al.",HARD,"Candidate names the plaintiffs, who won; the reference ('defendants') looks wrong."
+18,who is the speaker in shooting an elephant,Orwell,The speaker is Orwell.,CORRECT,
+19,what is the song in red dead redemption,Far Away,"""Far Away"" by José González",CORRECT,
+20,where do harry potter 's aunt and uncle live,"Number 4 , Privet Drive , Little Whinging in Surrey , England",Number 4,HARD,"Gives only 'Number 4', not the full address."
+21,who won season 2 of great british baking show,Joanne Wheatley,Joanne Wheatley,CORRECT,
+22,what nfl team is robert griffin the third playing for,currently a free agent,Insufficient information,INCORRECT,Abstains / no answer given.
+23,where does the pulmonary trunk receive blood from,the right side of the heart,Insufficient information,INCORRECT,Abstains / no answer given.
+24,which body system differentiates a male from a female,reproductive,reproductive system,CORRECT,
+25,where did the indian myna bird come from,Asia,"The Indian myna bird is native to Asia, with its initial home range spanning Iran, Pakistan, India, Nepal, Bhutan, Bangladesh, Sri Lanka, Afghanistan, Uzbekistan, Tajikistan, Turkmenistan, Myanmar, Malaysia, Singapore, peninsular Thailand, Indo-China, and China.",CORRECT,
+26,what is the salary of the ceo of microsoft,$84.3 million ( 2018 ),$84.3 million (2018),CORRECT,
+27,where was when we first met netflix filmed,New Orleans,Insufficient information,INCORRECT,Abstains / no answer given.
+28,what is the normal range for plasma glucose concentration,3.9 and 5.5 mmol / L ( 70 to 100 mg / dL ),"The normal range for plasma glucose concentration, as tested while fasting, for non-diabetics is between 3.9 and 5.5 mmol/L (70 to 100 mg/dL).",CORRECT,
+29,when is the president sworn into office ( date and time of an odd or even year ),at noon on the 20th day of January,"The provided facts do not contain enough information to answer the question. While Fact 1 states that terms end at noon on January 20th, it does not specify when the President is sworn into office (which typically occurs at the start of the term), nor does it distinguish between odd and even years.",HARD,"Abstains, but cites noon on January 20, which is the reference answer."
+30,what is the difference between an opiate agonist and antagonist,a substance that fully activates the receptor that it binds to,Insufficient information,INCORRECT,Abstains / no answer given.
+31,who won the ncaa basketball championship in 1994,Arkansas,Insufficient information,INCORRECT,Abstains / no answer given.
+32,leader of carthage in the first punic war,Xanthippus,Insufficient information,INCORRECT,Abstains / no answer given.
+33,what is the song in red dead redemption,Far Away,"""Deadman's Gun""",INCORRECT,Different song.
+34,where did the tradition of gift giving come from,in ancient Rome with gift - giving during the Saturnalia holiday,Europe,HARD,'Europe' is vague; the reference is ancient Rome / Saturnalia.
+35,who was the actor who played grizzly adams,Daniel Francis `` Dan '' Haggerty,"Daniel Francis ""Dan"" Haggerty",CORRECT,
+36,who is the actress who plays baker on blue bloods,Abigail Hawk,Abigail Hawk,CORRECT,
+37,why is the red river named the red river,for the red - bed country of its watershed,Insufficient information,INCORRECT,Abstains / no answer given.
+38,when does the flash season 4 episode 3 air,"October 24 , 2017","October 17, 2017",INCORRECT,Wrong date (Oct 17 vs Oct 24).
+39,what is the salary of the ceo of microsoft,$84.3 million ( 2018 ),$84.3 million (2018),CORRECT,
+40,new anime from the creators of attack on titan,Vinland Saga,"The provided facts do not contain enough information to answer the question. While Fact 1, Fact 2, and Fact 6 list ""Attack on Titan"" as being directed by Tetsurō Araki and Masashi Koizuka, none of the facts explicitly state that other listed anime are created by these same directors or creators.",INCORRECT,Abstains / no answer given.
+41,when did audio video and the film industry begin,in the mid - to late 1920s,The provided facts do not contain enough information to answer when the audio video and the film industry began. The document only states that the primary steps in the commercialization of sound cinema were taken in the mid- to late 1920s.,HARD,"Says insufficient, but quotes the mid- to late 1920s, which is the reference."
+42,who hosted they think it 's all over,Des Lynam,"Des Lynam, Nick Hancock, Lee Mack",HARD,"Reference host Des Lynam is included, plus two other hosts of the show."
+43,what does the adrenal gland produce that is necessary for the sympathetic nervous system to function,epinephrine,Insufficient information,INCORRECT,Abstains / no answer given.
+44,when does the eclipse end in the us,6 : 44 p.m. UTC ( 2 : 44 p.m. EDT ),Insufficient information,INCORRECT,Abstains / no answer given.
+45,when does the flash season 4 episode 3 air,"October 24 , 2017","October 24, 2017",CORRECT,
+46,when did michael jordan get his last ring,1998,1998,CORRECT,
+47,who formed and first came to the colony of maryland,the English,The English formed and first came to the colony of Maryland in 1634.,CORRECT,
+48,where did the indian myna bird come from,Asia,Insufficient information,INCORRECT,Abstains / no answer given.
+49,bacterial cell walls are made rigid by the presence of,Peptidoglycan,Peptidoglycan.,CORRECT,
+50,what is the salary of the ceo of microsoft,$84.3 million ( 2018 ),Not provided,INCORRECT,Abstains / no answer given.
+51,who is the actress who plays baker on blue bloods,Abigail Hawk,Abigail Hawk,CORRECT,
+52,where does the movie proof of life take place,The Republic of Tecala,The Republic of Tecala,CORRECT,
+53,what nfl team is robert griffin the third playing for,currently a free agent,Insufficient information,INCORRECT,Abstains / no answer given.
+54,who formed and first came to the colony of maryland,the English,The English formed and first came to the colony of Maryland.,CORRECT,
+55,who owns and operates the panama canal today,in 1999 the canal was taken over by the Panamanian government and is now managed and operated by the government - owned Panama Canal Authority,Panama Canal Authority,CORRECT,
+56,under article 1 what is the minimum age required to serve in the house of representatives,25 years old,The provided facts do not contain enough information to answer the question about the minimum age required to serve in the House of Representatives under Article 1.,INCORRECT,Abstains / no answer given.
+57,who want to be a millionaire calls his dad,Carpenter,Carpenter called his father.,CORRECT,
+58,how oxygenated blood returns to the heart from the lungs,pulmonary circulation,Insufficient information,INCORRECT,Abstains / no answer given.
+59,what is the difference between an opiate agonist and antagonist,a substance that fully activates the receptor that it binds to,"The provided facts do not contain enough information to answer the question. The document defines ""agonist - antagonist"" or ""mixed agonist / antagonist"" in pharmacology generally but does not mention opiates specifically.",INCORRECT,Abstains / no answer given.
+60,the meaning of the song piece by piece,restoring someone 's faith in love and family relationships,Restoring faith in love and family relationships,CORRECT,
+61,leader of carthage in the first punic war,Xanthippus,Not provided in the text.,INCORRECT,Abstains / no answer given.
+62,what is the white stuff on hot cross buns,"shortcrust pastry ; however , more recently recipes have recommended a paste consisting of flour and water",a paste consisting of flour and water,HARD,Gives the recent flour-and-water paste; the reference lists shortcrust pastry first.
+63,in which sea pearl is found in india,the Indian Ocean,"South China Sea, Persian Gulf, Red Sea, Gulf of Mannar, Arabian Sea",HARD,"List of seas; some lie in the Indian Ocean, others (South China Sea, Red Sea) don't."
+64,when did the battle of bull run start,5 : 15 a.m.,Insufficient information,INCORRECT,Abstains / no answer given.
+65,when does the mlb season start and finish,"March 29 -- October 31 , 2018","The 2018 MLB season starts on March 29 and finishes on October 31, 2018.",CORRECT,
+66,who was the actor who played grizzly adams,Daniel Francis `` Dan '' Haggerty,Daniel Francis `` Dan '' Haggerty,CORRECT,
+67,what is the normal range for plasma glucose concentration,3.9 and 5.5 mmol / L ( 70 to 100 mg / dL ),3.9 and 5.5 mmol / L ( 70 to 100 mg / dL ),CORRECT,
+68,when does the mlb season start and finish,"March 29 -- October 31 , 2018","March 29 -- October 31, 2018",CORRECT,
+69,who dies in akame ga kill night raid,Tatsumi,Insufficient information,INCORRECT,Abstains / no answer given.
+70,who plays the voice of chucky in seed of chucky,Brad Dourif,Brad Dourif,CORRECT,
+71,where are the hormones of the anterior pituitary created,"The pars distalis , ( distal part )",Insufficient information,INCORRECT,Abstains / no answer given.
+72,where are the 10 plagues found in the bible,Book of Exodus,Book of Exodus,CORRECT,
+73,who won nfl football coach of the year,Sean McVay,Insufficient information,INCORRECT,Abstains / no answer given.
+74,where was when we first met netflix filmed,New Orleans,Insufficient information,INCORRECT,Abstains / no answer given.
+75,where does the pulmonary trunk receive blood from,the right side of the heart,Insufficient information,INCORRECT,Abstains / no answer given.
+76,new anime from the creators of attack on titan,Vinland Saga,Vinland Saga,CORRECT,
+77,where did the name kaiser permanente come from,"Permanente Creek , which flowed past Henry Kaiser 's first cement plant on Black Mountain in Cupertino , California",Permanente Creek,CORRECT,
+78,where did the tradition of gift giving come from,in ancient Rome with gift - giving during the Saturnalia holiday,"The tradition of gift giving originated from a pagan custom associated with the winter solstice, which was celebrated in ancient Rome during the Saturnalia holiday in December.",CORRECT,
+79,when does the eclipse end in the us,6 : 44 p.m. UTC ( 2 : 44 p.m. EDT ),The total eclipse ends along the South Carolina coast at about 6:44 p.m. UTC (2:44 p.m. EDT).,CORRECT,
+80,what is the order of the netflix marvel shows,Marvel 's Daredevil,Insufficient information,INCORRECT,Abstains / no answer given.
+81,who played the mother in the black stallion,Teri Garr,Insufficient information,INCORRECT,Abstains / no answer given.
+82,how did orchestra change in the romantic period,a dramatic expansion in the size of the orchestra and in the dynamic range and diversity of instruments used in this ensemble,"The size of the orchestra expanded dramatically, along with the dynamic range and diversity of instruments used.",CORRECT,
+83,what nfl team is robert griffin the third playing for,currently a free agent,Insufficient information,INCORRECT,Abstains / no answer given.
+84,what was the name of darth vader star destroyer,Devastator,The name of Darth Vader's Star Destroyer was the Devastator.,CORRECT,
+85,when is the president sworn into office ( date and time of an odd or even year ),at noon on the 20th day of January,The President is sworn into office at noon on the 20th day of January in an odd-numbered year.,CORRECT,
+86,when does the eclipse end in the us,6 : 44 p.m. UTC ( 2 : 44 p.m. EDT ),at about 6 : 44 p.m. UTC,CORRECT,
+87,who won nfl football coach of the year,Sean McVay,The provided facts do not contain enough information to answer the question.,INCORRECT,Abstains / no answer given.
+88,how oxygenated blood returns to the heart from the lungs,pulmonary circulation,Oxygenated blood returns to the left atrium and ventricle of the heart.,HARD,Left atrium and ventricle is not 'pulmonary circulation'; loosely related.
+89,who played the colorado kid in rio bravo,Ricky Nelson,Ricky Nelson,CORRECT,
+90,what is the salary of the ceo of microsoft,$84.3 million ( 2018 ),The provided facts do not contain enough information to answer the question about the salary of the CEO of Microsoft.,INCORRECT,Abstains / no answer given.
+91,who plays the voice of chucky in seed of chucky,Brad Dourif,Brad Dourif serves as the voice of Chucky.,CORRECT,
+92,who won the ncaa basketball championship in 1994,Arkansas,"The provided facts do not contain enough information to answer the question. The document states that Arkansas defeated Duke to win their first ever national championship, but it does not specify the year this occurred.",HARD,"Abstains, but names Arkansas as the winner; the year is the only thing missing."
+93,which body system differentiates a male from a female,reproductive,Reproductive system,CORRECT,
+94,when did seattle slew win the triple crown,1977,1977,CORRECT,
+95,who did the broncos beat in the super bowl,Green Bay Packers,Green Bay Packers,CORRECT,
+96,who won in the brown vs board of education case,defendants,defendants,CORRECT,"Matches reference, though the reference itself looks factually wrong."
+97,season 2 attack on titan how many episodes,12,12,CORRECT,
+98,when will the 2018 oscar nominations be announced,"Tuesday , January 23 , 2018","Monday, February 5, 2018",INCORRECT,Wrong date.
+99,when did audio video and the film industry begin,in the mid - to late 1920s,"The provided facts do not contain enough information to answer when the audio video and the film industry began. The facts only state that the earliest feature-length movies with recorded sound included music, effects, and later synchronized dialogue (talkies), and that the primary steps in the commercialization of sound cinema were taken in the mid- to late 1920s. They do not specify when audio video or the film industry as a whole began.",HARD,"Says insufficient, but quotes the mid- to late 1920s, which is the reference."
+100,what time is it in alaska time zone,UTC − 09 : 00,Insufficient information,INCORRECT,Abstains / no answer given.

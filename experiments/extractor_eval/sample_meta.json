@@ -1,0 +1,16 @@
+{
+ "docs_scanned": 700,
+ "facts_total": 7824,
+ "negated": 184,
+ "non_asserted": 186,
+ "asserted": 7454,
+ "facts_sampled": 400,
+ "sentences_total": 3058,
+ "sentences_sampled": 200,
+ "sampling": "seed 42; facts: 130 negated + 120 non-asserted + 150 asserted (shuffled); sentences: 100 with a negation cue, 60 with a hedge/attribution/condition cue, 40 without",
+ "strata_available": {
+  "cue": 157,
+  "hedge": 137,
+  "other": 2764
+ }
+}

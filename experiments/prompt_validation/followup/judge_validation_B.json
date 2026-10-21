@@ -1,0 +1,44 @@
+{
+ "B_hard": 14,
+ "judge_vs_B": {
+  "pair": "judge-B",
+  "n": 86,
+  "agree": 83,
+  "agreement": 0.9651,
+  "wilson95": [
+   0.9024,
+   0.9881
+  ],
+  "cohen_kappa": 0.9299
+ },
+ "judge_vs_A": {
+  "pair": "judge-A",
+  "n": 90,
+  "agree": 83,
+  "agreement": 0.9222,
+  "wilson95": [
+   0.8481,
+   0.9618
+  ],
+  "cohen_kappa": 0.8444
+ },
+ "A_vs_B": {
+  "pair": "A-B",
+  "n": 76,
+  "agree": 76,
+  "agreement": 1.0,
+  "wilson95": [
+   0.9519,
+   1.0
+  ],
+  "cohen_kappa": 1.0
+ },
+ "judge_vs_consensus": {
+  "n": 76,
+  "agree": 73,
+  "wilson95": [
+   0.8903,
+   0.9865
+  ]
+ }
+}

@@ -1,0 +1,211 @@
+{
+ "facts": {
+  "rows": 400,
+  "unscorable_ambiguous": 12,
+  "scored": 388,
+  "A_polarity_precision": {
+   "negated": {
+    "correct": 54,
+    "n": 123,
+    "precision": 0.439
+   },
+   "not_negated": {
+    "correct": 264,
+    "n": 265,
+    "precision": 0.996
+   }
+  },
+  "A_modality_precision": {
+   "asserted": {
+    "correct": 238,
+    "n": 255,
+    "precision": 0.933
+   },
+   "attributed": {
+    "correct": 70,
+    "n": 89,
+    "precision": 0.787
+   },
+   "conditional": {
+    "correct": 12,
+    "n": 12,
+    "precision": 1.0
+   },
+   "hypothetical": {
+    "correct": 30,
+    "n": 32,
+    "precision": 0.938
+   }
+  },
+  "B_polarity_precision": {
+   "negated": {
+    "correct": 55,
+    "n": 123,
+    "precision": 0.447
+   },
+   "not_negated": {
+    "correct": 265,
+    "n": 265,
+    "precision": 1.0
+   }
+  },
+  "B_modality_precision": {
+   "asserted": {
+    "correct": 236,
+    "n": 255,
+    "precision": 0.925
+   },
+   "attributed": {
+    "correct": 64,
+    "n": 89,
+    "precision": 0.719
+   },
+   "conditional": {
+    "correct": 12,
+    "n": 12,
+    "precision": 1.0
+   },
+   "hypothetical": {
+    "correct": 31,
+    "n": 32,
+    "precision": 0.969
+   }
+  },
+  "kappa_polarity": 0.8589860076322008,
+  "kappa_modality_correct": 0.5012506948304613,
+  "raw_agreement_polarity": 0.959,
+  "raw_agreement_modality": 0.905,
+  "agreed_polarity_precision": {
+   "negated": {
+    "correct": 47,
+    "n": 108,
+    "precision": 0.435
+   },
+   "not_negated": {
+    "correct": 264,
+    "n": 264,
+    "precision": 1.0
+   }
+  },
+  "agreed_modality_precision": {
+   "asserted": {
+    "correct": 227,
+    "n": 235,
+    "precision": 0.966
+   },
+   "attributed": {
+    "correct": 60,
+    "n": 75,
+    "precision": 0.8
+   },
+   "conditional": {
+    "correct": 12,
+    "n": 12,
+    "precision": 1.0
+   },
+   "hypothetical": {
+    "correct": 29,
+    "n": 29,
+    "precision": 1.0
+   }
+  },
+  "A_modality_errors_stored_to_true": {
+   "attributed->asserted": 17,
+   "asserted->attributed": 7,
+   "asserted->conditional": 4,
+   "asserted->asserted": 3,
+   "asserted->hypothetical": 3,
+   "hypothetical->conditional": 2,
+   "attributed->hypothetical": 2
+  },
+  "negated_but_wrong_by_A": {
+   "n": 69,
+   "in_fact_fields": 14,
+   "elsewhere_in_sentence": 55,
+   "note": "automatic check of whether a negation cue occurs in the fact's subject, verb or object"
+  }
+ },
+ "sentences": {
+  "rows": 200,
+  "unscorable_ambiguous": 7,
+  "scored": 193,
+  "kappa_negation": 0.8027593254982114,
+  "kappa_modality": 0.713791398912506,
+  "raw_agreement_negation": 0.959,
+  "raw_agreement_modality": 0.891,
+  "negation_vs_A": {
+   "tp": 17,
+   "fp": 39,
+   "fn": 4,
+   "tn": 133,
+   "n": 193,
+   "precision": 0.304,
+   "recall": 0.81
+  },
+  "negation_vs_B": {
+   "tp": 20,
+   "fp": 36,
+   "fn": 5,
+   "tn": 132,
+   "n": 193,
+   "precision": 0.357,
+   "recall": 0.8
+  },
+  "negation_vs_agreed": {
+   "tp": 15,
+   "fp": 34,
+   "fn": 4,
+   "tn": 132,
+   "n": 185,
+   "precision": 0.306,
+   "recall": 0.789
+  },
+  "nonasserted_vs_A": {
+   "tp": 33,
+   "fp": 13,
+   "fn": 13,
+   "tn": 134,
+   "n": 193,
+   "precision": 0.717,
+   "recall": 0.717
+  },
+  "nonasserted_vs_B": {
+   "tp": 29,
+   "fp": 17,
+   "fn": 12,
+   "tn": 135,
+   "n": 193,
+   "precision": 0.63,
+   "recall": 0.707
+  },
+  "nonasserted_vs_agreed": {
+   "tp": 21,
+   "fp": 12,
+   "fn": 8,
+   "tn": 131,
+   "n": 172,
+   "precision": 0.636,
+   "recall": 0.724
+  },
+  "note": "extractor was run on the single sentence (no coreference); 'predicted negated' = any fact of the sentence negated"
+ },
+ "judge": {
+  "items": 100,
+  "blank_hard_to_tell": 10,
+  "scored": 90,
+  "judge_correct_items": 44,
+  "judge_incorrect_items": 46,
+  "human_agrees_when_judge_CORRECT_(precision)": 0.932,
+  "human_agrees_when_judge_INCORRECT_(npv)": 0.913,
+  "kappa": 0.8444444444444446,
+  "raw_agreement_in_stratified_sample": 0.922,
+  "population_weighted_agreement": 0.926,
+  "confusion": {
+   "judge_correct_human_correct": 41,
+   "judge_correct_human_incorrect": 3,
+   "judge_incorrect_human_correct": 4,
+   "judge_incorrect_human_incorrect": 42
+  },
+  "note": "sample was stratified 50 judge-CORRECT / 50 judge-INCORRECT; population weights use the 1,079/521 split of all 1,600 outputs"
+ }
+}

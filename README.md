@@ -42,7 +42,7 @@ backend/                 Python package `precis` (FastAPI service, pipeline, eva
   src/precis/api/        request models, JWT auth, sanitisation, rate limiting
   src/precis/evaluation/ benchmark harness and the chunked baseline
   scripts/               MRQA conversion and failure-analysis tools
-  tests/                 544 tests in 17 modules
+  tests/                 549 tests in 17 modules
 frontend/                web interface (upload, ask, inspect the packed context and pipeline trace)
 docker/, docker-compose.yml   containerised backend, frontend and nginx proxy
 docs/architecture.md     system architecture and data flow
@@ -66,7 +66,7 @@ venv/bin/pip install -e ".[api,eval,dev,coref-fast]"
 venv/bin/python -m spacy download en_core_web_lg
 # coreference model (read from the Hugging Face cache; not downloaded on first use)
 venv/bin/python -c "from huggingface_hub import snapshot_download; snapshot_download('biu-nlp/f-coref')"
-venv/bin/python -m pytest -q          # 544 tests
+venv/bin/python -m pytest -q          # 549 tests
 
 # models used in the paper
 ollama pull qwen2.5-coder:7b

@@ -4,12 +4,14 @@ FastAPI application exposing the NLP pipeline as REST + WebSocket endpoints.
 """
 
 import asyncio
+import hashlib
 import json
 import os
 import re
 import threading
 import time
 from pathlib import Path
+from collections import OrderedDict
 from collections.abc import Callable, Generator
 from contextlib import asynccontextmanager
 from typing import Any
@@ -237,8 +239,24 @@ def _get_store() -> FactStore:
 # found however the server is launched.
 DEFAULT_DATA_DIR = str(Path(__file__).resolve().parent / "chroma_data")
 
-_user_stores: dict[str, FactStore] = {}
+# Open per-user stores, most recently used last. Only handles are cached: the
+# data lives on disk, so dropping the oldest handle loses nothing.
+_MAX_OPEN_USER_STORES = 64
+_user_stores: OrderedDict[str, FactStore] = OrderedDict()
 _user_stores_lock = threading.Lock()
+
+# Uploads of the same document by the same user run one at a time, so a second
+# upload cannot interleave its delete and write with the first. Striped locks
+# keep the number of locks fixed.
+_INGEST_LOCKS = [threading.Lock() for _ in range(32)]
+
+
+def _ingest_serialised(user_sub: str, **kwargs: Any) -> Any:
+    """run_ingest_document under the lock for (user, document). Blocking."""
+    key = f"{user_sub}\x00{kwargs['source_doc']}"
+    lock = _INGEST_LOCKS[int(hashlib.sha256(key.encode()).hexdigest(), 16) % len(_INGEST_LOCKS)]
+    with lock:
+        return run_ingest_document(**kwargs)
 
 
 def _store_for(user_sub: str) -> FactStore:
@@ -259,6 +277,10 @@ def _store_for(user_sub: str) -> FactStore:
                 collection_name=f"facts_u_{user_sub[len('client-'):]}",
             )
             _user_stores[user_sub] = user_store
+            while len(_user_stores) > _MAX_OPEN_USER_STORES:
+                _user_stores.popitem(last=False)
+        else:
+            _user_stores.move_to_end(user_sub)
         return user_store
 
 
@@ -421,11 +443,13 @@ async def ingest_document(req: IngestRequest, request: Request) -> IngestRespons
         )
 
     document_name = (req.document_name.strip() or "document")[:255]
-    active_store = _store_for(_user_of(request))
+    user_sub = _user_of(request)
+    active_store = _store_for(user_sub)
 
     try:
         result = await asyncio.to_thread(
-            run_ingest_document,
+            _ingest_serialised,
+            user_sub,
             text=clean_text,
             source_doc=document_name,
             store=active_store,
@@ -1312,7 +1336,8 @@ async def _handle_ws_ingest(
 
     try:
         result = await asyncio.to_thread(
-            run_ingest_document,
+            _ingest_serialised,
+            user_sub,
             text=clean_text,
             source_doc=doc_name,
             store=active_store,

@@ -56,6 +56,44 @@ class TestReingest:
                 )
         assert store.count() == 0
 
+    def test_failed_reingest_restores_the_previous_version(self):
+        from precis.graph.schema import StructuralEvidence
+
+        store = FactStore(in_memory=True, collection_name="reingest_c")
+        self._ingest(store, ["apple", "berry"])
+        store.add_structural_evidence(
+            [
+                StructuralEvidence(
+                    id="t1", source_doc="doc.txt", structure_type="table",
+                    content="| a |", searchable_text="a",
+                )
+            ]
+        )
+        before = sorted(f.subject for f in store.get_by_document("doc.txt"))
+        before_embeddings = store.collection.get(include=["embeddings"])["embeddings"]
+
+        facts = [_fact("cherry", "doc.txt")]
+        with (
+            patch.object(orchestrator, "resolve_coreferences", side_effect=lambda t: t),
+            patch.object(orchestrator, "extract_facts", return_value=facts),
+            patch.object(orchestrator, "score_facts_with_store", side_effect=lambda f, s: f),
+            patch.object(store, "add_facts", side_effect=RuntimeError("disk full")),
+        ):
+            with pytest.raises(RuntimeError, match="disk full"):
+                orchestrator.ingest_document(
+                    "text", "doc.txt", store, hardware=MagicMock(), enable_list_extraction=False
+                )
+
+        assert sorted(f.subject for f in store.get_by_document("doc.txt")) == before
+        assert store.count_structural_evidence("doc.txt") == 1
+        after_embeddings = store.collection.get(include=["embeddings"])["embeddings"]
+        assert sorted(map(tuple, after_embeddings)) == sorted(map(tuple, before_embeddings))
+
+    def test_snapshot_of_unknown_document_restores_nothing(self):
+        store = FactStore(in_memory=True, collection_name="reingest_d")
+        store.restore_document(store.snapshot_document("missing.txt"))
+        assert store.count() == 0
+
 
 class TestHardwareTiering:
     def test_16gb_box_reporting_15_5_is_cpu_tier(self):
@@ -290,7 +328,7 @@ class TestPerUserIsolation:
         import main
 
         monkeypatch.setenv("PRECIS_DATA_DIR", str(tmp_path))
-        monkeypatch.setattr(main, "_user_stores", {})
+        monkeypatch.setattr(main, "_user_stores", main.OrderedDict())
         default_store = FactStore(in_memory=True, collection_name="default_shared")
         monkeypatch.setattr(main, "store", default_store)
         monkeypatch.setattr(main, "_get_store", lambda: default_store)
@@ -589,3 +627,49 @@ class TestMissingModelOnIngest:
         assert res.status_code == 500
         assert "not installed" in res.json()["detail"]
         assert "f-coref" in res.json()["detail"]
+
+
+class TestServerResourceLimits:
+    def test_open_user_stores_are_bounded(self, monkeypatch, tmp_path):
+        import main
+
+        monkeypatch.setenv("PRECIS_DATA_DIR", str(tmp_path))
+        monkeypatch.setattr(main, "_MAX_OPEN_USER_STORES", 2)
+        monkeypatch.setattr(main, "_user_stores", main.OrderedDict())
+        ids = [f"client-{str(i) * 32}" for i in range(3)]
+        first = main._store_for(ids[0])
+        main._store_for(ids[1])
+        main._store_for(ids[0])  # most recently used again
+        main._store_for(ids[2])  # evicts ids[1], the least recently used
+        assert list(main._user_stores) == [ids[0], ids[2]]
+        assert main._store_for(ids[0]) is first
+
+    def test_same_document_uploads_run_one_at_a_time(self):
+        import threading
+        import time as _time
+
+        import main
+
+        running = 0
+        peak = 0
+        guard = threading.Lock()
+
+        def slow_ingest(**kwargs):
+            nonlocal running, peak
+            with guard:
+                running += 1
+                peak = max(peak, running)
+            _time.sleep(0.05)
+            with guard:
+                running -= 1
+
+        with patch.object(main, "run_ingest_document", side_effect=slow_ingest):
+            threads = [
+                threading.Thread(target=main._ingest_serialised, args=("u",), kwargs={"source_doc": "a.txt"})
+                for _ in range(4)
+            ]
+            for t in threads:
+                t.start()
+            for t in threads:
+                t.join()
+        assert peak == 1

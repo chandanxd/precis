@@ -615,6 +615,37 @@ class FactStore:
         items.sort(key=lambda x: int(x.metadata.get("order_index", 0)) if isinstance(x.metadata.get("order_index"), (int, float)) else 0)
         return items
 
+    def snapshot_document(self, source_doc: str) -> dict[str, dict[str, Any]]:
+        """Raw rows (ids, embeddings, metadata, text) of a document in both
+        collections, so restore_document can put them back exactly."""
+        snapshot: dict[str, dict[str, Any]] = {}
+        for name, coll in (("facts", self._collection), ("structural", self._structural_collection)):
+            rows: dict[str, Any] = {"ids": []}
+            if source_doc and coll.count() > 0:
+                rows = dict(
+                    coll.get(
+                        where={"source_doc": source_doc},
+                        include=["embeddings", "metadatas", "documents"],
+                    )
+                )
+            snapshot[name] = rows
+        return snapshot
+
+    def restore_document(self, snapshot: dict[str, dict[str, Any]]) -> None:
+        """Write back the rows taken by snapshot_document."""
+        for name, coll in (("facts", self._collection), ("structural", self._structural_collection)):
+            rows = snapshot.get(name) or {}
+            ids = list(rows.get("ids") or [])
+            if not ids:
+                continue
+            documents = rows.get("documents")
+            coll.upsert(
+                ids=ids,
+                embeddings=rows.get("embeddings"),
+                metadatas=rows.get("metadatas"),
+                documents=documents if documents is not None and all(d is not None for d in documents) else None,
+            )
+
     def delete_document(self, source_doc: str) -> int:
         """
         Delete all facts and structural records originating from a specific source document.

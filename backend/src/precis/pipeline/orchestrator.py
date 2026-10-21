@@ -267,6 +267,11 @@ def ingest_document(
     t0 = time.perf_counter()
     # Re-ingesting a document replaces its previous facts and evidence. Done after
     # extraction so a failure in the earlier stages leaves the old version intact.
+    # The old rows are kept aside so a failure while storing the new version can
+    # put them back; scoring still sees the store without them, as before.
+    previous = (
+        store.snapshot_document(source_doc) if hasattr(store, "snapshot_document") else None
+    )
     if hasattr(store, "delete_document"):
         store.delete_document(source_doc)
 
@@ -279,9 +284,15 @@ def ingest_document(
         if pending_structural and hasattr(store, "add_structural_evidence"):
             store.add_structural_evidence(pending_structural)
     except Exception:
-        # Do not leave a partially written document behind.
+        # Do not leave a partially written document behind; restore the previous
+        # version, if there was one, then report the original error.
         if hasattr(store, "delete_document"):
             store.delete_document(source_doc)
+        if previous is not None:
+            try:
+                store.restore_document(previous)
+            except Exception as restore_exc:
+                print(f"Could not restore the previous version of {source_doc}: {restore_exc}")
         raise
 
     timings["sdh_scoring_and_storage"] = int((time.perf_counter() - t0) * 1000)

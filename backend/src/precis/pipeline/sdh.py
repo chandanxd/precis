@@ -372,8 +372,8 @@ def uniqueness(
 
     Uses soft-threshold redundancy penalty:
     - Cosine similarity < 0.60: full uniqueness (1.0). Distinct assertions on same topic.
-    - Cosine similarity 0.60 - 0.88: gradual penalty transition.
-    - Cosine similarity > 0.88: near duplicate, uniqueness drops towards 0.0.
+    - Cosine similarity 0.60 - 0.92: gradual penalty transition.
+    - Cosine similarity >= 0.92: near duplicate, uniqueness drops towards 0.0.
     """
     if existing_embeddings is None or len(existing_embeddings) == 0:
         return 1.0

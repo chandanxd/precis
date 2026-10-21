@@ -11,11 +11,16 @@ a hardware-adaptive token ceiling, outputting structured context and
 compression metrics.
 """
 
+import re
 from collections.abc import Sequence
 from dataclasses import dataclass
+from typing import Any
 
 from precis.graph.schema import Fact
 from precis.graph.store import FactStore
+
+# A negation cue already present in the verb phrase makes the explicit NOT marker redundant.
+_VERB_ALREADY_NEGATED = re.compile(r"\b(?:not|never|cannot)\b|n't\b", re.IGNORECASE)
 
 # Modality priority tiering: higher number = prioritized under score ties.
 MODALITY_PRIORITY: dict[str, int] = {
@@ -59,7 +64,10 @@ def _render_fact_parts(fact: Fact) -> list[str]:
     Keeps token estimation and actual context rendering based on the same
     representation so the estimated budget better matches the final output.
     """
-    if fact.negated:
+    if fact.negated and not _VERB_ALREADY_NEGATED.search(fact.verb or ""):
+        # Several extraction paths keep the negation word inside the verb
+        # phrase ("does not subsidize"); adding the marker there would render
+        # the polarity twice.
         core = f"{fact.subject} NOT {fact.verb} {fact.object}"
     else:
         core = f"{fact.subject} {fact.verb} {fact.object}"
@@ -221,8 +229,23 @@ def pack_context(
     if top_k <= 0:
         return _empty_pack_result()
 
-    # 1. Retrieve candidates from ChromaDB.
-    candidates = store.query_similar(query, n_results=top_k)
+    # 1. Retrieve candidates from ChromaDB (supporting multi-question queries).
+    sub_queries = [q.strip() for q in re.split(r'[?!]+|\.+(?=\s|$)', query) if q.strip()]
+    if not sub_queries:
+        sub_queries = [query]
+
+    candidates_map: dict[tuple[Any, ...], tuple[Fact, float]] = {}
+    for sub_q in sub_queries:
+        sub_candidates = store.query_similar(sub_q, n_results=top_k)
+        for fact, sim in sub_candidates:
+            fact_key = (fact.subject, fact.verb, fact.object, fact.source_doc, fact.sentence_id)
+            if fact_key in candidates_map:
+                if sim > candidates_map[fact_key][1]:
+                    candidates_map[fact_key] = (fact, sim)
+            else:
+                candidates_map[fact_key] = (fact, sim)
+
+    candidates = list(candidates_map.values())
 
     if not candidates:
         return _empty_pack_result()

@@ -10,10 +10,55 @@ from chromadb.api import ClientAPI
 from chromadb.api.models.Collection import Collection
 from chromadb.api.types import Embedding, Metadata
 
-from precis.graph.schema import Fact
+from precis.graph.schema import Fact, StructuralEvidence
 from precis.pipeline.sdh import canonical_fact_text, embed_text, embed_texts
 
 EMBEDDING_DIMENSION = 384
+
+
+def _evidence_to_metadata(item: StructuralEvidence) -> dict[str, Any]:
+    """Convert StructuralEvidence to ChromaDB metadata."""
+    order_idx = item.metadata.get("order_index", 0) if isinstance(item.metadata, dict) else 0
+    item_count = item.metadata.get("item_count", 0) if isinstance(item.metadata, dict) else 0
+    caption = str(item.metadata.get("caption", "")) if isinstance(item.metadata, dict) else ""
+    return {
+        "source_doc": item.source_doc or "",
+        "structure_type": item.structure_type or "list",
+        "content": item.content or "",
+        "searchable_text": item.searchable_text or "",
+        "order_index": int(order_idx) if isinstance(order_idx, (int, float)) else 0,
+        "item_count": int(item_count) if isinstance(item_count, (int, float)) else 0,
+        "caption": caption,
+        "metadata_json": json.dumps(item.metadata) if item.metadata else "{}",
+    }
+
+
+def _metadata_to_evidence(
+    id: str,
+    meta: Metadata,
+    document: str = "",
+    embedding: Sequence[float] | None = None,
+) -> StructuralEvidence:
+    """Reconstruct StructuralEvidence from ChromaDB metadata and embedding."""
+    meta_dict = meta if isinstance(meta, dict) else {}
+    parsed_meta: dict[str, Any] = {}
+    meta_json = meta_dict.get("metadata_json")
+    if isinstance(meta_json, str) and meta_json:
+        try:
+            parsed_meta = json.loads(meta_json)
+        except (json.JSONDecodeError, TypeError):
+            parsed_meta = {}
+
+    return StructuralEvidence(
+        id=id,
+        source_doc=str(meta_dict.get("source_doc", "")),
+        structure_type=str(meta_dict.get("structure_type", "list")),
+        content=str(meta_dict.get("content", "")),
+        searchable_text=str(meta_dict.get("searchable_text", document or "")),
+        embedding=list(embedding) if embedding is not None else [],
+        metadata=parsed_meta,
+    )
+
 
 
 def _generate_fact_id(
@@ -118,6 +163,11 @@ class FactStore:
             name=collection_name,
             metadata={"hnsw:space": "cosine"},
         )
+        self._structural_collection: Collection = self._client.get_or_create_collection(
+            name=f"{collection_name}_structural",
+            metadata={"hnsw:space": "cosine"},
+        )
+
 
     @property
     def collection(self) -> Collection:
@@ -396,27 +446,207 @@ class FactStore:
             "documents": sorted(docs),
         }
 
-    def delete_document(self, source_doc: str) -> int:
+    @property
+    def structural_collection(self) -> Collection:
+        """Return the underlying ChromaDB structural evidence collection."""
+        return self._structural_collection
+
+    def has_structural_evidence(self, source_doc: str | None = None) -> bool:
+        """Return True if any structural evidence is stored (optionally for a specific document)."""
+        if source_doc is not None:
+            return len(self.get_structural_evidence_by_document(source_doc)) > 0
+        return self._structural_collection.count() > 0
+
+    def count_structural_evidence(self, source_doc: str | None = None) -> int:
+        """Return count of structural evidence records currently stored (optionally for a specific document)."""
+        if source_doc is not None:
+            return len(self.get_structural_evidence_by_document(source_doc))
+        return self._structural_collection.count()
+
+    def add_structural_evidence(
+        self,
+        items: list[StructuralEvidence],
+        batch_size: int = 64,
+    ) -> int:
         """
-        Delete all facts originating from a specific source document.
-        Returns the number of deleted facts.
+        Store a batch of StructuralEvidence records into ChromaDB.
+        Replaces any existing structural evidence for the same source_doc,
+        ensuring deterministic cleanup of obsolete records upon re-ingestion.
         """
-        if not source_doc or self._collection.count() == 0:
+        if not items:
             return 0
-        results = self._collection.get(
+
+        # Group items by source_doc to clean up obsolete records per document
+        docs = {it.source_doc for it in items if it.source_doc}
+        for doc in docs:
+            self.delete_structural_evidence(doc)
+
+        missing_indices: list[int] = []
+        texts_to_embed: list[str] = []
+        for i, item in enumerate(items):
+            if not item.embedding or len(item.embedding) != EMBEDDING_DIMENSION:
+                missing_indices.append(i)
+                texts_to_embed.append(item.searchable_text or item.content)
+
+        if texts_to_embed:
+            computed_embeddings = embed_texts(texts_to_embed, batch_size=batch_size)
+            for idx, emb in zip(missing_indices, computed_embeddings):
+                items[idx].embedding = emb
+
+        ids: list[str] = []
+        documents: list[str] = []
+        embeddings: list[Embedding] = []
+        metadatas: list[Metadata] = []
+
+        for item in items:
+            ids.append(item.id)
+            documents.append(item.searchable_text or item.content)
+            embeddings.append(cast(Embedding, item.embedding))
+            metadatas.append(_evidence_to_metadata(item))
+
+        self._structural_collection.upsert(
+            ids=ids,
+            documents=documents,
+            embeddings=embeddings,
+            metadatas=metadatas,
+        )
+        return len(items)
+
+    def get_structural_documents(self) -> list[str]:
+        """Return sorted source document names that have structural evidence."""
+        if self._structural_collection.count() == 0:
+            return []
+        results = self._structural_collection.get(include=["metadatas"])
+        docs = {
+            m.get("source_doc")
+            for m in (results.get("metadatas") or [])
+            if isinstance(m.get("source_doc"), str) and m.get("source_doc")
+        }
+        return sorted(docs)
+
+    def delete_structural_evidence(self, source_doc: str) -> int:
+        """Delete all structural records originating from a specific source document."""
+        if not source_doc or self._structural_collection.count() == 0:
+            return 0
+        results = self._structural_collection.get(
             where={"source_doc": source_doc},
         )
         ids = results.get("ids", [])
         if ids:
-            self._collection.delete(ids=ids)
+            self._structural_collection.delete(ids=ids)
         return len(ids)
 
+    def query_similar_structural(
+        self,
+        query: str,
+        n_results: int = 10,
+        source_doc: str | None = None,
+    ) -> list[tuple[StructuralEvidence, float]]:
+        """
+        Retrieve structural evidence most similar to the query by cosine similarity.
+        Returns list of (StructuralEvidence, cosine_similarity) tuples sorted descending.
+        """
+        if not query or not query.strip() or self._structural_collection.count() == 0:
+            return []
+
+        query_emb = embed_text(query)
+        where_filter = {"source_doc": source_doc} if source_doc else None
+
+        actual_k = min(n_results, self._structural_collection.count())
+        if actual_k <= 0:
+            return []
+
+        results = self._structural_collection.query(
+            query_embeddings=[query_emb],
+            n_results=actual_k,
+            where=where_filter,
+            include=["metadatas", "distances", "embeddings", "documents"],
+        )
+
+        if not results or not results.get("ids") or not results["ids"][0]:
+            return []
+
+        ids = results["ids"][0]
+        metadatas_result = results.get("metadatas")
+        metadatas = cast(list[Metadata], metadatas_result[0]) if metadatas_result and metadatas_result[0] is not None else []
+        distances_result = results.get("distances")
+        distances = cast(list[float], distances_result[0]) if distances_result and distances_result[0] is not None else []
+        embeddings_result = results.get("embeddings")
+        embeddings = cast(list[Sequence[float]], embeddings_result[0]) if embeddings_result and embeddings_result[0] is not None else []
+        documents_result = results.get("documents")
+        documents = cast(list[str], documents_result[0]) if documents_result and documents_result[0] is not None else []
+
+        ranked_items: list[tuple[StructuralEvidence, float]] = []
+        for i in range(len(ids)):
+            meta = metadatas[i] if i < len(metadatas) else {}
+            dist = distances[i] if i < len(distances) else 1.0
+            emb = embeddings[i] if i < len(embeddings) else None
+            doc = documents[i] if i < len(documents) else ""
+            item = _metadata_to_evidence(ids[i], meta, document=doc, embedding=emb)
+            similarity = max(0.0, min(1.0, 1.0 - float(dist)))
+            ranked_items.append((item, round(similarity, 4)))
+
+        ranked_items.sort(key=lambda x: x[1], reverse=True)
+        return ranked_items
+
+    def get_structural_evidence_by_document(self, source_doc: str) -> list[StructuralEvidence]:
+        """Retrieve all structural evidence originating from a specific source document."""
+        if not source_doc or self._structural_collection.count() == 0:
+            return []
+        results = self._structural_collection.get(
+            where={"source_doc": source_doc},
+            include=["metadatas", "embeddings", "documents"],
+        )
+        if not results or not results.get("ids"):
+            return []
+
+        ids = results["ids"]
+        metadatas = results.get("metadatas") or []
+        embeddings = results.get("embeddings")
+        documents = results.get("documents") or []
+
+        items: list[StructuralEvidence] = []
+        for i in range(len(ids)):
+            meta = metadatas[i] if i < len(metadatas) else {}
+            emb = embeddings[i] if embeddings is not None and i < len(embeddings) else None
+            doc = documents[i] if i < len(documents) else ""
+            items.append(_metadata_to_evidence(ids[i], meta, document=doc, embedding=emb))
+
+        items.sort(key=lambda x: int(x.metadata.get("order_index", 0)) if isinstance(x.metadata.get("order_index"), (int, float)) else 0)
+        return items
+
+    def delete_document(self, source_doc: str) -> int:
+        """
+        Delete all facts and structural records originating from a specific source document.
+        Returns the number of deleted facts.
+        """
+        deleted_facts = 0
+        if source_doc and self._collection.count() > 0:
+            results = self._collection.get(
+                where={"source_doc": source_doc},
+            )
+            ids = results.get("ids", [])
+            if ids:
+                self._collection.delete(ids=ids)
+                deleted_facts = len(ids)
+
+        self.delete_structural_evidence(source_doc)
+        return deleted_facts
+
     def clear(self) -> int:
-        """Delete all facts from the collection. Returns count of deleted facts."""
+        """Delete all facts and structural records from the store. Returns count of deleted facts."""
         count = self._collection.count()
         if count > 0:
             all_data = self._collection.get()
             ids = all_data.get("ids", [])
             if ids:
                 self._collection.delete(ids=ids)
+
+        if self._structural_collection.count() > 0:
+            all_struct = self._structural_collection.get()
+            s_ids = all_struct.get("ids", [])
+            if s_ids:
+                self._structural_collection.delete(ids=s_ids)
+
         return count
+

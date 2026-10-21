@@ -236,6 +236,20 @@ class TestContextRendering:
         assert "Fact 2: Officials NOT confirmed outbreak" in rendered
         assert "[attributed to WHO]" in rendered
 
+    def test_negation_marker_not_doubled_when_verb_already_negated(self):
+        facts = [
+            Fact(subject="The framework", verb="does not subsidize", object="fossil fuels", negated=True),
+            Fact(subject="Gordon", verb="does n't help", object="Bruce", negated=True),
+            Fact(subject="Officials", verb="confirmed", object="outbreak", negated=True),
+        ]
+
+        rendered = render_context(facts)
+
+        assert "Fact 1: The framework does not subsidize fossil fuels" in rendered
+        assert "NOT does not" not in rendered
+        assert "Fact 2: Gordon does n't help Bruce" in rendered
+        assert "Fact 3: Officials NOT confirmed outbreak" in rendered
+
     def test_render_conditional_fact(self):
         fact = Fact(
             subject="The system",

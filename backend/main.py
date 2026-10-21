@@ -19,6 +19,8 @@ from fastapi import Path as PathParam
 from fastapi import Query
 from fastapi.middleware.cors import CORSMiddleware
 from precis.api.models import (
+    ChatTitleRequest,
+    ChatTitleResponse,
     DocumentInfo,
     DocumentListResponse,
     FactListResponse,
@@ -34,6 +36,7 @@ from precis.api.models import (
 from precis.api.security import (
     DEFAULT_USER,
     JWTMiddleware,
+    RateLimiter,
     check_injection,
     generate_token,
     is_client_id,
@@ -41,6 +44,7 @@ from precis.api.security import (
     sanitize_document,
     sanitize_document_layout,
     sanitize_query,
+    sanitize_text,
     validate_token,
     verify_mint_key,
 )
@@ -50,7 +54,9 @@ from precis.pipeline.history import ChatMessage, session_manager
 from precis.pipeline.inference import (
     OllamaConnectionError,
     OllamaInferenceError,
+    TITLE_INPUT_MAX_CHARS,
     generate_answer,
+    generate_chat_title,
 )
 from precis.pipeline.orchestrator import (
     assemble_query_context,
@@ -554,6 +560,41 @@ async def query(req: QueryRequest, request: Request) -> QueryResponse:
         session_id=req.session_id,
         answer_source=answer_source,
     )
+
+
+# Separate from query_limiter so naming a chat never uses up the user's queries.
+title_limiter = RateLimiter(max_requests=10, window_seconds=60)
+
+
+@app.post("/api/chat/title", response_model=ChatTitleResponse)
+async def chat_title(req: ChatTitleRequest, request: Request) -> ChatTitleResponse:
+    """Name a new chat from its first question and answer with the local model."""
+    user_sub = _user_of(request)
+    client_ip = request.client.host if request.client else "127.0.0.1"
+    if not title_limiter.is_allowed(user_sub if is_client_id(user_sub) else client_ip):
+        raise HTTPException(
+            status_code=429,
+            detail="Rate limit exceeded.",
+            headers={"Retry-After": "60"},
+        )
+
+    try:
+        question = sanitize_query(req.question)
+        answer = sanitize_text(req.answer[:TITLE_INPUT_MAX_CHARS], TITLE_INPUT_MAX_CHARS)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    if not question.strip():
+        raise HTTPException(status_code=400, detail="Question cannot be empty")
+
+    model = _parse_query_options(req.options).get("model", _get_hardware().recommended_model)
+    try:
+        title = await asyncio.to_thread(generate_chat_title, question, answer, model)
+    except OllamaConnectionError as exc:
+        raise HTTPException(status_code=503, detail="Ollama service is unreachable.") from exc
+    except OllamaInferenceError as exc:
+        raise HTTPException(status_code=502, detail=f"Local inference failed: {exc}") from exc
+
+    return ChatTitleResponse(title=title)
 
 
 @app.get("/api/hardware", response_model=HardwareResponse)

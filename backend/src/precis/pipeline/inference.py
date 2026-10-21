@@ -152,6 +152,7 @@ PROMPT_TEMPLATE = STANDARD_PROMPT_TEMPLATE
 
 CONVERSATIONAL_PROMPT_TEMPLATE = """You are Précis, a helpful, intelligent, and natural conversational AI assistant.
 Engage in helpful and direct conversation. If conversation history is provided, use it to maintain context.
+Format lists in Markdown with each item on its own line.
 
 {history_section}USER:
 {query}
@@ -175,6 +176,7 @@ RULES:
 - If the facts do not answer the question, say in one short sentence that the documents do not cover it, then answer from your general knowledge if you can. Never present general knowledge as coming from the documents.
 - If the message is casual conversation, reply naturally and ignore the facts.
 - Use the conversation history to understand follow-up questions.
+- Format lists in Markdown with each item on its own line.
 - Provide the final answer directly, without <think> blocks.
 
 {history_section}FACTS FROM DOCUMENTS:
@@ -191,6 +193,21 @@ REWRITE_PROMPT_TEMPLATE = """Rewrite the user's last message as one standalone q
 {query}
 
 STANDALONE QUESTION:"""
+
+TITLE_PROMPT_TEMPLATE = """Write a short title of 2 to 6 words for a chat that starts with the exchange below. Name the topic, in title case. Output only the title, without quotes and without a full stop.
+
+USER:
+{question}
+
+ASSISTANT:
+{answer}
+
+TITLE:"""
+
+# Only the start of each message is needed to name the chat.
+TITLE_INPUT_MAX_CHARS = 1500
+TITLE_MAX_WORDS = 8
+TITLE_MAX_CHARS = 60
 
 # Long grounded answers are cut in the prompt's history so that a few turns do
 # not crowd out the packed facts.
@@ -372,6 +389,64 @@ def rewrite_followup_query(
     if not rewritten or len(rewritten) > 3 * len(query) + 200:
         return query
     return rewritten
+
+
+def clean_chat_title(raw: str) -> str | None:
+    """First line of the model's output as a plain title, or None if unusable."""
+    lines = [ln.strip() for ln in strip_thinking_tags(raw).splitlines() if ln.strip()]
+    if not lines:
+        return None
+    title = re.sub(r"^(chat\s+)?title\s*:\s*", "", lines[0], flags=re.IGNORECASE)
+    title = re.sub(r"[*_#`]", "", title).strip(" \"'“”‘’")
+    title = re.sub(r"\s+", " ", title).rstrip(" .:;,!")
+    words = title.split(" ")[:TITLE_MAX_WORDS]
+    while words and len(" ".join(words)) > TITLE_MAX_CHARS:
+        words.pop()
+    title = " ".join(words)
+    return title or None
+
+
+def generate_chat_title(
+    question: str,
+    answer: str,
+    model: str | None = None,
+    base_url: str = OLLAMA_DEFAULT_BASE_URL,
+) -> str | None:
+    """Ask the local model for a short title for a new chat.
+
+    Raises OllamaConnectionError / OllamaInferenceError like generate_answer;
+    returns None when the model's output is unusable.
+    """
+    if model is None:
+        model = os.getenv("PRECIS_OLLAMA_MODEL", PRIMARY_MODEL)
+
+    prompt = TITLE_PROMPT_TEMPLATE.format(
+        question=question.strip()[:TITLE_INPUT_MAX_CHARS],
+        answer=answer.strip()[:TITLE_INPUT_MAX_CHARS],
+    )
+    payload = {
+        "model": model,
+        "prompt": prompt,
+        "stream": False,
+        "think": False,
+        "options": {
+            "temperature": 0.2,
+            "num_predict": 24,
+            "num_ctx": _context_window(prompt, 24),
+        },
+    }
+    try:
+        resp = requests.post(f"{base_url.rstrip('/')}/api/generate", json=payload, timeout=60)
+        resp.raise_for_status()
+        data = resp.json()
+    except ValueError as exc:
+        raise OllamaInferenceError("Ollama returned a malformed response") from exc
+    except requests.ConnectionError as exc:
+        raise OllamaConnectionError(f"Could not connect to Ollama at {base_url}") from exc
+    except requests.RequestException as exc:
+        raise OllamaInferenceError(f"Ollama title request failed: {exc}") from exc
+
+    return clean_chat_title(data.get("response", ""))
 
 
 def _context_window(prompt: str, max_tokens: int) -> int:

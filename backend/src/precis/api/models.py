@@ -54,6 +54,18 @@ class QueryRequest(BaseModel):
     )
 
 
+class ChatTitleRequest(BaseModel):
+    question: str = Field(..., max_length=4_000, description="First message of the chat")
+    answer: str = Field(..., max_length=100_000, description="First answer of the chat")
+    options: dict[str, Any] | None = Field(
+        None, description="Optional per-query settings; only the model is used"
+    )
+
+
+class ChatTitleResponse(BaseModel):
+    title: str | None = Field(..., description="Short title, or null if none could be made")
+
+
 class QueryResponse(BaseModel):
     answer: str
     facts_used: list[dict[str, Any]]

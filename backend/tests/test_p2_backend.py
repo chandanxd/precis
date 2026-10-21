@@ -10,6 +10,7 @@ from precis.graph.store import FactStore
 from precis.pipeline import orchestrator
 from precis.pipeline.hardware import profile_hardware
 from precis.pipeline.inference import (
+    OllamaConnectionError,
     OllamaInferenceError,
     _context_window,
     _stream_ollama,
@@ -414,3 +415,62 @@ class TestP3Backend:
         body = client.get("/api/facts?limit=2", headers=headers).json()
         assert len(body["facts"]) == 2 and body["total"] == 5
         assert client.get("/api/facts?limit=100000", headers=headers).status_code == 422
+
+
+class TestChatTitle:
+    def test_clean_chat_title(self):
+        from precis.pipeline.inference import clean_chat_title
+
+        assert clean_chat_title('"Chess Piece Movements."') == "Chess Piece Movements"
+        assert clean_chat_title("Title: **Revenue Growth 2021**\nextra line") == "Revenue Growth 2021"
+        assert clean_chat_title("<think>hmm</think>\n  Quarterly Results  ") == "Quarterly Results"
+        assert clean_chat_title("   \n") is None
+        long = clean_chat_title("one two three four five six seven eight nine ten")
+        assert long == "one two three four five six seven eight"
+        assert len(clean_chat_title("x" * 30 + " " + "y" * 40) or "") <= 60
+
+    def test_title_request_disables_thinking_and_is_short(self):
+        from precis.pipeline import inference
+
+        resp = MagicMock()
+        resp.json.return_value = {"response": "Chess Rules"}
+        with patch.object(inference.requests, "post", return_value=resp) as post:
+            assert inference.generate_chat_title("How do pieces move?", "Pawns...", model="m") == "Chess Rules"
+        payload = post.call_args.kwargs["json"]
+        assert payload["think"] is False
+        assert payload["model"] == "m"
+        assert payload["options"]["num_predict"] <= 32
+
+    def _client(self):
+        import main
+        from precis.api.security import generate_token
+
+        return TestClient(main.app), {"Authorization": f"Bearer {generate_token('title_user')}"}
+
+    def test_endpoint_returns_title_with_requested_model(self):
+        import main
+
+        client, headers = self._client()
+        with patch.object(main, "generate_chat_title", return_value="Chess Rules") as gen:
+            res = client.post(
+                "/api/chat/title",
+                headers=headers,
+                json={"question": "How do pieces move?", "answer": "Pawns...", "options": {"model": "qwen3:4b"}},
+            )
+        assert res.status_code == 200
+        assert res.json() == {"title": "Chess Rules"}
+        assert gen.call_args.args[2] == "qwen3:4b"
+
+    def test_endpoint_reports_unreachable_ollama(self):
+        import main
+
+        client, headers = self._client()
+        with patch.object(main, "generate_chat_title", side_effect=OllamaConnectionError("down")):
+            res = client.post("/api/chat/title", headers=headers, json={"question": "q", "answer": "a"})
+        assert res.status_code == 503
+
+    def test_endpoint_requires_auth(self):
+        import main
+
+        res = TestClient(main.app).post("/api/chat/title", json={"question": "q", "answer": "a"})
+        assert res.status_code == 401

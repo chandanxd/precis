@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 from docx_tools import Doc, NS, q
 
-SRC = ROOT / "paper/research-paper/Precis_paper_clean_plane_revised_v9.docx"
+SRC = ROOT / "paper/research-paper/Precis_paper_clean_plane_revised_v10.docx"
 OUT = ROOT / "paper/venues"
 d = Doc(SRC)
 B = [el for el in d.body if el.tag in (q("p"), q("tbl"))]

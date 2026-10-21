@@ -51,3 +51,26 @@ data/
 # OS
 .DS_Store
 Thumbs.db
+
+# Local caches & home dirs
+.cache/
+.ollama/
+.ollama_home/
+
+# Generated zip archives
+*.zip
+
+# Temporary plain text dumps
+*_dump.txt
+
+# Editor and spreadsheet lock/backup files
+.~lock.*#
+*.bak
+
+# Raw run logs
+experiments/**/*.log
+
+# LaTeX build output
+paper/venues/**/*.log
+paper/venues/**/*.aux
+paper/venues/**/*.out

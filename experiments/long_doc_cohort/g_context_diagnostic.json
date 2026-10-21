@@ -1,0 +1,18 @@
+{
+ "2048": {
+  "with_table": 118,
+  "lists_only": 82,
+  "with_fact": 0,
+  "with_reference_or_navigation_boilerplate": 107,
+  "answer_in_ctx_table": 58,
+  "answer_in_ctx_lists_only": 26
+ },
+ "1024": {
+  "with_table": 105,
+  "lists_only": 95,
+  "with_fact": 0,
+  "with_reference_or_navigation_boilerplate": 105,
+  "answer_in_ctx_table": 48,
+  "answer_in_ctx_lists_only": 28
+ }
+}

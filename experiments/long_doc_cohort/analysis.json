@@ -1,0 +1,344 @@
+{
+ "n": 200,
+ "margin_pp": 5.0,
+ "doc_words_median": 7093.0,
+ "doc_est_tokens_median": 9625.0,
+ "2048": {
+  "n": 200,
+  "arms": {
+   "G": {
+    "em": 44,
+    "cont": 53,
+    "answer_in_context": 84,
+    "mean_tokens": 1049.115,
+    "em_pp_per_100tok": 2.0970055713625295
+   },
+   "N": {
+    "em": 71,
+    "cont": 79,
+    "answer_in_context": 172,
+    "mean_tokens": 2048.0,
+    "em_pp_per_100tok": 1.7333984375
+   },
+   "N_raw": {
+    "em": 66,
+    "cont": 76,
+    "answer_in_context": 140,
+    "mean_tokens": 2048.0,
+    "em_pp_per_100tok": 1.611328125
+   },
+   "W": {
+    "em": 75,
+    "cont": 87,
+    "answer_in_context": 168,
+    "mean_tokens": 2048.0,
+    "em_pp_per_100tok": 1.8310546875
+   },
+   "TC": {
+    "em": 83,
+    "cont": 95,
+    "answer_in_context": 158,
+    "mean_tokens": 988.645,
+    "em_pp_per_100tok": 4.1976644801723575
+   },
+   "H": {
+    "em": 76,
+    "cont": 85,
+    "answer_in_context": 152,
+    "mean_tokens": 1140.52,
+    "em_pp_per_100tok": 3.331813558727598
+   }
+  },
+  "G_vs": {
+   "N": {
+    "diff_pp": -13.5,
+    "G_only": 16,
+    "comp_only": 43,
+    "p_mcnemar": 0.0005843646280443461,
+    "ci95_pp": [
+     -21.0,
+     -6.0
+    ],
+    "ci99_pp": [
+     -23.0,
+     -4.0
+    ],
+    "non_inferior_at_5pp": false,
+    "p_holm5": 0.0011687292560886922
+   },
+   "N_raw": {
+    "diff_pp": -11.0,
+    "G_only": 13,
+    "comp_only": 35,
+    "p_mcnemar": 0.0020881073339964473,
+    "ci95_pp": [
+     -17.5,
+     -4.5
+    ],
+    "ci99_pp": [
+     -20.0,
+     -2.5
+    ],
+    "non_inferior_at_5pp": false,
+    "p_holm5": 0.0020881073339964473
+   },
+   "W": {
+    "diff_pp": -15.5,
+    "G_only": 12,
+    "comp_only": 43,
+    "p_mcnemar": 3.3053764732060564e-05,
+    "ci95_pp": [
+     -22.5,
+     -8.5
+    ],
+    "ci99_pp": [
+     -24.5,
+     -6.5
+    ],
+    "non_inferior_at_5pp": false,
+    "p_holm5": 9.916129419618169e-05
+   },
+   "TC": {
+    "diff_pp": -19.5,
+    "G_only": 10,
+    "comp_only": 49,
+    "p_mcnemar": 2.706279703008907e-07,
+    "ci95_pp": [
+     -26.5,
+     -12.5
+    ],
+    "ci99_pp": [
+     -28.499999999999996,
+     -10.5
+    ],
+    "non_inferior_at_5pp": false,
+    "p_holm5": 1.3531398515044535e-06
+   },
+   "H": {
+    "diff_pp": -16.0,
+    "G_only": 12,
+    "comp_only": 44,
+    "p_mcnemar": 2.0876568218419767e-05,
+    "ci95_pp": [
+     -23.0,
+     -9.0
+    ],
+    "ci99_pp": [
+     -25.0,
+     -7.000000000000001
+    ],
+    "non_inferior_at_5pp": false,
+    "p_holm5": 8.350627287367907e-05
+   }
+  },
+  "strata": {
+   "answer_in_table": {
+    "n": 33,
+    "em": {
+     "G": 7,
+     "N": 11,
+     "N_raw": 11,
+     "W": 14,
+     "TC": 10,
+     "H": 9
+    },
+    "answer_in_context": {
+     "G": 17,
+     "N": 25,
+     "N_raw": 21,
+     "W": 25,
+     "TC": 19,
+     "H": 19
+    }
+   },
+   "answer_outside_table": {
+    "n": 167,
+    "em": {
+     "G": 37,
+     "N": 60,
+     "N_raw": 55,
+     "W": 61,
+     "TC": 73,
+     "H": 67
+    },
+    "answer_in_context": {
+     "G": 67,
+     "N": 147,
+     "N_raw": 119,
+     "W": 143,
+     "TC": 139,
+     "H": 133
+    }
+   }
+  }
+ },
+ "1024": {
+  "n": 200,
+  "arms": {
+   "G": {
+    "em": 43,
+    "cont": 53,
+    "answer_in_context": 76,
+    "mean_tokens": 692.56,
+    "em_pp_per_100tok": 3.104424165415271
+   },
+   "N": {
+    "em": 75,
+    "cont": 82,
+    "answer_in_context": 153,
+    "mean_tokens": 1024.0,
+    "em_pp_per_100tok": 3.662109375
+   },
+   "N_raw": {
+    "em": 55,
+    "cont": 64,
+    "answer_in_context": 119,
+    "mean_tokens": 1024.0,
+    "em_pp_per_100tok": 2.685546875
+   },
+   "W": {
+    "em": 78,
+    "cont": 91,
+    "answer_in_context": 156,
+    "mean_tokens": 1024.0,
+    "em_pp_per_100tok": 3.80859375
+   },
+   "TC": {
+    "em": 79,
+    "cont": 91,
+    "answer_in_context": 153,
+    "mean_tokens": 842.355,
+    "em_pp_per_100tok": 4.689234348938393
+   },
+   "H": {
+    "em": 76,
+    "cont": 85,
+    "answer_in_context": 149,
+    "mean_tokens": 919.525,
+    "em_pp_per_100tok": 4.132568445664881
+   }
+  },
+  "G_vs": {
+   "N": {
+    "diff_pp": -16.0,
+    "G_only": 14,
+    "comp_only": 46,
+    "p_mcnemar": 4.223704562267977e-05,
+    "ci95_pp": [
+     -23.5,
+     -9.0
+    ],
+    "ci99_pp": [
+     -26.0,
+     -6.5
+    ],
+    "non_inferior_at_5pp": false,
+    "p_holm5": 8.447409124535954e-05
+   },
+   "N_raw": {
+    "diff_pp": -6.0,
+    "G_only": 16,
+    "comp_only": 28,
+    "p_mcnemar": 0.09614175442061423,
+    "ci95_pp": [
+     -12.5,
+     0.5
+    ],
+    "ci99_pp": [
+     -14.499999999999998,
+     2.5
+    ],
+    "non_inferior_at_5pp": false,
+    "p_holm5": 0.09614175442061423
+   },
+   "W": {
+    "diff_pp": -17.5,
+    "G_only": 13,
+    "comp_only": 48,
+    "p_mcnemar": 7.665168380445453e-06,
+    "ci95_pp": [
+     -25.0,
+     -10.0
+    ],
+    "ci99_pp": [
+     -27.0,
+     -8.0
+    ],
+    "non_inferior_at_5pp": false,
+    "p_holm5": 2.299550514133636e-05
+   },
+   "TC": {
+    "diff_pp": -18.0,
+    "G_only": 9,
+    "comp_only": 45,
+    "p_mcnemar": 7.288430776686283e-07,
+    "ci95_pp": [
+     -25.0,
+     -11.5
+    ],
+    "ci99_pp": [
+     -27.0,
+     -9.0
+    ],
+    "non_inferior_at_5pp": false,
+    "p_holm5": 3.6442153883431416e-06
+   },
+   "H": {
+    "diff_pp": -16.5,
+    "G_only": 10,
+    "comp_only": 43,
+    "p_mcnemar": 5.550520889130439e-06,
+    "ci95_pp": [
+     -23.5,
+     -9.5
+    ],
+    "ci99_pp": [
+     -25.5,
+     -7.5
+    ],
+    "non_inferior_at_5pp": false,
+    "p_holm5": 2.2202083556521757e-05
+   }
+  },
+  "strata": {
+   "answer_in_table": {
+    "n": 33,
+    "em": {
+     "G": 6,
+     "N": 10,
+     "N_raw": 9,
+     "W": 14,
+     "TC": 8,
+     "H": 11
+    },
+    "answer_in_context": {
+     "G": 14,
+     "N": 21,
+     "N_raw": 17,
+     "W": 21,
+     "TC": 18,
+     "H": 19
+    }
+   },
+   "answer_outside_table": {
+    "n": 167,
+    "em": {
+     "G": 37,
+     "N": 65,
+     "N_raw": 46,
+     "W": 64,
+     "TC": 71,
+     "H": 65
+    },
+    "answer_in_context": {
+     "G": 62,
+     "N": 132,
+     "N_raw": 102,
+     "W": 135,
+     "TC": 135,
+     "H": 130
+    }
+   }
+  }
+ }
+}

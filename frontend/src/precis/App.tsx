@@ -1,5 +1,6 @@
 // @ts-nocheck — ported code written for a less strict TS config
 import { useState, useEffect } from "react";
+import { watchMotion } from "./services/motion";
 import type { HardwareProfile, Theme } from "./types/api";
 import { checkBackendHealth, fetchHardware } from "./services/api";
 import { Header } from "./components/common/Header";
@@ -28,6 +29,8 @@ function AppContent() {
   const [isOnline, setIsOnline] = useState<boolean | null>(null);
 
   // Synchronize HTML theme data-attribute
+  useEffect(() => watchMotion(), []);
+
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     try {
@@ -64,7 +67,7 @@ function AppContent() {
       </div>
       <div className="precis-grid" aria-hidden="true" />
       <div className="precis-particles" aria-hidden="true">
-        {Array.from({ length: 28 }).map((_, i) => (
+        {Array.from({ length: 14 }).map((_, i) => (
           <span
             key={i}
             style={{

@@ -133,7 +133,7 @@ body {
   inset: 0;
   pointer-events: none;
   z-index: 50;
-  mix-blend-mode: overlay;
+  /* Plain alpha, not mix-blend-mode: a full-screen blend layer makes every repaint cost more. */
   opacity: 0.35;
   background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 3px);
 }
@@ -147,8 +147,9 @@ body {
 .precis-aurora span {
   position: absolute;
   border-radius: 50%;
-  filter: blur(110px);
-  mix-blend-mode: screen;
+  /* Soft edges from a radial gradient instead of filter: blur(110px) and a blend mode,
+     so the moving orbs stay on the compositor. */
+  background: radial-gradient(circle, var(--orb) 0%, transparent 70%);
   animation: orb 18s ease-in-out infinite alternate;
 }
 .precis-aurora span:nth-child(1) {
@@ -156,7 +157,7 @@ body {
   height: 640px;
   left: -180px;
   top: 10%;
-  background: #ffffff;
+  --orb: #ffffff;
   opacity: 0.07;
 }
 .precis-aurora span:nth-child(2) {
@@ -164,7 +165,7 @@ body {
   height: 560px;
   right: -140px;
   top: 35%;
-  background: #d0d0d8;
+  --orb: #d0d0d8;
   opacity: 0.05;
   animation-delay: -6s;
 }
@@ -173,14 +174,13 @@ body {
   height: 420px;
   left: 35%;
   bottom: -220px;
-  background: #ffffff;
+  --orb: #ffffff;
   opacity: 0.04;
   animation-delay: -11s;
 }
 :root[data-theme="light"] .precis-aurora span {
   opacity: 0.08;
-  mix-blend-mode: multiply;
-  background: #000;
+  --orb: #000;
 }
 @keyframes orb {
   0% {
@@ -199,21 +199,28 @@ body {
   height: 60%;
   pointer-events: none;
   z-index: 0;
-  background-image:
+  --grid-lines:
     linear-gradient(rgba(255, 255, 255, 0.16) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
-  background-size: 70px 70px;
   transform: perspective(500px) rotateX(70deg);
   transform-origin: bottom;
   mask-image: linear-gradient(to top, #000 0%, transparent 85%);
   opacity: 0.3;
+  overflow: hidden;
+}
+/* The lines live on a taller pseudo-element that slides one cell per loop: a
+   transform animation runs on the compositor, background-position repaints. */
+.precis-grid::before {
+  content: "";
+  position: absolute;
+  inset: -70px 0 0 0;
+  background-image: var(--grid-lines);
+  background-size: 70px 70px;
   animation: floor 6s linear infinite;
 }
 @keyframes floor {
   to {
-    background-position:
-      0 70px,
-      0 0;
+    transform: translateY(70px);
   }
 }
 
@@ -440,7 +447,7 @@ a:hover .precis-logo {
   padding: 18px 20px;
   border-radius: var(--r);
   background: rgba(0, 0, 0, 0.72);
-  backdrop-filter: blur(16px);
+  /* No backdrop-filter: one per answer card adds up in long chats. */
   border: 1px solid var(--bd-2);
   max-width: 880px;
 }
@@ -453,8 +460,12 @@ a:hover .precis-logo {
   background:
     linear-gradient(rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.95)) padding-box,
     var(--conic) border-box;
-  animation: conicSpin 4s linear infinite;
   box-shadow: 0 0 60px -24px rgba(255, 255, 255, 0.35);
+}
+/* The border spins only under the pointer: the selected card (usually the latest
+   answer) would otherwise repaint every frame for as long as the chat is open. */
+.precis-turn:hover .precis-ai-card {
+  animation: conicSpin 4s linear infinite;
 }
 .precis-ai-card > div:first-child span {
   font-family: var(--display);
@@ -480,7 +491,7 @@ a:hover .precis-logo {
     linear-gradient(rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.95)) padding-box,
     var(--conic) border-box;
   animation: conicSpin 6s linear infinite;
-  backdrop-filter: blur(20px);
+  /* No backdrop-filter: the 95%-opaque fill hides anything it would blur. */
   box-shadow: 0 20px 60px -26px rgba(255, 255, 255, 0.3);
 }
 :root[data-theme="light"] .precis-composer {
@@ -524,11 +535,8 @@ a:hover .precis-logo {
 main .bg-\[var\(--bg\)\] {
   background-color: transparent;
 }
-main .bg-\[var\(--bg-2\)\],
-main .bg-\[var\(--surface\)\],
-main .bg-\[var\(--raised\)\] {
-  backdrop-filter: blur(16px) saturate(150%);
-}
+/* Panels are not backdrop-blurred: over a moving background that blur re-runs every
+   frame for each panel, and on these mostly opaque, dark fills it is barely visible. */
 main h1,
 main h2 {
   font-family: var(--display);
@@ -691,6 +699,12 @@ pre {
   50% {
     opacity: 0.4;
   }
+}
+
+:root[data-motion="paused"] *,
+:root[data-motion="paused"] *::before,
+:root[data-motion="paused"] *::after {
+  animation-play-state: paused !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -857,7 +871,7 @@ pre {
 }
 :root[data-theme="light"] .precis-grid {
   opacity: 0.15;
-  background-image:
+  --grid-lines:
     linear-gradient(rgba(10, 10, 10, 0.12) 1px, transparent 1px),
     linear-gradient(90deg, rgba(10, 10, 10, 0.1) 1px, transparent 1px);
 }

@@ -1,26 +1,16 @@
-// @ts-nocheck — static view; intentionally NOT connected to the backend.
-import { useState } from "react";
-import { ShieldCheck, KeyRound, Route, History } from "lucide-react";
+// @ts-nocheck — ported code written for a less strict TS config
+import { useEffect, useState } from "react";
+import { ShieldCheck, KeyRound, History } from "lucide-react";
+import {
+  checkSecurity,
+  ensureToken,
+  getTokenInfo,
+  type SecurityCheckResult,
+} from "../../services/api";
+import { loadConversations } from "../../services/storage";
 
-// Mirrors backend security.py, routing.py and history.py. Local-only demo logic.
-const INJECTION = [
-  /ignore (all|previous) instructions/i,
-  /system prompt/i,
-  /you are now/i,
-  /disregard/i,
-];
-const GREET = /^(hi|hello|hey|thanks|thank you|bye|ok|okay|cool)\b/i;
-const GENERAL = /^(what is|who is|define|explain)\b/i;
-
-function classify(q: string) {
-  const t = q.trim();
-  if (!t) return null;
-  if (GREET.test(t)) return "conversational";
-  if (/\b(document|according to|in the (text|file|report)|this (doc|paper))\b/i.test(t))
-    return "document_grounded";
-  if (GENERAL.test(t)) return "general_knowledge";
-  return "ambiguous";
-}
+// Every value on this page comes from the backend or this browser's storage:
+// the checks run through the real sanitiser, injection filter and chat router.
 
 const Card = ({ icon: Icon, title, tag, children }) => (
   <div className="border border-[var(--bd)] bg-[var(--bg)] p-[0.75rem] flex flex-col gap-[0.5rem]">
@@ -35,23 +25,63 @@ const Card = ({ icon: Icon, title, tag, children }) => (
   </div>
 );
 
-const sessions = [
-  { id: "sess-7f2a", turns: 6, last: "2 min ago" },
-  { id: "sess-91cd", turns: 3, last: "18 min ago" },
-  { id: "sess-04be", turns: 11, last: "1 h ago" },
+const Row = ({ label, value }) => (
+  <div className="flex justify-between gap-2 text-[0.6875rem] border-t border-[var(--bd)] pt-[0.375rem]">
+    <span className="text-[var(--tx-3)]">{label}</span>
+    <span className="font-bold text-[var(--tx)] text-right">{value}</span>
+  </div>
+);
+
+const SOURCE_LABELS = {
+  document: "Answered from your documents",
+  general: "Answered from the model's general knowledge",
+  conversation: "Conversational reply",
+};
+
+const LIMITS = [
+  ["Chat questions", "10 per minute, 2,000 characters"],
+  ["Chat titles", "10 per minute"],
+  ["Documents", "100,000 characters after sanitising"],
+  ["Access token", "HS256 JWT, valid 24 hours"],
 ];
 
 export const SecurityView = () => {
-  const [token, setToken] = useState<string | null>(null);
-  const [probe, setProbe] = useState("");
-  const [query, setQuery] = useState("");
-  const flagged = INJECTION.some((r) => r.test(probe));
-  const intent = classify(query);
+  const [token, setToken] = useState(() => getTokenInfo());
+  const [text, setText] = useState("");
+  const [result, setResult] = useState<SecurityCheckResult | null>(null);
+  const [checkError, setCheckError] = useState(false);
+  const conversations = loadConversations();
 
-  const makeToken = () => {
-    const rnd = () => Math.random().toString(36).slice(2, 12);
-    setToken(`eyJhbGciOiJIUzI1NiJ9.${rnd()}${rnd()}.${rnd()}`);
-  };
+  useEffect(() => {
+    let active = true;
+    ensureToken().then(() => {
+      if (active) setToken(getTokenInfo());
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  // Check the text shortly after typing stops, so the backend is not called per keystroke.
+  useEffect(() => {
+    if (!text.trim()) {
+      setResult(null);
+      setCheckError(false);
+      return;
+    }
+    let active = true;
+    const timer = setTimeout(() => {
+      checkSecurity(text).then((r) => {
+        if (!active) return;
+        setResult(r);
+        setCheckError(r === null);
+      });
+    }, 400);
+    return () => {
+      active = false;
+      clearTimeout(timer);
+    };
+  }, [text]);
 
   const input =
     "w-full bg-[var(--bg-2)] border border-[var(--bd)] p-[0.5rem] text-[0.75rem] text-[var(--tx)] outline-none";
@@ -59,75 +89,93 @@ export const SecurityView = () => {
   return (
     <div className="flex-1 min-h-0 overflow-y-auto p-[1rem] font-mono">
       <div className="max-w-[72rem] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-[0.75rem]">
-        <Card icon={KeyRound} title="API Access Token" tag="JWT · HS256 · 24H">
+        <Card icon={ShieldCheck} title="Input Checks" tag="SANITISER · INJECTION FILTER · ROUTER">
           <p className="text-[0.6875rem] text-[var(--tx-3)]">
-            Bearer tokens protect every API call through zero-trust middleware.
+            Type a chat message to see what the backend would do with it. No model is called.
           </p>
-          <button
-            onClick={makeToken}
-            className="self-start px-[0.625rem] py-[0.375rem] text-[0.6875rem] bg-[var(--inv-bg)] text-[var(--inv-tx)] font-semibold uppercase"
-          >
-            Generate token
-          </button>
-          {token && (
-            <code className="break-all text-[0.6875rem] border border-[var(--bd)] bg-[var(--bg-2)] p-[0.5rem] text-[var(--tx)]">
-              {token}
-            </code>
+          <textarea
+            rows={3}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder="e.g. What does the report say about revenue?"
+            aria-label="Text to check"
+            className={input}
+          />
+          <Row
+            label="RESULT"
+            value={
+              !text.trim()
+                ? "—"
+                : checkError
+                  ? "Backend unreachable"
+                  : !result
+                    ? "Checking…"
+                    : result.accepted
+                      ? "ACCEPTED"
+                      : `REJECTED · ${result.reason}`
+            }
+          />
+          {result?.accepted && (
+            <>
+              <Row label="INTENT" value={result.intent?.replace(/_/g, " ").toUpperCase()} />
+              <Row
+                label="ROUTE"
+                value={SOURCE_LABELS[result.answer_source] ?? result.answer_source}
+              />
+              {typeof result.relevance === "number" && (
+                <Row label="BEST DOCUMENT MATCH" value={result.relevance.toFixed(2)} />
+              )}
+              <Row label="DOCUMENTS LOADED" value={result.has_documents ? "Yes" : "No"} />
+            </>
           )}
         </Card>
 
-        <Card icon={ShieldCheck} title="Prompt Injection Guard" tag="SANITIZER">
-          <textarea
-            rows={3}
-            value={probe}
-            onChange={(e) => setProbe(e.target.value)}
-            placeholder="Paste text to test…"
-            className={input}
+        <Card icon={KeyRound} title="Access" tag="JWT · PER-BROWSER CLIENT ID">
+          <p className="text-[0.6875rem] text-[var(--tx-3)]">
+            This browser keeps a random client ID; the backend keys your documents and chat context
+            by it. Every API call carries a token minted for that ID. Minting is open unless the
+            server sets PRECIS_TOKEN_MINT_KEY.
+          </p>
+          <Row
+            label="CLIENT ID"
+            value={token.clientId ? `${token.clientId.slice(0, 15)}…` : "Unavailable"}
           />
-          <div className="flex justify-between text-[0.6875rem]">
-            <span className="text-[var(--tx-3)]">RESULT</span>
-            <span className="font-bold text-[var(--tx)]">
-              {!probe ? "—" : flagged ? "REJECTED · suspicious content" : "PASSED"}
-            </span>
-          </div>
-          <div className="flex justify-between text-[0.6875rem] border-t border-[var(--bd)] pt-[0.375rem]">
-            <span className="text-[var(--tx-3)]">QUERY RATE LIMIT</span>
-            <span className="font-bold text-[var(--tx)]">10 requests / min (sliding window)</span>
-          </div>
+          <Row
+            label="TOKEN"
+            value={
+              token.expiresAt
+                ? `Valid until ${new Date(token.expiresAt).toLocaleString()}`
+                : "None (backend unreachable?)"
+            }
+          />
+          {LIMITS.map(([label, value]) => (
+            <Row key={label} label={label.toUpperCase()} value={value} />
+          ))}
         </Card>
 
-        <Card icon={Route} title="Query Intent Routing" tag="CLASSIFIER">
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Type a question…"
-            className={input}
-          />
-          <div className="grid grid-cols-2 gap-[0.375rem] text-[0.6875rem]">
-            {["conversational", "general_knowledge", "document_grounded", "ambiguous"].map((k) => (
-              <div
-                key={k}
-                className={`border border-[var(--bd)] p-[0.375rem] ${intent === k ? "bg-[var(--inv-bg)] text-[var(--inv-tx)]" : "bg-[var(--bg-2)] text-[var(--tx-3)]"}`}
-              >
-                {k.replace("_", " ").toUpperCase()}
-              </div>
-            ))}
-          </div>
-        </Card>
-
-        <Card icon={History} title="Conversation Sessions" tag="SESSION MANAGER">
-          <div className="flex flex-col text-[0.6875rem]">
-            {sessions.map((s) => (
-              <div
-                key={s.id}
-                className="grid grid-cols-3 border-b border-[var(--bd)] py-[0.375rem] text-[var(--tx)]"
-              >
-                <span>{s.id}</span>
-                <span className="text-center">{s.turns} turns</span>
-                <span className="text-right text-[var(--tx-3)]">{s.last}</span>
-              </div>
-            ))}
-          </div>
+        <Card icon={History} title="Conversations" tag="STORED IN THIS BROWSER">
+          <p className="text-[0.6875rem] text-[var(--tx-3)]">
+            Chats live in this browser&apos;s storage. The server keeps only recent turns of each
+            chat in memory for follow-up questions, for up to 4 hours.
+          </p>
+          {conversations.length === 0 ? (
+            <span className="text-[0.6875rem] text-[var(--tx-3)]">No saved conversations.</span>
+          ) : (
+            <div className="flex flex-col text-[0.6875rem]">
+              {conversations.map((c) => (
+                <div
+                  key={c.id}
+                  className="grid grid-cols-[1fr_auto_auto] gap-[0.75rem] border-b border-[var(--bd)] py-[0.375rem] text-[var(--tx)]"
+                >
+                  <span className="truncate">{c.title}</span>
+                  <span className="text-[var(--tx-3)]">{c.message_count} msgs</span>
+                  <span className="text-right text-[var(--tx-3)]">
+                    {new Date(c.created_at).toLocaleDateString()}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
         </Card>
       </div>
     </div>

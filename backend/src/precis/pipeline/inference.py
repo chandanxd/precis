@@ -233,6 +233,20 @@ class InferenceResult:
     prompt_tokens: int = 0
 
 
+def list_ollama_models(base_url: str = OLLAMA_DEFAULT_BASE_URL) -> list[str]:
+    """Names of the models installed in Ollama (e.g. "qwen3.5:4b").
+
+    Raises OllamaConnectionError when Ollama cannot be reached.
+    """
+    try:
+        resp = requests.get(f"{base_url.rstrip('/')}/api/tags", timeout=3)
+        resp.raise_for_status()
+        data = resp.json()
+    except (requests.RequestException, ValueError) as exc:
+        raise OllamaConnectionError(f"Could not list models at {base_url}") from exc
+    return sorted(m["name"] for m in data.get("models", []) if isinstance(m.get("name"), str))
+
+
 def check_ollama(base_url: str = OLLAMA_DEFAULT_BASE_URL) -> bool:
     """Check if the local Ollama daemon is running and reachable."""
     try:

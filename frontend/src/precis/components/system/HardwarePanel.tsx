@@ -1,7 +1,7 @@
 // @ts-nocheck — ported code written for a less strict TS config
 import { useState, useEffect } from "react";
 import type { HardwareProfile, FactStoreStats } from "../../types/api";
-import { fetchHardware, fetchFactStats } from "../../services/api";
+import { fetchHardware, fetchFactStats, fetchModels } from "../../services/api";
 import { Cpu, Activity, Workflow } from "lucide-react";
 
 export const HardwarePanel = () => {
@@ -9,6 +9,7 @@ export const HardwarePanel = () => {
   const [stats, setStats] = useState<FactStoreStats | null>(null);
   const [selectedStage, setSelectedStage] = useState<number>(2);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [listExtraction, setListExtraction] = useState<boolean | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -25,6 +26,11 @@ export const HardwarePanel = () => {
         if (isMounted) setStats(st);
       })
       .catch(onFail);
+    fetchModels()
+      .then((m) => {
+        if (isMounted && m) setListExtraction(m.list_extraction_enabled);
+      })
+      .catch(() => {});
     return () => {
       isMounted = false;
     };
@@ -38,60 +44,64 @@ export const HardwarePanel = () => {
     );
   }
 
+  // Descriptions follow the code and the paper (Section 4); no latency figures are
+  // shown because none were measured per stage for this page.
   const stageDetails = [
     {
       stage: 0,
       title: "Hardware Detection & Calibration",
-      tech: "psutil · PyTorch CUDA · Sysinfo",
-      targetLatency: "< 50 ms",
-      role: "Calibrates host system cores, RAM, and GPU VRAM to set dynamic token budget ceilings (1024 - 4096 tokens) avoiding out-of-memory crashes on consumer devices.",
-      inputs: "Host system hardware sensors",
-      outputs: "Calibrated HardwareProfile + Token Ceiling",
+      short: "Hardware",
+      tech: "psutil · nvidia-smi / rocm-smi · PyTorch",
+      role: "Reads CPU cores, RAM and GPU memory and picks one of four modes, each with a default model and a token ceiling between 1,024 and 4,096 (Settings → Device preset). These rules were not evaluated in the paper.",
+      inputs: "Host CPU, RAM and GPU",
+      outputs: "Hardware profile: mode, default model, token ceiling",
     },
     {
       stage: 1,
-      title: "Neural Coreference Resolution",
-      tech: "FastCoref (F-Core) · DistilBERT",
-      targetLatency: "~ 120 ms",
-      role: "Resolves ambiguous pronouns and noun phrases across document sentences into concrete antecedent entities prior to syntactic predicate extraction.",
-      inputs: "Raw sanitized document text",
-      outputs: "Co-reference resolved document string",
+      title: "Coreference Resolution",
+      short: "Coreference",
+      tech: "fastcoref · biu-nlp/f-coref",
+      role: "Replaces pronouns and other references with the entities they refer to, so that each extracted fact stands on its own.",
+      inputs: "Sanitised document prose",
+      outputs: "Coreference-resolved text",
     },
     {
       stage: 2,
-      title: "SVOA Extraction & Modality Typing",
-      tech: "spaCy en_core_web_sm · Dependency Matcher",
-      targetLatency: "~ 180 ms",
-      role: "Extracts Subject-Verb-Object-Adjunct quadruples. Classifies epistemics into Asserted, Conditional, Attributed, or Hypothetical, and sets explicit negation flags.",
-      inputs: "Coreference-resolved sentence stream",
-      outputs: "Epistemically-typed Fact[] tuples",
+      title: "SVOA Extraction & Structural Retention",
+      short: "Extraction",
+      tech: "spaCy en_core_web_lg dependency parse · HTML table/list parser",
+      role: `Extracts subject–verb–object–adjunct facts with negation and a modality (asserted, attributed, conditional or hypothetical). With structural retention on, HTML tables and lists are kept in native form instead of being rewritten as sentences. Structural retention is ${
+        listExtraction === null ? "unknown" : listExtraction ? "ON" : "OFF"
+      } on this server (PRECIS_ENABLE_LIST_EXTRACTION).`,
+      inputs: "Resolved prose (and the raw HTML for tables and lists)",
+      outputs: "Typed facts; structural evidence",
     },
     {
       stage: 3,
-      title: "SDH Salience Scoring & Vector Indexing",
-      tech: "ChromaDB · all-MiniLM-L6-v2 · 4-Term SDH Heuristic",
-      targetLatency: "~ 90 ms",
-      role: "Computes 4-term SDH score combining linguistic salience, semantic diversity, certainty weight, and term frequency. Persists vector embeddings into local ChromaDB.",
-      inputs: "SVOA facts + Epistemic modalities",
-      outputs: "Persisted vector index + SDH ranked store",
+      title: "SDH Scoring & Indexing",
+      short: "Scoring",
+      tech: "all-MiniLM-L6-v2 · ChromaDB (cosine HNSW)",
+      role: "Scores each fact with SDH, an equally weighted sum of entity relatedness, verb informativeness, uniqueness against stored facts and adjunct density (hand-set constants, not tuned), then stores facts and structural evidence with their embeddings.",
+      inputs: "Typed facts; structural evidence",
+      outputs: "Persistent fact and structural stores",
     },
     {
       stage: 4,
-      title: "Query-Adaptive Re-Ranking & Modality Packing",
-      tech: "Knapsack Budget Packer · BM25 + Cosine Fusion",
-      targetLatency: "~ 40 ms",
-      role: "Re-ranks stored facts against the query. Applies knapsack packing to fit the highest-salience facts into the hardware-calibrated token ceiling, pruning redundant tokens by 70-85%.",
-      inputs: "User query + Token budget limit",
-      outputs: "Densely packed context string + Used Fact[]",
+      title: "Query-Adaptive Packing",
+      short: "Packing",
+      tech: "Greedy budget packer · guarded structural priority (Candidate G)",
+      role: "Retrieves up to 100 facts per question part, drops hypothetical facts by default, ranks the rest by SDH × query similarity and adds them greedily while the estimated tokens stay within the ceiling. With structural retention on, matching tables and lists are packed first under a guard.",
+      inputs: "Question; token ceiling",
+      outputs: "Packed context and the facts used",
     },
     {
       stage: 5,
-      title: "Quantized Edge LLM Inference",
-      tech: "Ollama · LLaMA-3 (8B) / Phi-3 (3.8B) 4-bit Quant",
-      targetLatency: "~ 800 - 1500 ms",
-      role: "Executes local generation over the compressed SVOA facts without cloud telemetry. Delivers hallucination-resistant answers with verifiable fact citations.",
-      inputs: "SVOA prompt context + User question",
-      outputs: "Streaming natural language answer",
+      title: "Local Generation",
+      short: "Generation",
+      tech: `Ollama · ${hardware.recommended_model}`,
+      role: "A locally served model answers from the packed context. The grounding prompt asks it to preserve negation and not to present attributed, conditional or hypothetical claims as established; the chat app also uses the conversation and may answer from general knowledge, saying so.",
+      inputs: "Packed context; question; conversation",
+      outputs: "Streamed answer",
     },
   ];
 
@@ -127,7 +137,7 @@ export const HardwarePanel = () => {
             </div>
 
             <div className="border border-[var(--bd)] bg-[var(--bg-2)] p-[0.5rem] flex flex-col gap-[0.125rem]">
-              <span className="text-[var(--tx-3)] text-[0.625rem]">PHYSICAL RAM</span>
+              <span className="text-[var(--tx-3)] text-[0.625rem]">USABLE RAM</span>
               <span className="text-[var(--tx)] font-bold">{hardware.ram_gb} GB</span>
             </div>
 
@@ -151,15 +161,12 @@ export const HardwarePanel = () => {
           {/* Token budget allocation bar */}
           <div className="border border-[var(--bd)] bg-[var(--bg-2)] p-[0.5rem] flex flex-col gap-[0.25rem] text-[0.6875rem]">
             <div className="flex items-center justify-between">
-              <span className="text-[var(--tx-3)]">TARGET QUANTIZED MODEL:</span>
+              <span className="text-[var(--tx-3)]">DEFAULT MODEL FOR THIS MODE:</span>
               <span className="font-bold text-[var(--tx)]">{hardware.recommended_model}</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-[var(--tx-3)]">TOKEN BUDGET CEILING:</span>
               <span className="font-bold text-[var(--tx)]">{hardware.token_ceiling} tokens</span>
-            </div>
-            <div className="w-full h-[0.375rem] bg-[var(--bd)] border border-[var(--bd-2)] mt-[0.125rem] overflow-hidden">
-              <div className="h-full bg-[var(--tx)]" style={{ width: "100%" }} />
             </div>
           </div>
         </div>
@@ -219,10 +226,10 @@ export const HardwarePanel = () => {
         <div className="h-[2.5rem] border-b border-[var(--bd)] px-[0.75rem] flex items-center justify-between select-none shrink-0 bg-[var(--bg-2)]">
           <div className="flex items-center gap-[0.375rem] text-[0.75rem] font-bold text-[var(--tx)]">
             <Workflow size={13} strokeWidth={1.5} />
-            <span>6-STAGE NLP PIPELINE ARCHITECTURE & EDGE LATENCY PROFILER</span>
+            <span>PIPELINE STAGES</span>
           </div>
           <span className="text-[0.6875rem] text-[var(--tx-3)] hidden sm:inline">
-            ZERO-TRUST LATENCY OPTIMIZED
+            OFFLINE · LOCAL MODELS ONLY
           </span>
         </div>
 
@@ -243,9 +250,8 @@ export const HardwarePanel = () => {
                 STAGE 0{st.stage}
               </span>
               <span className="text-[0.6875rem] font-semibold text-[var(--tx)] truncate">
-                {st.title.split(" ")[0]}
+                {st.short}
               </span>
-              <span className="text-[0.625rem] text-[var(--tx-2)]">{st.targetLatency}</span>
             </button>
           ))}
         </div>
@@ -261,9 +267,6 @@ export const HardwarePanel = () => {
                 {currentStage.title}
               </span>
             </div>
-            <span className="text-[0.6875rem] text-[var(--tx-2)] font-mono">
-              BUDGET: {currentStage.targetLatency}
-            </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-[0.5rem] text-[0.75rem]">
@@ -291,7 +294,7 @@ export const HardwarePanel = () => {
 
           <div className="border border-[var(--bd)] bg-[var(--bg-2)] p-[0.75rem] flex flex-col gap-[0.25rem] text-[0.75rem]">
             <span className="text-[0.625rem] text-[var(--tx-3)] font-bold uppercase">
-              ALGORITHMIC ROLE & EDGE VIABILITY
+              WHAT IT DOES
             </span>
             <p className="text-[var(--tx-2)] leading-relaxed text-[0.75rem]">{currentStage.role}</p>
           </div>

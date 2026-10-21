@@ -1,16 +1,15 @@
 // @ts-nocheck — ported code written for a less strict TS config
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import type { UserSettings, Modality, Theme } from "../../types/api";
 import {
   loadSettings,
   saveSettings,
-  testOllamaConnection,
   exportAllData,
   importAllData,
   resetToDemoBaseline,
   DEFAULT_SETTINGS,
 } from "../../services/settings";
-import { clearAllFacts } from "../../services/api";
+import { clearAllFacts, fetchModels, type ModelsInfo } from "../../services/api";
 import {
   Cpu,
   Filter,
@@ -26,6 +25,7 @@ import {
   Moon,
   Activity,
   Server,
+  RefreshCw,
 } from "lucide-react";
 
 interface SettingsViewProps {
@@ -37,13 +37,9 @@ export const SettingsView = ({ theme, onThemeChange }: SettingsViewProps) => {
   const [settings, setSettings] = useState<UserSettings>(() => loadSettings());
   const [savedNotice, setSavedNotice] = useState<boolean>(false);
 
-  // Ollama ping testing
-  const [isTestingOllama, setIsTestingOllama] = useState<boolean>(false);
-  const [ollamaResult, setOllamaResult] = useState<{
-    success: boolean;
-    message: string;
-    models?: string[];
-  } | null>(null);
+  // Installed models and hardware tiers, as the backend sees them
+  const [models, setModels] = useState<ModelsInfo | null>(null);
+  const [modelsState, setModelsState] = useState<"loading" | "ready" | "error">("loading");
 
   // Data operations
   const [importStatus, setImportStatus] = useState<string | null>(null);
@@ -58,20 +54,34 @@ export const SettingsView = ({ theme, onThemeChange }: SettingsViewProps) => {
     setTimeout(() => setSavedNotice(false), 1500);
   };
 
-  const handleTestOllama = async () => {
-    setIsTestingOllama(true);
-    setOllamaResult(null);
-    try {
-      const result = await testOllamaConnection(settings.ollamaBaseUrl);
-      setOllamaResult(result);
-      if (result.success && result.models && result.models.length > 0) {
-        // If current model not in list and list has models, offer first
-        if (!result.models.includes(settings.ollamaModel)) {
-          updateSettings({ ollamaModel: result.models[0] });
-        }
-      }
-    } finally {
-      setIsTestingOllama(false);
+  const refreshModels = async () => {
+    setModelsState("loading");
+    const info = await fetchModels();
+    setModels(info);
+    setModelsState(info ? "ready" : "error");
+  };
+
+  useEffect(() => {
+    void refreshModels();
+  }, []);
+
+  const isInstalled = (model: string) =>
+    !!models && (models.installed.includes(model) || models.installed.includes(`${model}:latest`));
+
+  const detectedTier = models?.tiers.find((t) => t.mode === models.detected_mode);
+
+  const applyPreset = (mode: string) => {
+    if (mode === "auto") {
+      updateSettings({ devicePreset: "auto", ollamaModel: "", tokenCeiling: null });
+      return;
+    }
+    const tier = models?.tiers.find((t) => t.mode === mode);
+    if (tier) {
+      updateSettings({
+        devicePreset: mode,
+        ollamaModel: tier.model,
+        tokenCeiling: tier.token_ceiling,
+      });
     }
   };
 
@@ -153,7 +163,7 @@ export const SettingsView = ({ theme, onThemeChange }: SettingsViewProps) => {
             <span>SYSTEM CONFIGURATION & WORKBENCH PREFERENCES</span>
           </div>
           <span className="text-[0.625rem] text-[var(--tx-3)] font-sans">
-            Local LLM generation parameters, SVOA epistemic constraints, and session backups
+            Model and context limits, evidence modalities, display and backups
           </span>
         </div>
 
@@ -187,62 +197,118 @@ export const SettingsView = ({ theme, onThemeChange }: SettingsViewProps) => {
             <span className="text-[0.5625rem] text-[var(--tx-4)] uppercase">STAGE 5 SYNTHESIS</span>
           </div>
 
-          {/* Active Model Identifier */}
+          {/* Device preset: the backend's four hardware tiers */}
           <div className="flex flex-col gap-1">
             <label className="text-[0.625rem] text-[var(--tx-3)] uppercase font-semibold">
-              Model Tag (Ollama)
+              Device Preset
             </label>
-            <div className="flex gap-1.5">
-              <input
-                type="text"
-                value={settings.ollamaModel}
-                onChange={(e) => updateSettings({ ollamaModel: e.target.value })}
-                placeholder="e.g. llama3:8b-q4_K_M"
-                className="flex-1 bg-[var(--bg)] border border-[var(--bd-3)] px-2 py-1 text-[0.6875rem] text-[var(--tx)] outline-none focus:border-[var(--tx)] font-mono"
-              />
-            </div>
-            <div className="flex items-center gap-1 flex-wrap pt-0.5">
-              <span className="text-[0.5625rem] text-[var(--tx-4)]">Presets:</span>
-              {popularModels.map((m) => (
+            <span className="text-[0.5625rem] text-[var(--tx-4)] font-sans">
+              Sets the model and context ceiling the backend would choose on that kind of machine.
+              It does not make the rest of the pipeline lighter.
+            </span>
+            <div className="flex flex-col gap-1 pt-0.5">
+              {[
+                {
+                  mode: "auto",
+                  label: detectedTier
+                    ? `Auto: this machine (${detectedTier.label})`
+                    : "Auto: the backend decides for this machine",
+                  detail: models
+                    ? `${models.default_model} · ${models.default_token_ceiling} tokens`
+                    : "",
+                  missing: false,
+                  model: "",
+                },
+                ...(models?.tiers ?? []).map((t) => ({
+                  mode: t.mode,
+                  label: t.label,
+                  detail: `${t.model} · ${t.token_ceiling} tokens`,
+                  missing: t.installed === false,
+                  model: t.model,
+                })),
+              ].map((p) => (
                 <button
-                  key={m}
+                  key={p.mode}
                   type="button"
-                  onClick={() => updateSettings({ ollamaModel: m })}
-                  className={`px-1.5 py-0.5 text-[0.5625rem] border transition-colors cursor-pointer ${
-                    settings.ollamaModel === m
-                      ? "border-[var(--tx)] bg-[var(--inv-bg)] text-[var(--inv-tx)] font-bold"
+                  onClick={() => applyPreset(p.mode)}
+                  className={`px-2 py-1.5 border text-left flex items-center justify-between gap-2 transition-colors cursor-pointer ${
+                    settings.devicePreset === p.mode
+                      ? "border-[var(--tx)] bg-[var(--bg)] text-[var(--tx)]"
                       : "border-[var(--bd)] bg-[var(--bg)] text-[var(--tx-3)] hover:text-[var(--tx)]"
                   }`}
                 >
-                  {m.split(":")[0]}
+                  <span className="text-[0.625rem] font-bold">{p.label}</span>
+                  <span className="text-[0.5625rem] text-right">
+                    {p.detail}
+                    {p.missing && (
+                      <span className="block text-[var(--tx-4)]">
+                        not installed: ollama pull {p.model}
+                      </span>
+                    )}
+                  </span>
                 </button>
               ))}
+              {settings.devicePreset === "custom" && (
+                <span className="text-[0.5625rem] text-[var(--tx-4)]">
+                  Custom: model and ceiling set individually below.
+                </span>
+              )}
             </div>
+          </div>
+
+          {/* Model: installed models only */}
+          <div className="flex flex-col gap-1">
+            <label
+              htmlFor="settings-model"
+              className="text-[0.625rem] text-[var(--tx-3)] uppercase font-semibold"
+            >
+              Model (Ollama)
+            </label>
+            <select
+              id="settings-model"
+              value={settings.ollamaModel}
+              onChange={(e) =>
+                updateSettings({ ollamaModel: e.target.value, devicePreset: "custom" })
+              }
+              className="bg-[var(--bg)] border border-[var(--bd-3)] px-2 py-1 text-[0.6875rem] text-[var(--tx)] outline-none focus:border-[var(--tx)] font-mono"
+            >
+              <option value="">Auto{models ? ` (${models.default_model})` : ""}</option>
+              {(models?.installed ?? []).map((m) => (
+                <option key={m} value={m}>
+                  {m}
+                </option>
+              ))}
+              {settings.ollamaModel && models && !isInstalled(settings.ollamaModel) && (
+                <option value={settings.ollamaModel}>{settings.ollamaModel} (not installed)</option>
+              )}
+            </select>
           </div>
 
           {/* Token Ceiling Budget */}
           <div className="flex flex-col gap-1">
             <div className="flex items-center justify-between">
               <label className="text-[0.625rem] text-[var(--tx-3)] uppercase font-semibold">
-                SVOA Context Token Ceiling
+                Context Token Ceiling
               </label>
               <span className="text-[0.6875rem] text-[var(--tx)] font-bold">
-                {settings.tokenCeiling} TOKENS
+                {settings.tokenCeiling === null
+                  ? `AUTO${models ? ` (${models.default_token_ceiling})` : ""}`
+                  : `${settings.tokenCeiling} TOKENS`}
               </span>
             </div>
-            <div className="grid grid-cols-5 gap-1">
-              {[512, 1024, 2048, 4096, 8192].map((ceil) => (
+            <div className="grid grid-cols-7 gap-1">
+              {[null, 512, 1024, 2048, 3072, 4096, 8192].map((ceil) => (
                 <button
-                  key={ceil}
+                  key={ceil ?? "auto"}
                   type="button"
-                  onClick={() => updateSettings({ tokenCeiling: ceil })}
+                  onClick={() => updateSettings({ tokenCeiling: ceil, devicePreset: "custom" })}
                   className={`py-1 text-[0.625rem] border text-center transition-colors cursor-pointer ${
                     settings.tokenCeiling === ceil
                       ? "border-[var(--tx)] bg-[var(--inv-bg)] text-[var(--inv-tx)] font-bold"
                       : "border-[var(--bd)] bg-[var(--bg)] text-[var(--tx-3)] hover:text-[var(--tx)]"
                   }`}
                 >
-                  {ceil}
+                  {ceil ?? "AUTO"}
                 </button>
               ))}
             </div>
@@ -274,44 +340,43 @@ export const SettingsView = ({ theme, onThemeChange }: SettingsViewProps) => {
             </div>
           </div>
 
-          {/* Ollama Base URL & Connectivity Test */}
+          {/* Ollama status, as the backend sees it */}
           <div className="flex flex-col gap-1 pt-1 border-t border-[var(--bd)]">
-            <label className="text-[0.625rem] text-[var(--tx-3)] uppercase font-semibold">
-              Ollama Daemon Base URL
-            </label>
-            <div className="flex gap-1.5">
-              <input
-                type="text"
-                value={settings.ollamaBaseUrl}
-                onChange={(e) => updateSettings({ ollamaBaseUrl: e.target.value })}
-                className="flex-1 bg-[var(--bg)] border border-[var(--bd-3)] px-2 py-1 text-[0.6875rem] text-[var(--tx)] outline-none focus:border-[var(--tx)] font-mono"
-              />
+            <div className="flex items-center justify-between">
+              <label className="text-[0.625rem] text-[var(--tx-3)] uppercase font-semibold">
+                Ollama (used by the backend)
+              </label>
               <button
                 type="button"
-                onClick={handleTestOllama}
-                disabled={isTestingOllama}
-                className="px-2.5 py-1 border border-[var(--tx)] bg-[var(--bg)] hover:bg-[var(--inv-bg)] hover:text-[var(--inv-tx)] text-[var(--tx)] text-[0.625rem] font-bold shrink-0 disabled:opacity-50 transition-colors cursor-pointer flex items-center gap-1"
+                onClick={refreshModels}
+                disabled={modelsState === "loading"}
+                className="px-2 py-0.5 border border-[var(--bd)] text-[var(--tx-3)] hover:text-[var(--tx)] text-[0.5625rem] font-bold disabled:opacity-50 flex items-center gap-1 cursor-pointer"
               >
-                <Server size={10} />
-                <span>{isTestingOllama ? "PINGING..." : "TEST PING"}</span>
+                <RefreshCw size={9} />
+                <span>{modelsState === "loading" ? "CHECKING..." : "RECHECK"}</span>
               </button>
             </div>
-            {ollamaResult && (
-              <div
-                className={`text-[0.625rem] p-1.5 border mt-1 flex items-center gap-1.5 ${
-                  ollamaResult.success
-                    ? "border-[var(--bd-3)] bg-[var(--bg)] text-[var(--tx)] font-medium"
-                    : "border-[var(--bd-3)] bg-[var(--bg)] text-[var(--tx-3)]"
-                }`}
-              >
-                {ollamaResult.success ? (
-                  <Check size={11} className="text-[var(--tx)] shrink-0" />
-                ) : (
-                  <AlertCircle size={11} className="text-[var(--tx-3)] shrink-0" />
-                )}
-                <span>{ollamaResult.message}</span>
-              </div>
-            )}
+            <div className="text-[0.625rem] p-1.5 border border-[var(--bd-3)] bg-[var(--bg)] flex items-center gap-1.5">
+              {modelsState === "ready" && models?.ollama_reachable ? (
+                <Check size={11} className="text-[var(--tx)] shrink-0" />
+              ) : modelsState === "loading" ? (
+                <Server size={11} className="text-[var(--tx-3)] shrink-0" />
+              ) : (
+                <AlertCircle size={11} className="text-[var(--tx-3)] shrink-0" />
+              )}
+              <span className="text-[var(--tx-2)]">
+                {modelsState === "loading"
+                  ? "Checking…"
+                  : modelsState === "error"
+                    ? "Backend unreachable."
+                    : models!.ollama_reachable
+                      ? `Reachable at ${models!.ollama_url} · ${models!.installed.length} models installed`
+                      : `Not reachable at ${models!.ollama_url}. Start it with: ollama serve`}
+              </span>
+            </div>
+            <span className="text-[0.5625rem] text-[var(--tx-4)] font-sans">
+              The address is set on the server (PRECIS_OLLAMA_BASE_URL).
+            </span>
           </div>
         </div>
 
@@ -320,44 +385,19 @@ export const SettingsView = ({ theme, onThemeChange }: SettingsViewProps) => {
           <div className="flex items-center justify-between border-b border-[var(--bd)] pb-2">
             <div className="flex items-center gap-1.5 text-[0.6875rem] font-bold text-[var(--tx)] uppercase">
               <Filter size={12} strokeWidth={1.5} />
-              <span>2. EPISTEMIC SVOA CONSTRAINTS</span>
+              <span>2. EVIDENCE MODALITIES</span>
             </div>
-            <span className="text-[0.5625rem] text-[var(--tx-4)] uppercase">
-              STAGE 3-4 RETRIEVAL
-            </span>
-          </div>
-
-          {/* Minimum SDH Salience Cutoff */}
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center justify-between">
-              <label className="text-[0.625rem] text-[var(--tx-3)] uppercase font-semibold">
-                Minimum SDH Salience Score Cutoff
-              </label>
-              <span className="text-[0.6875rem] text-[var(--tx)] font-bold">
-                {settings.minSdhScore.toFixed(2)}
-              </span>
-            </div>
-            <input
-              type="range"
-              min="0.0"
-              max="1.0"
-              step="0.05"
-              value={settings.minSdhScore}
-              onChange={(e) => updateSettings({ minSdhScore: parseFloat(e.target.value) })}
-              className="w-full accent-[var(--accent)] cursor-pointer"
-            />
-            <div className="flex items-center justify-between text-[0.5625rem] text-[var(--tx-4)] font-sans">
-              <span>0.00 (Pass All Extracted Facts)</span>
-              <span>0.50 (Recommended)</span>
-              <span>0.85 (High Precision Only)</span>
-            </div>
+            <span className="text-[0.5625rem] text-[var(--tx-4)] uppercase">STAGE 4 PACKING</span>
           </div>
 
           {/* Modality Filter Selection */}
           <div className="flex flex-col gap-1.5">
             <label className="text-[0.625rem] text-[var(--tx-3)] uppercase font-semibold">
-              Permitted Epistemic Modalities
+              Facts the packer may use
             </label>
+            <span className="text-[0.5625rem] text-[var(--tx-4)] font-sans">
+              Hypothetical facts are left out by default, as in the paper.
+            </span>
             <div className="grid grid-cols-2 gap-1.5">
               {(["asserted", "attributed", "conditional", "hypothetical"] as Modality[]).map(
                 (mod) => {
@@ -390,30 +430,6 @@ export const SettingsView = ({ theme, onThemeChange }: SettingsViewProps) => {
                 },
               )}
             </div>
-          </div>
-
-          {/* Strict Negation Handling */}
-          <div className="flex items-center justify-between border-t border-[var(--bd)] pt-2 mt-1">
-            <div className="flex flex-col">
-              <span className="text-[0.625rem] font-bold text-[var(--tx)] uppercase">
-                Preserve Negation Assertions
-              </span>
-              <span className="text-[0.5625rem] text-[var(--tx-3)] font-sans">
-                Never prune or deprioritize propositions marked with ¬ NEG during context
-                compression
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={() => updateSettings({ strictNegation: !settings.strictNegation })}
-              className={`px-2.5 py-1 text-[0.625rem] border font-bold transition-colors cursor-pointer ${
-                settings.strictNegation
-                  ? "border-[var(--tx)] bg-[var(--inv-bg)] text-[var(--inv-tx)]"
-                  : "border-[var(--bd)] bg-[var(--bg)] text-[var(--tx-3)]"
-              }`}
-            >
-              {settings.strictNegation ? "ENFORCED" : "STANDARD"}
-            </button>
           </div>
         </div>
 
@@ -478,7 +494,7 @@ export const SettingsView = ({ theme, onThemeChange }: SettingsViewProps) => {
                 Supporting Evidence Default State
               </span>
               <span className="text-[0.5625rem] text-[var(--tx-3)] font-sans">
-                Whether evidence premise rows begin expanded or collapsed on new turns
+                Whether the supporting-evidence list under each answer starts open
               </span>
             </div>
             <button
@@ -495,33 +511,6 @@ export const SettingsView = ({ theme, onThemeChange }: SettingsViewProps) => {
               }`}
             >
               {settings.defaultEvidenceExpanded ? "EXPANDED" : "COLLAPSED"}
-            </button>
-          </div>
-
-          {/* Default Sidebar State */}
-          <div className="flex items-center justify-between border-t border-[var(--bd)] pt-2">
-            <div className="flex flex-col">
-              <span className="text-[0.625rem] font-bold text-[var(--tx)] uppercase">
-                Session Sidebar Default Layout
-              </span>
-              <span className="text-[0.5625rem] text-[var(--tx-3)] font-sans">
-                Initial conversation rail width on launch (toggle with Ctrl/Cmd + B)
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={() =>
-                updateSettings({
-                  defaultSidebarCollapsed: !settings.defaultSidebarCollapsed,
-                })
-              }
-              className={`px-2.5 py-1 text-[0.625rem] border font-bold transition-colors cursor-pointer ${
-                settings.defaultSidebarCollapsed
-                  ? "border-[var(--tx)] bg-[var(--inv-bg)] text-[var(--inv-tx)]"
-                  : "border-[var(--bd)] bg-[var(--bg)] text-[var(--tx-3)]"
-              }`}
-            >
-              {settings.defaultSidebarCollapsed ? "COLLAPSED (w-10)" : "EXPANDED (w-64)"}
             </button>
           </div>
         </div>

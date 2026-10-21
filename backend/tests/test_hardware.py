@@ -34,8 +34,8 @@ class TestSelectMode:
     @pytest.mark.parametrize(
         "ram_gb,has_gpu,vram_gb,expected_mode,expected_ceiling,expected_model",
         [
-            (4, False, None, "cpu-light", 1024, "qwen2.5-coder:7b"),
-            (8, False, None, "cpu-light", 1024, "qwen2.5-coder:7b"),
+            (4, False, None, "cpu-light", 1024, "qwen3.5:2b"),
+            (8, False, None, "cpu-light", 1024, "qwen3.5:2b"),
             (8, True, 4, "gpu-partial", 3072, "qwen3.5:4b"),
             (8, True, 6, "gpu", 4096, "qwen3.5:4b"),
             (8, True, 8, "gpu", 4096, "qwen3.5:4b"),
@@ -57,11 +57,11 @@ class TestSelectMode:
 class TestProfileHardware:
     def test_default_primary_model_is_qwen35(self):
         assert PRIMARY_MODEL == "qwen3.5:4b"
-        assert FALLBACK_MODEL == "qwen2.5-coder:7b"
+        assert FALLBACK_MODEL == "qwen3.5:2b"
         assert get_model_for_mode("gpu") == "qwen3.5:4b"
         assert get_model_for_mode("gpu-partial") == "qwen3.5:4b"
         assert get_model_for_mode("cpu") == "qwen3.5:4b"
-        assert get_model_for_mode("cpu-light") == "qwen2.5-coder:7b"
+        assert get_model_for_mode("cpu-light") == "qwen3.5:2b"
 
     def test_returns_hardware_profile(self):
         profile = profile_hardware()
@@ -93,7 +93,7 @@ class TestProfileHardware:
         assert get_model_for_mode("gpu") == "custom-model:latest"
         assert get_model_for_mode("gpu-partial") == "custom-model:latest"
         assert get_model_for_mode("cpu") == "custom-model:latest"
-        assert get_model_for_mode("cpu-light") == "qwen2.5-coder:7b"
+        assert get_model_for_mode("cpu-light") == "qwen3.5:2b"
 
     def test_fallback_model_env_override(self, monkeypatch):
         monkeypatch.setenv("PRECIS_OLLAMA_FALLBACK_MODEL", "custom-fallback:3b")

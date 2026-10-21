@@ -42,7 +42,7 @@ backend/                 Python package `precis` (FastAPI service, pipeline, eva
   src/precis/api/        request models, JWT auth, sanitisation, rate limiting
   src/precis/evaluation/ benchmark harness and the chunked baseline
   scripts/               MRQA conversion and failure-analysis tools
-  tests/                 534 tests in 17 modules
+  tests/                 544 tests in 17 modules
 frontend/                web interface (upload, ask, inspect the packed context and pipeline trace)
 docker/, docker-compose.yml   containerised backend, frontend and nginx proxy
 docs/architecture.md     system architecture and data flow
@@ -64,13 +64,17 @@ cd backend
 python3 -m venv venv
 venv/bin/pip install -e ".[api,eval,dev,coref-fast]"
 venv/bin/python -m spacy download en_core_web_lg
-venv/bin/python -m pytest -q          # 534 tests
+# coreference model (read from the Hugging Face cache; not downloaded on first use)
+venv/bin/python -c "from huggingface_hub import snapshot_download; snapshot_download('biu-nlp/f-coref')"
+venv/bin/python -m pytest -q          # 544 tests
 
 # models used in the paper
 ollama pull qwen2.5-coder:7b
 ollama pull qwen3.5:4b                # prompt experiment
 ollama pull qwen3.5:9b                # generator replay
 ollama pull gemma4:12b                # answer-equivalence judge
+# default chat model on machines under 16 GB RAM without a GPU (falls back to qwen3.5:4b if absent)
+ollama pull qwen3.5:2b
 
 # run the API (development)
 venv/bin/uvicorn main:app --reload --port 8000

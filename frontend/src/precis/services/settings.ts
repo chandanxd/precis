@@ -13,34 +13,62 @@ import { DEMO_MODE } from "./demo";
 const SETTINGS_KEY = "precis_settings";
 
 export const DEFAULT_SETTINGS: UserSettings = {
-  ollamaModel: "llama3:8b-q4_K_M",
-  tokenCeiling: 4096,
+  ollamaModel: "",
+  tokenCeiling: null,
+  devicePreset: "auto",
   temperature: 0.3,
-  ollamaBaseUrl: "http://localhost:11434",
-  minSdhScore: 0.5,
   allowedModalities: {
     asserted: true,
     attributed: true,
     conditional: true,
     hypothetical: false,
   },
-  strictNegation: true,
   defaultEvidenceExpanded: false,
-  defaultSidebarCollapsed: false,
   theme: "dark",
+  version: 2,
 };
 
+// Version-1 defaults. They were never sent to the backend (only changed values
+// were), so a stored copy of them means "let the backend decide".
+const V1_DEFAULT_MODEL = "llama3:8b-q4_K_M";
+const V1_DEFAULT_CEILING = 4096;
+
+/** Bring stored or imported settings to the current format, dropping unknown keys. */
+export function normalizeSettings(
+  raw: Partial<UserSettings> & Record<string, unknown>,
+): UserSettings {
+  const s = { ...DEFAULT_SETTINGS };
+  const legacy = raw.version !== 2;
+  if (typeof raw.ollamaModel === "string") {
+    s.ollamaModel = legacy && raw.ollamaModel === V1_DEFAULT_MODEL ? "" : raw.ollamaModel.trim();
+  }
+  if (typeof raw.tokenCeiling === "number") {
+    s.tokenCeiling = legacy && raw.tokenCeiling === V1_DEFAULT_CEILING ? null : raw.tokenCeiling;
+  }
+  if (typeof raw.devicePreset === "string") s.devicePreset = raw.devicePreset;
+  else if (s.ollamaModel || s.tokenCeiling !== null) s.devicePreset = "custom";
+  if (typeof raw.temperature === "number") s.temperature = raw.temperature;
+  if (raw.allowedModalities && typeof raw.allowedModalities === "object") {
+    s.allowedModalities = { ...DEFAULT_SETTINGS.allowedModalities, ...raw.allowedModalities };
+  }
+  if (typeof raw.defaultEvidenceExpanded === "boolean") {
+    s.defaultEvidenceExpanded = raw.defaultEvidenceExpanded;
+  }
+  if (raw.theme === "light" || raw.theme === "dark") s.theme = raw.theme;
+  return s;
+}
+
 /**
- * Per-query options sent to the backend. Only values the user changed from the
- * defaults are sent, so untouched defaults never override the backend's
- * hardware-calibrated model and token ceiling.
+ * Per-query options sent to the backend. The model and token ceiling are sent
+ * only when chosen (not "auto"), so otherwise the backend's hardware-calibrated
+ * values apply; the other options only when changed from their defaults.
  */
 export function getQueryOptions(): Record<string, unknown> {
   const s = loadSettings();
   const d = DEFAULT_SETTINGS;
   const options: Record<string, unknown> = {};
-  if (s.ollamaModel && s.ollamaModel !== d.ollamaModel) options.model = s.ollamaModel;
-  if (s.tokenCeiling !== d.tokenCeiling) options.token_ceiling = s.tokenCeiling;
+  if (s.ollamaModel) options.model = s.ollamaModel;
+  if (s.tokenCeiling !== null) options.token_ceiling = s.tokenCeiling;
   if (s.temperature !== d.temperature) options.temperature = s.temperature;
   const modalities = Object.keys(s.allowedModalities) as (keyof typeof s.allowedModalities)[];
   if (modalities.some((m) => s.allowedModalities[m] !== d.allowedModalities[m])) {
@@ -56,15 +84,8 @@ export function loadSettings(): UserSettings {
   try {
     const stored = localStorage.getItem(SETTINGS_KEY);
     if (stored) {
-      const parsed = JSON.parse(stored) as Partial<UserSettings>;
-      return {
-        ...DEFAULT_SETTINGS,
-        ...parsed,
-        allowedModalities: {
-          ...DEFAULT_SETTINGS.allowedModalities,
-          ...(parsed.allowedModalities || {}),
-        },
-      };
+      const parsed = JSON.parse(stored);
+      if (parsed && typeof parsed === "object") return normalizeSettings(parsed);
     }
   } catch {
     // fallback
@@ -80,57 +101,6 @@ export function saveSettings(settings: UserSettings): void {
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
   } catch {
     // ignore
-  }
-}
-
-/**
- * Test connectivity to an Ollama endpoint.
- */
-export async function testOllamaConnection(
-  baseUrl: string,
-): Promise<{ success: boolean; latencyMs: number; message: string; models?: string[] }> {
-  const cleanUrl = baseUrl.trim().replace(/\/+$/, "");
-  const t0 = performance.now();
-
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 2500);
-
-    const res = await fetch(`${cleanUrl}/api/tags`, {
-      signal: controller.signal,
-      method: "GET",
-    });
-    clearTimeout(timeoutId);
-
-    const latencyMs = Math.round(performance.now() - t0);
-
-    if (res.ok) {
-      const data = (await res.json()) as { models?: { name: string }[] };
-      const modelNames = data.models ? data.models.map((m) => m.name) : [];
-      return {
-        success: true,
-        latencyMs,
-        message: `Ollama reachable (${latencyMs}ms). Found ${modelNames.length} models.`,
-        models: modelNames,
-      };
-    }
-
-    return {
-      success: false,
-      latencyMs,
-      message: `Ollama responded with HTTP ${res.status}: ${res.statusText}`,
-    };
-  } catch (err: unknown) {
-    const latencyMs = Math.round(performance.now() - t0);
-    const msg =
-      err instanceof Error && err.name === "AbortError"
-        ? "Connection timed out (2.5s ceiling exceeded)"
-        : "Could not reach Ollama daemon (check if `ollama serve` is running)";
-    return {
-      success: false,
-      latencyMs,
-      message: msg,
-    };
   }
 }
 
@@ -189,10 +159,7 @@ export function importAllData(jsonStr: string): {
 
     // Save settings if present
     if (parsed.settings && typeof parsed.settings === "object") {
-      saveSettings({
-        ...DEFAULT_SETTINGS,
-        ...parsed.settings,
-      });
+      saveSettings(normalizeSettings(parsed.settings));
     }
 
     if (parsed.conversations.length > 0) {

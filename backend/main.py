@@ -19,6 +19,7 @@ from fastapi import Path as PathParam
 from fastapi import Query
 from fastapi.middleware.cors import CORSMiddleware
 from precis.api.models import (
+    SecurityCheckRequest,
     ChatTitleRequest,
     ChatTitleResponse,
     DocumentInfo,
@@ -49,14 +50,21 @@ from precis.api.security import (
     verify_mint_key,
 )
 from precis.graph.store import FactStore
-from precis.pipeline.hardware import HardwareProfile, profile_hardware
+from precis.pipeline.hardware import (
+    PRIMARY_MODEL,
+    HardwareProfile,
+    hardware_tiers,
+    profile_hardware,
+)
 from precis.pipeline.history import ChatMessage, session_manager
 from precis.pipeline.inference import (
+    OLLAMA_DEFAULT_BASE_URL,
     OllamaConnectionError,
     OllamaInferenceError,
     TITLE_INPUT_MAX_CHARS,
     generate_answer,
     generate_chat_title,
+    list_ollama_models,
 )
 from precis.pipeline.orchestrator import (
     assemble_query_context,
@@ -274,6 +282,48 @@ def _get_hardware() -> HardwareProfile:
     return hardware
 
 
+_MODELS_CACHE_SECONDS = 60.0
+_models_cache: tuple[float, list[str] | None] = (0.0, None)
+
+
+def _installed_models() -> list[str] | None:
+    """Models installed in Ollama, cached briefly; None if Ollama is unreachable.
+
+    Blocking (one HTTP call at most per minute); call via asyncio.to_thread.
+    """
+    global _models_cache
+    checked_at, models = _models_cache
+    if time.monotonic() - checked_at < _MODELS_CACHE_SECONDS:
+        return models
+    try:
+        models = list_ollama_models(OLLAMA_DEFAULT_BASE_URL)
+    except OllamaConnectionError:
+        models = None
+    _models_cache = (time.monotonic(), models)
+    return models
+
+
+def _is_installed(model: str, installed: list[str]) -> bool:
+    return model in installed or f"{model}:latest" in installed
+
+
+def _default_model() -> str:
+    """The hardware tier's model, or the primary model when the tier's model is
+    not installed but the primary one is (e.g. qwen3.5:2b never pulled).
+
+    Blocking; call via asyncio.to_thread.
+    """
+    recommended = _get_hardware().recommended_model
+    installed = _installed_models()
+    if (
+        installed is not None
+        and not _is_installed(recommended, installed)
+        and _is_installed(PRIMARY_MODEL, installed)
+    ):
+        return PRIMARY_MODEL
+    return recommended
+
+
 def _next_stream_item(
     stream_gen: Generator[str, None, Any],
 ) -> tuple[bool, str | Any]:
@@ -383,6 +433,13 @@ async def ingest_document(req: IngestRequest, request: Request) -> IngestRespons
             raw_document=raw_layout,
         )
 
+    except FileNotFoundError as exc:
+        # A model file is missing (e.g. the coreference model was never downloaded).
+        print(f"Document ingestion failed: {exc}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Document ingestion failed: a required model is not installed. {exc}",
+        ) from exc
     except Exception as exc:
         print(f"Document ingestion failed: {exc}")
         raise HTTPException(
@@ -456,7 +513,7 @@ async def query(req: QueryRequest, request: Request) -> QueryResponse:
         )
 
     t0 = time.perf_counter()
-    selected_model = active_hardware.recommended_model
+    selected_model = await asyncio.to_thread(_default_model)
     inf_tokens = 0
 
     try:
@@ -465,7 +522,7 @@ async def query(req: QueryRequest, request: Request) -> QueryResponse:
             query=clean_query,
             store=active_store,
             hardware=active_hardware,
-            model=active_hardware.recommended_model,
+            model=selected_model,
             stream=False,
             session_id=session_key,
             chat=True,
@@ -586,7 +643,9 @@ async def chat_title(req: ChatTitleRequest, request: Request) -> ChatTitleRespon
     if not question.strip():
         raise HTTPException(status_code=400, detail="Question cannot be empty")
 
-    model = _parse_query_options(req.options).get("model", _get_hardware().recommended_model)
+    model = _parse_query_options(req.options).get("model") or await asyncio.to_thread(
+        _default_model
+    )
     try:
         title = await asyncio.to_thread(generate_chat_title, question, answer, model)
     except OllamaConnectionError as exc:
@@ -595,6 +654,67 @@ async def chat_title(req: ChatTitleRequest, request: Request) -> ChatTitleRespon
         raise HTTPException(status_code=502, detail=f"Local inference failed: {exc}") from exc
 
     return ChatTitleResponse(title=title)
+
+
+@app.get("/api/models")
+async def list_models() -> dict[str, Any]:
+    """Installed Ollama models and the hardware tiers, for the Settings page."""
+    installed = await asyncio.to_thread(_installed_models)
+    profile = _get_hardware()
+    tiers = [
+        {
+            **tier,
+            "installed": None if installed is None else _is_installed(tier["model"], installed),
+        }
+        for tier in hardware_tiers()
+    ]
+    return {
+        "ollama_reachable": installed is not None,
+        "ollama_url": OLLAMA_DEFAULT_BASE_URL,
+        "installed": installed or [],
+        "detected_mode": profile.recommended_mode,
+        "default_model": await asyncio.to_thread(_default_model),
+        "default_token_ceiling": profile.token_ceiling,
+        "list_extraction_enabled": is_list_extraction_enabled(),
+        "tiers": tiers,
+    }
+
+
+@app.post("/api/security/check")
+async def security_check(req: SecurityCheckRequest, request: Request) -> dict[str, Any]:
+    """Run text through the real input checks and chat router (no model call).
+
+    Reports what the sanitiser, the prompt-injection filter and the intent
+    router would do with this text as a chat message for this user.
+    """
+    try:
+        clean = sanitize_query(req.text)
+    except ValueError as exc:
+        return {"accepted": False, "reason": str(exc), "intent": None, "answer_source": None}
+    if not clean.strip():
+        return {"accepted": False, "reason": "Empty after sanitising", "intent": None, "answer_source": None}
+    if check_injection(clean):
+        return {
+            "accepted": False,
+            "reason": "Matches a prompt-injection pattern",
+            "intent": None,
+            "answer_source": None,
+        }
+
+    active_store = _store_for(_user_of(request))
+    has_docs = await asyncio.to_thread(_has_documents, active_store)
+    # Empty history, so the router makes no model call (no follow-up rewrite).
+    route = await asyncio.to_thread(
+        route_chat_query, clean, active_store, has_docs, [], PRIMARY_MODEL
+    )
+    return {
+        "accepted": True,
+        "reason": None,
+        "intent": route.intent.value,
+        "answer_source": route.answer_source,
+        "relevance": route.relevance,
+        "has_documents": has_docs,
+    }
 
 
 @app.get("/api/hardware", response_model=HardwareResponse)
@@ -867,7 +987,7 @@ async def _handle_ws_query(
     if not isinstance(session_id, str) or not session_id or len(session_id) > 128:
         session_id = None
     options = _parse_query_options(data.get("options"))
-    effective_model = options.get("model", active_hardware.recommended_model)
+    effective_model = options.get("model") or await asyncio.to_thread(_default_model)
     effective_ceiling = options.get("token_ceiling", active_hardware.token_ceiling)
     session_key = _session_key(user_sub, session_id)
     history = _parse_client_history(data.get("history"))
@@ -1202,13 +1322,10 @@ async def _handle_ws_ingest(
 
     except Exception as exc:
         print(f"Document ingestion failed: {exc}")
-
-        await ws.send_json(
-            {
-                "type": "error",
-                "detail": "Document ingestion failed",
-            }
-        )
+        detail = "Document ingestion failed"
+        if isinstance(exc, FileNotFoundError):
+            detail += f": a required model is not installed. {exc}"
+        await ws.send_json({"type": "error", "detail": detail})
         return
 
     total_ms = int((time.perf_counter() - t0) * 1000)

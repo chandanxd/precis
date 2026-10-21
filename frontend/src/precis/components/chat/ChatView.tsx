@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import type { Message, PipelineEvent, QueryResponse, Fact, Conversation } from "../../types/api";
 import { buildChatHistory, fetchChatTitle, streamQueryPipeline } from "../../services/api";
+import { loadSettings } from "../../services/settings";
 import {
   loadConversations,
   saveConversations,
@@ -67,6 +68,8 @@ export const ChatView = () => {
   const [rightPanelTab, setRightPanelTab] = useState<"evidence" | "telemetry">("evidence");
   const [isInspectorOpen, setIsInspectorOpen] = useState(true);
   const [expandedEvidenceMap, setExpandedEvidenceMap] = useState<Record<string, boolean>>({});
+  // Settings → "Supporting evidence default state"; a click on a list overrides it.
+  const [evidenceOpenByDefault] = useState(() => loadSettings().defaultEvidenceExpanded);
   const [hoveredFactIndex, setHoveredFactIndex] = useState<number | null>(null);
   const [hoveredSentenceIndex, setHoveredSentenceIndex] = useState<number | null>(null);
   const [copiedMsgId, setCopiedMsgId] = useState<string | null>(null);
@@ -132,12 +135,15 @@ export const ChatView = () => {
   }, []);
 
   // Toggle supporting evidence collapse state per message
-  const toggleEvidence = useCallback((msgId: string) => {
-    setExpandedEvidenceMap((prev) => ({
-      ...prev,
-      [msgId]: !prev[msgId],
-    }));
-  }, []);
+  const toggleEvidence = useCallback(
+    (msgId: string) => {
+      setExpandedEvidenceMap((prev) => ({
+        ...prev,
+        [msgId]: !(prev[msgId] ?? evidenceOpenByDefault),
+      }));
+    },
+    [evidenceOpenByDefault],
+  );
 
   // Abort any in-flight stream when the active conversation changes (switch, route
   // change, delete) or the view unmounts, so late callbacks can't write into the
@@ -667,7 +673,7 @@ export const ChatView = () => {
               ? selectedMsgId === turn.aiMsg?.id || selectedMsgId === turn.userMsg?.id
               : turn.aiMsg?.id === activeMsg?.id;
             const isEvidenceExpanded = turn.aiMsg
-              ? Boolean(expandedEvidenceMap[turn.aiMsg.id])
+              ? (expandedEvidenceMap[turn.aiMsg.id] ?? evidenceOpenByDefault)
               : false;
 
             return (

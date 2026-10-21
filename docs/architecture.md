@@ -13,7 +13,7 @@
 1. **Preserved Structural Parsing**: Direct extraction and rendering of tables from input documents into intact Markdown formats.
 2. **Propositional Information Extraction**: Dependency-parsed Subject-Verb-Object-Adjunct (SVOA) propositions annotated with negation and epistemic modality using spaCy (`en_core_web_lg`).
 3. **Guarded Structural-Priority Context Packing (Candidate G)**: Prioritizing preserved structural tables, gating cross-document propositions, and strictly capping same-document distractor propositions.
-4. **Hardware-Calibrated Offline Inference**: Hardware sensing and dynamic token budgeting dispatching queries to a locally hosted Ollama instance (`qwen2.5-coder:7b` across reported benchmark evaluations; `qwen3.5:4b` configured as default in hardware runtime profiling).
+4. **Hardware-Calibrated Offline Inference**: Hardware sensing and dynamic token budgeting dispatching queries to a locally hosted Ollama instance (`qwen2.5-coder:7b` across reported benchmark evaluations; `qwen3.5:4b` configured as default in hardware runtime profiling, `qwen3.5:2b` on the `cpu-light` profile).
 
 ---
 
@@ -96,5 +96,5 @@ Every node, module, and data boundary in the architecture is verified against ph
 | **Similarity Retrieval** | `backend/src/precis/pipeline/packer.py` | **Implemented** | Uses `store.query_similar()` and `store.query_similar_structural()` to retrieve top-$k$ candidate propositions and structural blocks via cosine similarity with the query embedding. |
 | **Hardware-Budget Control** | `backend/src/precis/pipeline/hardware.py` | **Implemented** | Inspects RAM and VRAM; sets runtime profile ceilings (1,024–4,096 tokens). The reported confirmatory evaluation enforced an evaluation-specific 2,048-token ceiling. |
 | **Guarded Packing (Candidate G)** | `backend/src/precis/pipeline/structural.py` | **Implemented** | Function `assemble_structural_query_context()` enforces table priority, suppresses same-document propositions, and caps packing at the specified token ceiling. |
-| **Local LLM Inference** | `backend/src/precis/pipeline/inference.py` | **Implemented** | Dispatches prompts to local Ollama HTTP endpoint (`http://localhost:11434`) using deterministic greedy decoding ($T=0.0$). The reported confirmatory evaluation used `qwen2.5-coder:7b`; the runtime profiler in `hardware.py` defaults to `qwen3.5:4b`. |
+| **Local LLM Inference** | `backend/src/precis/pipeline/inference.py` | **Implemented** | Dispatches prompts to local Ollama HTTP endpoint (`http://localhost:11434`) using deterministic greedy decoding ($T=0.0$). The reported confirmatory evaluation used `qwen2.5-coder:7b`; the runtime profiler in `hardware.py` defaults to `qwen3.5:4b` (`qwen3.5:2b` on the `cpu-light` profile, falling back to `qwen3.5:4b` when it is not installed). |
 | **Generated Answer** | `backend/src/precis/pipeline/orchestrator.py` | **Implemented** | Returns generated string response to caller without external cloud network calls in nominal deployment. |

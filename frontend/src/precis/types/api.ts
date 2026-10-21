@@ -115,16 +115,18 @@ export type ActiveTab =
   "chat" | "facts" | "documents" | "system" | "evaluation" | "security" | "settings";
 
 export interface UserSettings {
+  /** Ollama model tag; "" lets the backend pick for the detected hardware. */
   ollamaModel: string;
-  tokenCeiling: number;
+  /** Context token ceiling; null lets the backend pick for the detected hardware. */
+  tokenCeiling: number | null;
+  /** Hardware mode whose model and ceiling were applied, "auto", or "custom". */
+  devicePreset: string;
   temperature: number;
-  ollamaBaseUrl: string;
-  minSdhScore: number;
   allowedModalities: Record<Modality, boolean>;
-  strictNegation: boolean;
   defaultEvidenceExpanded: boolean;
-  defaultSidebarCollapsed: boolean;
   theme: Theme;
+  /** Settings format version (2 = auto model and ceiling). */
+  version: number;
 }
 
 export interface GraphNode {

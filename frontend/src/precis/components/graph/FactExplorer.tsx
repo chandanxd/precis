@@ -98,6 +98,8 @@ export const FactExplorer = () => {
 
     return { total, asserted, conditional, attributed, hypothetical, negated, avgSdh };
   }, [facts]);
+  // Share of the loaded facts, as a whole-number percentage (0 when none are loaded).
+  const pct = (n: number) => (stats.total ? Math.round((n / stats.total) * 100) : 0);
 
   // Graph Data positioning
   const graphData = useMemo(() => {
@@ -549,34 +551,36 @@ export const FactExplorer = () => {
                       <BarChart3 size={13} />
                       <span>MODALITY BREAKDOWN</span>
                     </div>
-                    <span>{stats.total} TOTAL</span>
+                    <span>
+                      {totalFacts !== null && totalFacts > stats.total
+                        ? `FIRST ${stats.total} OF ${totalFacts}`
+                        : `${stats.total} TOTAL`}
+                    </span>
                   </div>
 
                   <div className="flex flex-col gap-[0.375rem] text-[0.6875rem] pt-[0.25rem]">
                     <div className="flex items-center justify-between">
                       <span className="text-[var(--tx-2)]">Asserted Claims:</span>
                       <span className="font-bold text-[var(--tx)]">
-                        {stats.asserted} ({((stats.asserted / stats.total) * 100).toFixed(0)}%)
+                        {stats.asserted} ({pct(stats.asserted)}%)
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-[var(--tx-2)]">Conditional Rules:</span>
                       <span className="font-bold text-[var(--tx)]">
-                        {stats.conditional} ({((stats.conditional / stats.total) * 100).toFixed(0)}
-                        %)
+                        {stats.conditional} ({pct(stats.conditional)}%)
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-[var(--tx-2)]">Attributed Quotes:</span>
                       <span className="font-bold text-[var(--tx)]">
-                        {stats.attributed} ({((stats.attributed / stats.total) * 100).toFixed(0)}%)
+                        {stats.attributed} ({pct(stats.attributed)}%)
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-[var(--tx-2)]">Hypothetical Forecasts:</span>
                       <span className="font-bold text-[var(--tx)]">
-                        {stats.hypothetical} (
-                        {((stats.hypothetical / stats.total) * 100).toFixed(0)}%)
+                        {stats.hypothetical} ({pct(stats.hypothetical)}%)
                       </span>
                     </div>
                     <div className="flex items-center justify-between border-t border-[var(--bd)] pt-[0.25rem]">

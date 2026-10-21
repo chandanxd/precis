@@ -337,6 +337,73 @@ export async function fetchAllFacts(
   }
 }
 
+export interface HardwareTier {
+  mode: string;
+  label: string;
+  model: string;
+  token_ceiling: number;
+  /** null when Ollama could not be reached. */
+  installed: boolean | null;
+}
+
+export interface ModelsInfo {
+  ollama_reachable: boolean;
+  ollama_url: string;
+  installed: string[];
+  detected_mode: string;
+  default_model: string;
+  default_token_ceiling: number;
+  list_extraction_enabled: boolean;
+  tiers: HardwareTier[];
+}
+
+/** Installed Ollama models and the hardware tiers (null if the backend is unreachable). */
+export async function fetchModels(): Promise<ModelsInfo | null> {
+  try {
+    const res = await authFetch(`${apiBase()}/api/models`);
+    return res.ok ? await res.json() : null;
+  } catch {
+    return null;
+  }
+}
+
+export interface SecurityCheckResult {
+  accepted: boolean;
+  reason: string | null;
+  intent: string | null;
+  answer_source: string | null;
+  relevance?: number | null;
+  has_documents?: boolean;
+}
+
+/** Run text through the backend's real sanitiser, injection filter and chat router. */
+export async function checkSecurity(text: string): Promise<SecurityCheckResult | null> {
+  try {
+    const res = await authFetch(`${apiBase()}/api/security/check`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text }),
+    });
+    return res.ok ? await res.json() : null;
+  } catch {
+    return null;
+  }
+}
+
+/** This browser's access token state, without exposing the token itself. */
+export function getTokenInfo(): { clientId: string | null; expiresAt: number | null } {
+  return {
+    clientId: getClientId(),
+    expiresAt: cachedToken && tokenExpiresAt > Date.now() ? tokenExpiresAt : null,
+  };
+}
+
+/** Make sure a token is held (minting one if needed); returns its expiry time. */
+export async function ensureToken(): Promise<number | null> {
+  const token = await acquireToken();
+  return token ? tokenExpiresAt : null;
+}
+
 /**
  * Ask the backend's local model for a short title for a new chat.
  * Returns null on any failure, so callers keep their fallback title.

@@ -4,6 +4,7 @@ import platform
 import re
 import subprocess
 from dataclasses import dataclass
+from typing import Any
 
 import psutil
 
@@ -360,7 +361,10 @@ def select_mode(ram_gb: float, has_gpu: bool, vram_gb: float | None) -> str:
 
 
 PRIMARY_MODEL = os.getenv("PRECIS_OLLAMA_MODEL", "qwen3.5:4b")
-FALLBACK_MODEL = os.getenv("PRECIS_OLLAMA_FALLBACK_MODEL", "qwen2.5-coder:7b")
+# Model for the lightest tier (under 16 GB RAM, no usable GPU): the smallest
+# model of the same family (q4_K_M, 1.9 GB on disk against 3.3 GB for 4b), so
+# it fits beside spaCy, the coreference model and the embedder in 8 GB.
+FALLBACK_MODEL = os.getenv("PRECIS_OLLAMA_FALLBACK_MODEL", "qwen3.5:2b")
 
 MODE_TO_MODEL: dict[str, str] = {
     "gpu": PRIMARY_MODEL,
@@ -375,6 +379,29 @@ MODE_TO_CEILING: dict[str, int] = {
     "cpu": 2048,
     "cpu-light": 1024,
 }
+
+
+# Human-readable rule per mode, in the order of select_mode. Settings shows
+# these as device presets.
+MODE_LABELS: dict[str, str] = {
+    "gpu": "GPU with 6 GB+ VRAM (and 8 GB+ RAM)",
+    "gpu-partial": "GPU with 2-6 GB VRAM (and 8 GB+ RAM)",
+    "cpu": "16 GB+ RAM, no usable GPU",
+    "cpu-light": "Under 16 GB RAM, no usable GPU",
+}
+
+
+def hardware_tiers() -> list[dict[str, Any]]:
+    """The four hardware modes with their default model and token ceiling."""
+    return [
+        {
+            "mode": mode,
+            "label": MODE_LABELS[mode],
+            "model": get_model_for_mode(mode),
+            "token_ceiling": MODE_TO_CEILING[mode],
+        }
+        for mode in ("gpu", "gpu-partial", "cpu", "cpu-light")
+    ]
 
 
 def get_model_for_mode(mode: str) -> str:

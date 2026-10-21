@@ -54,6 +54,10 @@ class QueryRequest(BaseModel):
     )
 
 
+class SecurityCheckRequest(BaseModel):
+    text: str = Field(..., max_length=4_000, description="Text to run through the input checks")
+
+
 class ChatTitleRequest(BaseModel):
     question: str = Field(..., max_length=4_000, description="First message of the chat")
     answer: str = Field(..., max_length=100_000, description="First answer of the chat")
